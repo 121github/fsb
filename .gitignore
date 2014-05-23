@@ -1,0 +1,22 @@
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+/build/
+/vendor/
+/bin/
+/composer.phar
+/web/bundles/
+/web/bundles/*
+/web/css/*
+/web/js/*
+
+# Files created by IDEs like Eclipse, Zend Studio, Netbeans, PHPStorm and TextMate2
+.buildpath
+.project
+.settings
+nbproject
+.idea
+.tm_properties
