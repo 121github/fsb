@@ -1,0 +1,35 @@
+backend:
+    resource: "@BackendBundle/Resources/config/routing.yml"
+    prefix:   /backend
+
+reporting:
+    resource: "@ReportingBundle/Resources/config/routing.yml"
+    prefix:   /reporting
+
+calendar:
+    resource: "@CalendarBundle/Resources/config/routing.yml"
+    prefix:   /
+
+note:
+    resource: "@NoteBundle/Resources/config/routing.yml"
+    prefix:   /
+
+record:
+    resource: "@RecordBundle/Resources/config/routing.yml"
+    prefix:   /
+
+rule:
+    resource: "@RuleBundle/Resources/config/routing.yml"
+    prefix:   /
+
+appointment:
+    resource: "@AppointmentBundle/Resources/config/routing.yml"
+    prefix:   /
+
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
+    prefix:   /
+    
+index:
+    path: /
+    defaults: { _controller: "CalendarBundle:Default:index"}

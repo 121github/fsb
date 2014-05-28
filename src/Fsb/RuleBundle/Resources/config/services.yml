@@ -1,0 +1,7 @@
+parameters:
+#    rule.example.class: Fsb\RuleBundle\Example
+
+services:
+#    rule.example:
+#        class: %rule.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

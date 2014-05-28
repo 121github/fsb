@@ -1,0 +1,7 @@
+parameters:
+#    note.example.class: Fsb\NoteBundle\Example
+
+services:
+#    note.example:
+#        class: %note.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

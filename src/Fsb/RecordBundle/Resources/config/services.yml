@@ -1,0 +1,7 @@
+parameters:
+#    record.example.class: Fsb\RecordBundle\Example
+
+services:
+#    record.example:
+#        class: %record.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

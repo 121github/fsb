@@ -1,0 +1,3 @@
+calendar_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: CalendarBundle:Default:index }
