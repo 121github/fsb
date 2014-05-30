@@ -1,0 +1,25 @@
+{% extends '::base.html.twig' %}
+
+
+{% block stylesheets %}
+{# 	<link href="{{ asset('bundles/backend/css/normalize.css') }}" rel="stylesheet" type="text/css" />#}
+{# 	<link href="{{ asset('bundles/backend/css/common.css') }}" rel="stylesheet" type="text/css" />#}
+	<link href="{{ asset('bundles/backend/css/calendar.css') }}"	rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block body %}
+	<div data-role="content">
+		
+		{# Info Messages #}
+		{% for type, flashMessage in app.session.flashbag.all() %}
+	        {% if flashMessage.title is defined %}
+	        	<strong>{{ flashMessage.title }}</strong>
+	        	{{ flashMessage.message }}
+	        {% else %}
+	        	{{ type }}
+	        {% endif %}
+		{% endfor %}
+		
+		{% block article %}{% endblock %}
+	</div><!-- /content -->
+{% endblock %}

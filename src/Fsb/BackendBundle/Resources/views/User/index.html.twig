@@ -1,0 +1,36 @@
+{% extends '::backend.html.twig' %}
+
+{% block title %} Backend {% endblock %}
+
+{% block article -%}
+    <h1>User list</h1>
+
+    <table class="ui-responsive ui-shadow"  data-role="table" id="user-table" data-mode="column">
+        <thead>
+            <tr>
+                <th>Login</th>
+                <th>Role</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.login }}</a></td>
+                <td>{{ entity.role }}</td>
+                <td>{{ entity.userDetail.firstname }}</td>
+                <td>{{ entity.userDetail.lastname }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('user_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

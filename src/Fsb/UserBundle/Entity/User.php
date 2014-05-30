@@ -15,7 +15,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @ORM\Entity(repositoryClass="Fsb\UserBundle\Entity\UserRepository")
  * @DoctrineAssert\UniqueEntity("login")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var integer
@@ -47,7 +47,7 @@ class User
      * @ORM\Column(name="password", type="string", length=255)
      * 
      * @Assert\Length(min = 6)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"create"})
      * 
      */
     private $password;
@@ -101,6 +101,36 @@ class User
     	return $this->getUserDetail()->getFirstname().' '.$this->getUserDetail()->getSurname();
     }
 
+    /**
+     * @see \Symfony\Component\Security\Core\User\UserInterface::eraseCredentials()
+     */
+    public function eraseCredentials() {
+    
+    }
+    
+    /**
+     * @see \Symfony\Component\Security\Core\User\UserInterface::getRoles()
+     *
+     * @return ROLE_EMPLOYEE
+     */
+    public function getRoles() {
+    	return array($this->getRole()->getName());
+    }
+    
+    
+    /**
+     * @see \Symfony\Component\Security\Core\User\UserInterface::getUsername()
+     *
+     * @return login
+     */
+    public function getUsername() {
+    	return $this->getLogin();
+    }
+    
+    public function __sleep(){
+    	return array('id', 'login');
+    }
+    
     /**
      * Get id
      *

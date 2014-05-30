@@ -1,0 +1,46 @@
+{% extends '::backend.html.twig' %}
+
+{% block article -%}
+
+    <h1>User Details</h1>
+    
+    <a href="{{ path('user_edit', { 'id': entity.id }) }}"><button>Edit</button></a>
+    
+
+    <table class="ui-responsive ui-shadow"  data-role="table" id="user-show-table" data-mode="column">
+        <tbody>
+            <tr>
+                <th>Login</th>
+                <td>{{ entity.login }}</td>
+            </tr>
+            <tr>
+                <th>Role</th>
+                <td>{{ entity.role }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ entity.userDetail.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ entity.userDetail.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.userDetail.email }}</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>{{ entity.userDetail.telephone }}</td>
+            </tr>
+            <tr>
+                <th>Mobile</th>
+                <td>{{ entity.userDetail.mobile }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    {{ form(delete_form) }}
+    
+    
+{% endblock %}

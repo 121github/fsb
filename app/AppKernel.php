@@ -25,6 +25,7 @@ class AppKernel extends Kernel
             new Fsb\ReportingBundle\ReportingBundle(),
             new Fsb\BackendBundle\BackendBundle(),
             new JQuery\JQueryBundle\JQueryBundle(),
+        	new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
