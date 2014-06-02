@@ -1,5 +1,5 @@
 <?php
-namespace Fsb\BackendBundle\Form;
+namespace Fsb\BackendBundle\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

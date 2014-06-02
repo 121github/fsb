@@ -18,7 +18,7 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/calendar/*, roles: [ROLE_RECRUITER, ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR, ROLE_SUPER_USER] }
         - { path: ^/reporting/*, roles: [ROLE_SUPER_USER] }
-        - { path: ^/backend/*, roles: [ROLE_ADMINISTRATOR, ROLE_SUPER_USER] }
+        - { path: ^/backend/*, roles: [ROLE_ADMINISTRATOR] }
         # You can use a regular expression for the languges '[a-z]{2}'
     
     providers:

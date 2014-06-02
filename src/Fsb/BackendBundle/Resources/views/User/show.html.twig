@@ -4,9 +4,6 @@
 
     <h1>User Details</h1>
     
-    <a href="{{ path('user_edit', { 'id': entity.id }) }}"><button>Edit</button></a>
-    
-
     <table class="ui-responsive ui-shadow"  data-role="table" id="user-show-table" data-mode="column">
         <tbody>
             <tr>
@@ -40,7 +37,40 @@
         </tbody>
     </table>
     
-    {{ form(delete_form) }}
+    <a href="{{ path('user_edit', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
+    <a href="#popupChangePass" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="password" data-theme="a">Change Password</a>
+    <a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>
+    
+    
+    <!--  POPUP DELETE CONFIRM -->
+    <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+    	<form action="{{ path('user_delete' , { 'id': entity.id}) }}" method="delete" {{ form_enctype(delete_form) }}>
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>Delete User?</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+		        <h3 class="ui-title">Are you sure you want to delete this user?</h3>
+		        <p>This action cannot be undone.</p>
+		        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+{# 		        <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Delete</button>#}
+		        {{ form_rest(delete_form) }}
+		    </div>
+			
+    	</form>
+    </div>
+    
+    <!--  POPUP CHANGE PASSWORD -->
+    <div data-role="popup" id="popupChangePass" data-overlay-theme="a" data-theme="a" data-dismissible="true" style="max-width:400px;" class="ui-corner-all">
+    	<form action="{{ path('user_password' , { 'id': entity.id}) }}" method="post" {{ form_enctype(delete_form) }}>
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>Change Password</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+				{{ form_rest(password_form) }}
+		    </div>
+			
+    	</form>
+    </div>
     
     
 {% endblock %}

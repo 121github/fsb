@@ -12,4 +12,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+	/**
+	 * Get All the users by a role
+	 *
+	 * @param Role $role Get the Users  by a role
+	 *
+	 * @return array Departments
+	 */
+	public function findUsersByRole($role){
+	
+		$em = $this->getEntityManager();
+	
+		$dql = 'SELECT u, ur
+					FROM UserBundle:User u
+					JOIN u.role ur
+					WHERE ur.name = :role
+					ORDER BY ur.name ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('role', $role);
+	
+		$user_ar = $query->getResult();
+	
+		return $user_ar;
+	}
 }

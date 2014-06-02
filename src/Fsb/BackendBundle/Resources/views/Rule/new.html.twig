@@ -1,0 +1,17 @@
+{% extends '::backend.html.twig' %}
+
+{% block title %} Backend {% endblock %}
+
+{% block article -%}
+    <h1>Rule creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('rule') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

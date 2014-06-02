@@ -1,0 +1,30 @@
+rule:
+    pattern:  /
+    defaults: { _controller: "BackendBundle:Rule:index" }
+
+rule_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "BackendBundle:Rule:show" }
+
+rule_new:
+    pattern:  /new
+    defaults: { _controller: "BackendBundle:Rule:new" }
+
+rule_create:
+    pattern:  /create
+    defaults: { _controller: "BackendBundle:Rule:create" }
+    requirements: { _method: post }
+
+rule_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "BackendBundle:Rule:edit" }
+
+rule_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "BackendBundle:Rule:update" }
+    requirements: { _method: post|put }
+
+rule_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "BackendBundle:Rule:delete" }
+    requirements: { _method: post|delete }

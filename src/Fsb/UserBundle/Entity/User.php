@@ -98,7 +98,7 @@ class User implements UserInterface
      */
     public function __toString()
     {
-    	return $this->getUserDetail()->getFirstname().' '.$this->getUserDetail()->getSurname();
+    	return $this->getUserDetail()->getFirstname().' '.$this->getUserDetail()->getLastname();
     }
 
     /**

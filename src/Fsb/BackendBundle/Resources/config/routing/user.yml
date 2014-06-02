@@ -23,6 +23,11 @@ user_update:
     pattern:  /{id}/update
     defaults: { _controller: "BackendBundle:User:update" }
     requirements: { _method: post|put }
+    
+user_password:
+    pattern:  /{id}/changepass
+    defaults: { _controller: "BackendBundle:User:changePassword" }
+    requirements: { _method: post|put }
 
 user_delete:
     pattern:  /{id}/delete

@@ -9,6 +9,7 @@ use Fsb\UserBundle\Entity\UserDetail;
 use Fsb\UserBundle\Entity\UserRepository;
 use Fsb\UserBundle\Entity\UserRole;
 use Fsb\UserBundle\Util\Util;
+use Fsb\RuleBundle\Entity\Rule;
 
 
 /**
@@ -82,6 +83,29 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         	}	
         }
             
+        $manager->flush();
+        
+        // Rules
+        $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+        $numRule = 0;
+        foreach ($recruiters as $recruiter) {
+        	 
+        	for ($i=1; $i<=3; $i++) {
+        
+        		$numRule++;
+        		 
+        		$rule = new Rule();
+        		
+        		$rule->setRule("Rule number ".$numRule);
+        		$rule->setDescription("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        		$rule->setRecruiter($recruiter);
+        		
+        		Util::setCreateAuditFields($rule);
+        		 
+        		$manager->persist($rule);
+        	}
+        }
+        
         $manager->flush();
         
     }

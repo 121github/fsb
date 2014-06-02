@@ -6,9 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Fsb\UserBundle\Entity\User;
-use Fsb\BackendBundle\Form\UserType;
+use Fsb\BackendBundle\Form\User\UserType;
+use Fsb\BackendBundle\Form\User\UserEditType;
+use Fsb\BackendBundle\Form\User\UserChangePasswordType;
 use Fsb\UserBundle\Util\Util;
-use Fsb\BackendBundle\Form\UserEditType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -100,7 +101,7 @@ class UserController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
-            				'title' => 'Created!',
+            				'title' => 'User Created!',
             				'message' => 'The user has been created'
             		)
             );
@@ -128,7 +129,10 @@ class UserController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array(
+        		'label' => 'Create',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        ));
 
         return $form;
     }
@@ -163,10 +167,13 @@ class UserController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
+        $passwordForm = $this->createChangePasswordForm($user);
 
         return $this->render('BackendBundle:User:show.html.twig', array(
             'entity'      => $user,
-            'delete_form' => $deleteForm->createView(),        ));
+            'delete_form' => $deleteForm->createView(),
+        	'password_form' => $passwordForm->createView(),
+        ));
     }
 
     /**
@@ -184,12 +191,10 @@ class UserController extends Controller
         }
 
         $editForm = $this->createEditForm($user);
-        $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('BackendBundle:User:edit.html.twig', array(
             'entity'      => $user,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -207,7 +212,10 @@ class UserController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array(
+        		'label' => 'Update',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        ));
 
         return $form;
     }
@@ -225,11 +233,10 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $originalPassword = $form->getData()->getPassword();
-        
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($user);
         $editForm->handleRequest($request);
+        
+        $originalPassword = $editForm->getData()->getPassword();
         
         if ($editForm->isValid()) {
  
@@ -238,7 +245,7 @@ class UserController extends Controller
         		$user->setPassword($originalPassword);
         	}
         	else {
-        		$encoder = $this->get('security.encoder_factory')->getEncoder($employee);
+        		$encoder = $this->get('security.encoder_factory')->getEncoder($user);
         		 
         		$passwordEncoded = $encoder->encodePassword(
         				$user->getPassword(),
@@ -257,6 +264,14 @@ class UserController extends Controller
         	$em->persist($user);
         	$em->persist($userDetail);
             $em->flush();
+            
+            $this->get('session')->getFlashBag()->set(
+            		'success',
+            		array(
+            				'title' => 'User Changed!',
+            				'message' => 'The user has been updated'
+            		)
+            );
 
             return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
         }
@@ -264,9 +279,90 @@ class UserController extends Controller
         return $this->render('BackendBundle:User:edit.html.twig', array(
             'entity'      => $user,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
+    
+    /**
+     * Change password
+     *
+     */
+    public function changePasswordAction(Request $request, $id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$user = $em->getRepository('UserBundle:User')->find($id);
+    
+    	if (!$user) {
+    		throw $this->createNotFoundException('Unable to find User entity.');
+    	}
+    
+    	$passwordForm = $this->createChangePasswordForm($user);
+    	$passwordForm->handleRequest($request);
+    
+    	if ($passwordForm->isValid()) {
+    
+    		$encoder = $this->get('security.encoder_factory')->getEncoder($user);
+    
+    		$passwordEncoded = $encoder->encodePassword(
+    				$user->getPassword(),
+    				$user->getSalt()
+    		);
+    		$user->setPassword($passwordEncoded);
+    		 
+    		Util::setModifyAuditFields($user);
+    		 
+    		$em->persist($user);
+    		$em->flush();
+    		
+    		$this->get('session')->getFlashBag()->set(
+    				'success',
+    				array(
+    						'title' => 'Password Changed!',
+    						'message' => 'The user password has been updated'
+    				)
+    		);
+    
+    		return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
+    	}
+    
+//     	return $this->render('BackendBundle:User:edit.html.twig', array(
+//     			'entity'      => $user,
+//     			'password_form'   => $passwordForm->createView(),
+//     	));
+
+    	$this->get('session')->getFlashBag()->set(
+    			'success',
+    			array(
+    					'title' => 'ERROR!',
+    					'message' => 'The user password has NOT been updated'
+    			)
+    	);
+
+    	return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
+    }
+    
+    /**
+     * Creates a form to change the password of a User entity by id.
+     *
+     * @param $user the user entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createChangePasswordForm(User $user)
+    {
+    	$form = $this->createForm(new UserChangePasswordType(), $user, array(
+    			'action' => $this->generateUrl('user_password', array('id' => $user->getId())),
+    			'method' => 'PUT',
+    	));
+    	 
+    	$form->add('submit', 'submit', array(
+    			'label' => 'Change',
+    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+    	));
+    	 
+    	return $form;
+    }
+    
     /**
      * Deletes a User entity.
      *
@@ -292,7 +388,7 @@ class UserController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
-            				'title' => 'Deleted!',
+            				'title' => 'User Deleted!',
             				'message' => 'The user has been deleted'
             		)
             );
@@ -313,7 +409,10 @@ class UserController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('user_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array(
+            		'label' => 'Delete',
+            		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+            ))
             ->getForm()
         ;
     }

@@ -1,13 +1,29 @@
 <?php
 
-namespace Fsb\BackendBundle\Form;
+namespace Fsb\BackendBundle\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserEditType extends UserType
+class UserChangePasswordType extends AbstractType
 {
+	
+	/**
+	 * @param FormBuilderInterface $builder
+	 * @param array $options
+	 */
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
+		$builder
+		->add('password', 'repeated', array(
+				'type' => 'password',
+				'invalid_message' => 'Both passwords must be the same',
+				'options' => array('label' => 'Password')
+		))
+		;
+	}
+	
     /**
      * @param OptionsResolverInterface $resolver
      */
@@ -24,6 +40,6 @@ class UserEditType extends UserType
      */
     public function getName()
     {
-        return 'fsb_backendbundle_useredit';
+        return 'fsb_backendbundle_userchangepassword';
     }
 }

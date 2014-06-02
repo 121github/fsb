@@ -26,11 +26,6 @@
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('user_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+    <a href="{{ path('user_new') }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">New User</a>
+   
+{% endblock %}

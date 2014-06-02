@@ -1,6 +1,7 @@
 {% extends '::backend.html.twig' %}
 
 {% block article -%}
+
     <h1>User edit</h1>
 
     <form action="{{ path('user_update' , { 'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }}>
@@ -57,6 +58,5 @@
 
 		{{ form_rest(edit_form) }}
 	</form>
-
-    {{ form(delete_form) }}
+    
 {% endblock %}

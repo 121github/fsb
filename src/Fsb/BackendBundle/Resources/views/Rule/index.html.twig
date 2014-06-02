@@ -1,0 +1,29 @@
+{% extends '::backend.html.twig' %}
+
+{% block title %} Backend {% endblock %}
+
+{% block article -%}
+    <h1>Rule list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+            	<th>Rule</th>
+                <th>Description</th>
+                <th>Recruiter</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+            	<td><a href="{{ path('rule_show', { 'id': entity.id }) }}">{{ entity.rule }}</a></td>
+                <td>{{ entity.description | truncate(60,true) }}</td>
+                <td><a href="{{ path('user_show', { 'id': entity.recruiter.id }) }}">{{ entity.recruiter }}</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	
+	<a href="{{ path('rule_new') }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">New Rule</a>
+	
+{% endblock %}
