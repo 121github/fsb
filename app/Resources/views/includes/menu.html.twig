@@ -1,0 +1,53 @@
+<!-- MENU -->
+{% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
+	<!-- LEFT PANEL -->
+	<div data-role="panel" id="right-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a">
+		
+		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
+			
+			<li data-role="list-divider">MENU</li>
+				
+			{% if (is_granted('ROLE_SUPER_USER')) %}
+            	<li><a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-grid">{{ "Reporting" }}</a></li>
+            {% elseif (is_granted('ROLE_ADMINISTRATOR')) %}
+            	<li><a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Users" }}</a></li>
+            	<li><a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action">{{ "Rules" }}</a></li>
+            {% endif %}
+            <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar">{{ "Calendar" }}</a></li>
+            
+            <li>
+            	{% set time = "now"|date("U") %}
+            	{% include 'CalendarBundle:Default:includes/calendar_mini.html.twig' %}
+            </li>
+            
+            <li>
+            	<table style="width: 100%;">
+            		<tr>
+            			<td width="33%"><a href="#" class="hreflink ui-btn ui-icon-calendar ui-btn-icon-notext"></a></td>
+            			<td width="33%"><a href="#" class="hreflink ui-btn ui-icon-bars ui-btn-icon-notext"></a></td>
+            			<td width="33%"><a href="#" class="hreflink ui-btn ui-icon-bullets ui-btn-icon-notext"></a></td>
+            		</tr>
+            		<tr>
+            			<td>Month</td>
+            			<td>Week</td>
+            			<td>Day</td>
+            		</tr>
+            	</table>
+            </li>
+		</ul>
+				
+	</div><!-- /panel -->
+		    
+    <!-- RIGHT PANEL -->
+    <div data-role="panel" id="left-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a">
+
+		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
+			
+			<li data-role="list-divider">Hi {{ app.security.getToken().getUser().getUserDetail().getFirstname() }}</li>
+			
+			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Logout" }}</a></li>
+		</ul>
+		
+    </div><!-- /panel -->
+{% endif %}
+		    

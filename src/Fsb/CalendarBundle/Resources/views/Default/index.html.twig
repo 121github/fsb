@@ -1,4 +1,72 @@
 {% extends '::calendar.html.twig' %}
 
 
-{% block title %}Access form{% endblock %}
+{% block title %}Calendar{% endblock %}
+
+{% block article -%}
+    
+    <div  data-theme="a" id="calendar-page" class="month-page">
+{#     <div>#}
+	    
+	    {% set time = "now"|date("U") %}
+	    {% set daysInMonth = time|date('t') %}
+		{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+		{% set dow = startDow %}
+		
+	    <div role="main" class="ui-content">
+	    	
+	    	<table>
+	    		<tr>
+	    			<td>Mon</td>
+	    			<td>Tue</td>
+	    			<td>Wed</td>
+	    			<td>Thu</td>
+	    			<td>Fri</td>
+	    			<td>Sat</td>
+	    			<td>Sun</td>
+	    		</tr>
+	    	</table>
+	    	
+	        <ul data-role="listview" data-inset="true">
+	        	{% if startDow != 0 %}
+        			{% for daysBefore in range(1,startDow) %}
+        				<li><a href="#" class="ui-btne"></a>
+{#         					<img src="" class="ui-li-thumb">#}
+{# 			                <h2></h2>#}
+{# 			                <p></p>#}
+{# 			                <p class="ui-li-aside">#}
+{# 			                	{{ startDow - daysBefore + 1 }}#}
+{# 			                	<div class="day">L</div>#}
+{# 			                </p>#}
+        				</li>
+        			{% endfor %}
+        		{% endif %}
+        		
+	        	{% for i in range(1,daysInMonth) %}
+		            <li><a href="#" class="ui-btn">
+		            	{% if i % 4 %}
+		            		
+			                <h2></h2>
+			                <p></p>
+			                <p class="ui-li-aside">
+			                	{{ i }}
+			                	<div class="day">L</div>
+			                </p>
+			            {% else %}
+							{#<img src="{{ asset('bundles/calendar/images/appointment_b.png') }}" class="ui-li-thumb">#}
+							<img src="" class="ui-li-thumb">
+			                <h2>3</h2>
+			                <p>Appointmens</p>
+			                <p class="ui-li-aside">
+			                	{{ i }}
+			                	<div class="day">L</div>
+			                </p>
+			            {% endif %}
+		            </a></li>
+	            {% endfor %}
+	        </ul>
+	    </div><!-- /content -->
+	</div>
+    
+{% endblock %}
+

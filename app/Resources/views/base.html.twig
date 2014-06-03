@@ -21,48 +21,19 @@
     </head>
     <body id="{%  block id '' %}">
     	<div data-role="page">			
+
+    		{% include '::includes/menu.html.twig' %}
     		
-    		<!-- MENU -->
-    		{% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
-    			<!-- LEFT PANEL -->
-	    		<div data-role="panel" id="right-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a">
-			
-					<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
-						
-						<li data-role="list-divider">MENU</li>
-						
-{# 						<a href="#" data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true" data-iconpos="notext"></a>#}
-						
-						{% if (is_granted('ROLE_SUPER_USER')) %}
-			            	<li><a href="#" class="hreflink">{{ "Reporting" }}</a></li>
-			            {% elseif (is_granted('ROLE_ADMINISTRATOR')) %}
-			            	<li><a href="{{ path('user') }}" class="hreflink">{{ "Users" }}</a></li>
-			            	<li><a href="{{ path('rule') }}" class="hreflink">{{ "Rules" }}</a></li>
-			            {% endif %}
-			            <li><a href="{{ path('calendar_homepage') }}" class="hreflink">{{ "Calendar" }}</a></li>
-					</ul>
-					
-			    </div><!-- /panel -->
-			    
-			    <!-- RIGHT PANEL -->
-			    <div data-role="panel" id="left-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a">
-			
-					<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
-						
-						<li data-role="list-divider">Hi {{ app.security.getToken().getUser().getUserDetail().getFirstname() }}</li>
-						
-						<li><a href="{{ path('logout') }}" class="hreflink">{{ "Logout" }}</a></li>
-					</ul>
-					
-			    </div><!-- /panel -->
-		   	{% endif %}
-		    
-		    <header data-role="header" class="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
-				 {% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
+    		<header data-role="header" class="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
+				{% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 				 	<a href="#right-panel" id="navmenu-btn" class="navmenu-btn">&#9776; </a>
 				 	<a href="#left-panel" data-role="button" data-icon="gear" data-iconpos="notext"></a>
-				 {% endif %}
-				 <h1><a href="{{ path('index') }}"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
+				{% endif %}
+				<h1><a href="{{ path('index') }}"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
+				<div data-role="header">
+					<h1>{% block name %}{% endblock %}</h1>
+				    <a href="./" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-rel="back" data-ajax="false">Back</a>
+				</div>
 			</header><!-- /header -->
     
 			{% block body %}{% endblock %}
