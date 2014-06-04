@@ -65,7 +65,7 @@ class Address
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Record", inversedBy="address")
+     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Record", mappedBy="address")
      */
     private $record;
     

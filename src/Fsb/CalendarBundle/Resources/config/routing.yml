@@ -1,3 +1,7 @@
 calendar_homepage:
     pattern:  /
     defaults: { _controller: "CalendarBundle:Default:index" }
+
+calendar_month:
+    pattern:  /month/{month}
+    defaults: { _controller: "CalendarBundle:Default:month" }

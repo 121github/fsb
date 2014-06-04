@@ -24,9 +24,9 @@ class Postcode
     /**
      * @var string
      *
-     * @ORM\Column(name="poscode", type="string", length=100)
+     * @ORM\Column(name="postcode", type="string", length=100)
      */
-    private $poscode;
+    private $postcode;
 
     /**
      * @var float
@@ -92,26 +92,26 @@ class Postcode
     }
 
     /**
-     * Set poscode
+     * Set postcode
      *
-     * @param string $poscode
+     * @param string $postcode
      * @return Postcode
      */
-    public function setPoscode($poscode)
+    public function setPostcode($postcode)
     {
-        $this->poscode = $poscode;
+        $this->postcode = $postcode;
 
         return $this;
     }
 
     /**
-     * Get poscode
+     * Get postcode
      *
      * @return string 
      */
-    public function getPoscode()
+    public function getPostcode()
     {
-        return $this->poscode;
+        return $this->postcode;
     }
 
     /**

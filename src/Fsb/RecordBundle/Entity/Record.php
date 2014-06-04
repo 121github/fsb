@@ -49,14 +49,14 @@ class Record
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Address", mappedBy="record")
+     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Address", inversedBy="record")
      * 
      */
     private $address;
 
     /**
      * 
-     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Contact", mappedBy="record")
+     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Contact", inversedBy="record")
      * 
      */
     private $contact;

@@ -13,7 +13,7 @@
    Tables
    ======================================================================== */
 
-/*
+
 th {
 	border-bottom: 1px solid #d6d6d6;
 	background:#5C7CB4;
@@ -27,7 +27,7 @@ tr {
 tr:nth-child(even) {
 	background:#e9e9e9;
 }
-*/
+
 
 
 .month-page .ui-listview li .ui-btn .ui-li-aside {
@@ -86,6 +86,12 @@ tr:nth-child(even) {
 	display: none;
 }
 
+/* DO not show the days of the last or future month in the general view */
+.month-page .ui-listview li.pastDays{
+    	display: none;
+    	
+    }
+
 /* First breakpoint is 63.75em (1020px). 7 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
 @media ( min-width: 63.75em ) {
     .month-page .ui-content {
@@ -103,9 +109,10 @@ tr:nth-child(even) {
     but we stick to percentage values for demo purposes. */
     .month-page .ui-listview li {
         float: left;
-        width: 12%;
-        height: 114px;
-        margin: .625em 1%;
+        width: 13%;
+        height: 95px;
+        /*margin: .625em 1%;*/
+        margin: 2px 2px;
     }
     .month-page .ui-listview li > .ui-btn {
         -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
@@ -224,6 +231,21 @@ tr:nth-child(even) {
     .month-page td{
     	width: 12%;
     }
+    
+    /*Show the days of the last or future month in this breakpoint */
+    .month-page .ui-listview li.pastDays{
+    	display: inline-block;
+    	
+    }
+    
+    .month-page .ui-listview li > .pastDays{
+    	background: rgb(209, 209, 209);
+    }
+    
+    
+    .month-page .ui-listview li.pastDays.ui-li-has-thumb p.ui-li-aside {
+ 	  	background: rgb(209, 209, 209);
+	}
 }
 
 /* For this style we used images with a size of 310x310 pixels. Just before the first breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */

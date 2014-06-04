@@ -10,6 +10,18 @@ use Fsb\UserBundle\Entity\UserRepository;
 use Fsb\UserBundle\Entity\UserRole;
 use Fsb\UserBundle\Util\Util;
 use Fsb\RuleBundle\Entity\Rule;
+use Fsb\AppointmentBundle\Entity\Appointment;
+use Fsb\AppointmentBundle\Entity\AppointmentDetail;
+use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
+use Fsb\AppointmentBundle\Entity\AppointmentProject;
+use Fsb\RecordBundle\Entity;
+use Fsb\RecordBundle\Entity\Record;
+use Fsb\RecordBundle\Entity\RecordOutcome;
+use Fsb\RecordBundle\Entity\RecordSector;
+use Fsb\RecordBundle\Entity\Address;
+use Fsb\RecordBundle\Entity\Position;
+use Fsb\RecordBundle\Entity\Postcode;
+use Fsb\RecordBundle\Entity\Contact;
 
 
 /**
@@ -32,6 +44,10 @@ class Basico implements FixtureInterface, ContainerAwareInterface
     
     public function load(ObjectManager $manager)
     {
+    	/*********************************************************************/
+    	/******************* USERS ************************************/
+    	/*********************************************************************/
+    	
         // Roles
         foreach (array('ROLE_RECRUITER','ROLE_APPOINTMENT_SETTER','ROLE_ADMINISTRATOR','ROLE_SUPER_USER',) as $name) {
             $role = new UserRole();
@@ -72,7 +88,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$userDetail = new UserDetail();
         		$userDetail->setFirstname('Firstname'.$numUser);
         		$userDetail->setLastname('Lastname'.$numUser);
-        		$userDetail->setEmail('employee'.$numUser.'@localhost');
+        		$userDetail->setEmail('user'.$numUser.'@localhost');
         		$userDetail->setTelephone('01511234567 ');
         		$userDetail->setMobile('07123456789 ');
         		$userDetail->setUser($user);
@@ -84,6 +100,10 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         }
             
         $manager->flush();
+        
+        /*********************************************************************/
+        /******************* RULES ************************************/
+        /*********************************************************************/
         
         // Rules
         $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
@@ -103,6 +123,209 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		Util::setCreateAuditFields($rule);
         		 
         		$manager->persist($rule);
+        	}
+        }
+        
+        $manager->flush();
+        
+        
+        /*********************************************************************/
+        /******************* ADDRESSES ************************************/
+        /*********************************************************************/
+        
+        // Address
+        $postcodes = $manager->getRepository('RecordBundle:Postcode')->findAll();
+        $numAddress = 0;
+        for ($i=1;$i<100;$i++) {
+        
+       		$numAddress++;
+	      		 
+       		$address = new Address();
+        
+        	$address->setAdd1($numAddress." Street");
+        	$address->setAdd2("Apartment ".rand(1, 700));
+        	$address->setAdd3("");
+        	$address->setCountry("UK");
+        	$address->setPostcode($postcodes[rand(1, count($postcodes)-1)]);
+        	$address->setTown("Manchester");
+        	
+        	Util::setCreateAuditFields($address);
+        	 
+        	$manager->persist($address);
+        }
+        
+        $manager->flush();
+        
+        
+        /*********************************************************************/
+        /******************* CONTACTS ************************************/
+        /*********************************************************************/
+        
+        //Position
+        foreach (array("Manager", "Director", "Other") as $position) {
+        	$contactPosition = new Position();
+        	$contactPosition->setName($position);
+        	Util::setCreateAuditFields($contactPosition);
+        
+        	$manager->persist($contactPosition);
+        }
+        
+        $manager->flush();
+        
+        // Contact
+        $contactPositionList = $manager->getRepository('RecordBundle:Position')->findAll();
+        $numContact = 0;
+        foreach ($contactPositionList as $contact) {
+        	 
+        	for ($i=1; $i<=10; $i++) {
+        
+        		$numContact++;
+        		 
+        		$contact = new Contact();
+        		 
+        		$contact->setFirstname('Firstname'.$numContact);
+        		$contact->setLastname('Lastname'.$numContact);
+        		$contact->setEmail('contact'.$numContact.'@localhost');
+        		$contact->setTelephone('01511234567');
+        		$contact->setMobile('07123456789');
+        		$contact->setFax('01511234568');
+        		$contact->setLinkedinUrl("http://www.linkedin.co.uk/contact".$numContact);
+        		$contact->setWebsite("http://121customerinsight.co.uk");
+        		$position = $contactPositionList[rand(1, count($contactPositionList)-1)];
+        		$contact->setPosition($position);
+        		if (strcmp($position->getName(),"Other")) {
+        			$contact->setOtherPosition("Employee");
+        		}
+        		else {
+        			$contact->setOtherPosition("");
+        		}
+        
+        		Util::setCreateAuditFields($contact);
+        		 
+        		$manager->persist($contact);
+        	}
+        }
+        
+        $manager->flush();
+        
+        /*********************************************************************/
+        /******************* APPOINTMENTS ************************************/
+        /*********************************************************************/
+        
+        //Appointment Outcome
+        foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
+        	$appointmentOutcome = new AppointmentOutcome();
+        	$appointmentOutcome->setName($outcome);
+        	Util::setCreateAuditFields($appointmentOutcome);
+        
+        	$manager->persist($appointmentOutcome);
+        }
+        
+        $manager->flush();
+        
+        //AppointmetProject
+        for ($i=1;$i<20;$i++){
+        	$appointmentProject = new AppointmentProject();
+        	$appointmentProject->setName("Project ".$i);
+        	Util::setCreateAuditFields($appointmentProject);
+        	
+        	$manager->persist($appointmentProject);
+        }
+        
+        $manager->flush();
+        
+        //Record Outcome
+        foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
+        	$recordOutcome = new RecordOutcome();
+        	$recordOutcome->setName($outcome);
+        	Util::setCreateAuditFields($recordOutcome);
+        
+        	$manager->persist($recordOutcome);
+        }
+        
+        $manager->flush();
+        
+        //Record Sector
+        foreach (array("Insurance", "Motor", "Other") as $sector) {
+        	$recordSector = new RecordSector();
+        	$recordSector->setName($sector);
+        	Util::setCreateAuditFields($recordSector);
+        
+        	$manager->persist($recordSector);
+        }
+        
+        $manager->flush();
+        
+        // Appointment
+  	    $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+  	    $managers = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_SUPER_USER');
+  	    $appointmentOutcomeList = $manager->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
+  	    $appointmentProjectList = $manager->getRepository('AppointmentBundle:AppointmentProject')->findAll();
+  	    $recordContactList = $manager->getRepository('RecordBundle:Contact')->findAll();
+  	    $recordAddressList = $manager->getRepository('RecordBundle:Address')->findAll();
+  	    
+  	    $recordOutcomeList = $manager->getRepository('RecordBundle:RecordOutcome')->findAll();
+  	    $recordSectorList = $manager->getRepository('RecordBundle:RecordSector')->findAll();
+        $numAppointment = 0;
+        foreach ($recruiters as $recruiter) {
+        	 
+        	for ($i=1; $i<=3; $i++) {
+        
+        		$numAppointment++;
+        		 
+        		$appointment = new Appointment();
+        		
+        		$appointment->setRecruiter($recruiter);
+        		$days = rand(1, 300);
+        		$appointment->setStartDate(new \DateTime('now - '.$days.' days'));
+        		$days = rand(1, 300);
+        		$appointment->setEndDate(new \DateTime('now - '.$days.' days'));
+        		
+        		Util::setCreateAuditFields($appointment);
+        		
+        		 
+        		$manager->persist($appointment);
+        		
+        		//Appointment Details
+        		$appointmentDetail = new AppointmentDetail();
+        		$appointmentDetail->setTitle("Appointment ".+$numAppointment);
+        		$appointmentDetail->setComment("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        		$appointmentDetail->setAppointment($appointment);
+        		$appointmentDetail->setOutcome($appointmentOutcomeList[rand(1, count($appointmentOutcomeList)-1)]);
+        		$appointmentDetail->setOutcomeReason("Lorem ipsum dolor sit amet");
+        		$appointmentDetail->setProject($appointmentProjectList[rand(1, count($appointmentProjectList)-1)]);
+        		
+        		Util::setCreateAuditFields($appointmentDetail);
+        		 
+        		$manager->persist($appointmentDetail);
+        		
+        		//Record
+        		$record = new Record();
+        		$record->setAddress($recordAddressList[$numAppointment]);
+        		$record->setContact($recordContactList[$numAppointment]);
+        		$record->setConame("Company ".$numAppointment);
+        		$record->setManager($managers[rand(1, count($managers)-1)]);
+        		$days = rand(1, 300);
+        		$record->setNextcall(new \DateTime('now - '.$days.' days'));
+        		$sector = $recordSectorList[rand(1, count($recordSectorList)-1)];
+        		$record->setSector($sector);
+        		if (strcmp($sector->getName(),"Other")) {
+        			$record->setOtherSector("Other");
+        		}
+        		else {
+        			$record->setOtherSector("");
+        		}
+        		$record->setOutcome($recordOutcomeList[rand(1, count($recordOutcomeList)-1)]);
+        		$record->setOutcomeReason("Lorem ipsum dolor sit amet");
+        		$record->setStatus(rand(0, 1));
+        		
+        		Util::setCreateAuditFields($record);
+        		
+        		$manager->persist($record);
+        		
+        		$appointment->setRecord($record);
+        		$manager->persist($appointment);
+        		
         	}
         }
         

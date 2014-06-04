@@ -1,0 +1,103 @@
+{% extends '::calendar.html.twig' %}
+
+
+{% block title %}Calendar{% endblock %}
+
+{% block article -%}
+    
+    <div  data-theme="a" id="calendar-page" class="month-page">
+{#     <div>#}
+	    
+	    {% set now = "now"|date("U") %}
+	    {% set nowDay = now|date("d") %}
+	    {% set nowMonth = now|date("m") %}
+	    {% set nowYear = now|date("Y") %}
+	    
+	    {% set currentMonth = month %}
+	    {% set currentYear = nowYear %}
+	    {% set time = currentMonth ~ "/01/" ~ currentYear|date("U") %}
+	    
+	    
+	    {% set daysInMonth = time|date('t') %}
+		{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+		
+	    {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
+	    {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+		
+	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
+	    	
+	    	<table>
+	    		<tr>
+	    			<td>Mon</td>
+	    			<td>Tue</td>
+	    			<td>Wed</td>
+	    			<td>Thu</td>
+	    			<td>Fri</td>
+	    			<td>Sat</td>
+	    			<td>Sun</td>
+	    		</tr>
+	    	</table>
+	    	
+	        <ul data-role="listview" data-inset="true">
+	        
+	        	{########## Days before month ###############}
+	        	{% if startDow != 0 %}
+        			{% for daysBefore in range(1,startDow) %}
+        				<li class="pastDays" ><a href="#" class="pastDays ui-btn"></a>
+        					<img src="" class="ui-li-thumb">
+			                <h2></h2>
+			                <p></p>
+			                <p class="ui-li-aside">
+			                	{% set day = firstMonthDay|date_modify('-' ~ (startDow - daysBefore + 1) ~ 'day')|date('d/M') %}
+			                	{{ day }}
+			                	<div class="day">L</div>
+			                </p>
+        				</li>
+        			{% endfor %}
+        		{% endif %}
+        		
+        		{########## Days in month ###############}
+	        	{% for i in range(1,daysInMonth) %}
+		            <li><a href="#" class="ui-btn">
+		            	{% if i % 4 %}
+		            		
+			                <h2></h2>
+			                <p></p>
+			                <p class="ui-li-aside">
+			                	{{ i }}
+			                	<div class="day">L</div>
+			                </p>
+			            {% else %}
+							{#<img src="{{ asset('bundles/calendar/images/appointment_b.png') }}" class="ui-li-thumb">#}
+							<img src="" class="ui-li-thumb">
+			                <h2>3</h2>
+			                <p>Appointmens</p>
+			                <p class="ui-li-aside">
+			                	{{ i }}
+			                <div class="day">L</div>
+			                </p>
+			            {% endif %}
+		            </a></li>
+	            {% endfor %}
+	            
+	            {########## Days after month ###############}
+	            {% set lastDow = ((startDow + (daysInMonth % 7)) % 7)  %}
+	            {% if lastDow != 6 %}
+        			{% for daysAfter in range(1,7-lastDow) %}
+        				<li class="pastDays" ><a href="#" class="pastDays ui-btn"></a>
+        					<img src="" class="ui-li-thumb">
+			                <h2></h2>
+			                <p></p>
+			                <p class="ui-li-aside">
+								{% set day = lastMonthDay|date_modify('+' ~ daysAfter ~ 'days')|date('d/M') %}
+			                	{{ day }}
+			                	<div class="day">L</div>
+			                </p>
+        				</li>
+        			{% endfor %}
+        		{% endif %}
+	        </ul>
+		</div> <!-- content -->
+	</div>
+	
+{% endblock %}

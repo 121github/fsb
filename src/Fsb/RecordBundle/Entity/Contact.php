@@ -92,7 +92,7 @@ class Contact
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Record", inversedBy="address")
+     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Record", mappedBy="contact")
      */
     private $record;
 
