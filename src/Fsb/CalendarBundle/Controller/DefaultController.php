@@ -61,11 +61,11 @@ class DefaultController extends Controller
     
     	$em = $this->getDoctrine()->getManager();
     	 
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentList as $appointment) {
-    		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+    		$auxList[(int)$appointment["hour"]] = $appointment["numapp"];
     	}
     	 
     	$appointmentList = $auxList;

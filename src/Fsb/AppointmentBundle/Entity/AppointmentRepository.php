@@ -43,4 +43,38 @@ class AppointmentRepository extends EntityRepository
 	
 		return $recruiter_ar;
 	}
+	
+	/**
+	 * Get The appointments of a recruiter and in a particular month
+	 *
+	 * @param int $recruiter_id
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array Appointments
+	 */
+	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year){
+	
+		$em = $this->getEntityManager();
+	
+		$dql = 'SELECT SUBSTRING(a.startDate, 11, 6) AS hour, COUNT(a.id) AS numapp
+					FROM AppointmentBundle:Appointment a
+					WHERE
+						a.recruiter = :recruiter_id AND
+						SUBSTRING(a.startDate, 9, 2) = :day AND
+						SUBSTRING(a.startDate, 6, 2) = :month AND
+						SUBSTRING(a.startDate, 1, 4) = :year
+					GROUP BY hour
+					ORDER BY a.startDate ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('recruiter_id', $recruiter_id);
+		$query->setParameter('day', (int)$day);
+		$query->setParameter('month', (int)$month);
+		$query->setParameter('year', (int)$year);
+	
+		$recruiter_ar = $query->getResult();
+	
+		return $recruiter_ar;
+	}
 }
