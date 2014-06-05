@@ -3,5 +3,9 @@ calendar_homepage:
     defaults: { _controller: "CalendarBundle:Default:index" }
 
 calendar_month:
-    pattern:  /month/{month}
+    pattern:  /month/{month}/year/{year}
     defaults: { _controller: "CalendarBundle:Default:month" }
+
+calendar_day:
+    pattern:  /day/{day}/month/{month}/year/{year}
+    defaults: { _controller: "CalendarBundle:Default:day" }

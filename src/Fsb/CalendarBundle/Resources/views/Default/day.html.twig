@@ -1,0 +1,94 @@
+{% extends '::calendar.html.twig' %}
+
+
+{% block title %}Calendar{% endblock %}
+
+{% block article -%}
+
+	{% set now = "now"|date("U") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+    
+    {% set currentDay = day %}
+    {% set currentMonth = month %}
+    {% set currentYear = year %}
+    {% set time = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
+    
+    {% set prevDate = time|date_modify("-1 day") %}
+    {% set prevDay = prevDate|date("d") %}
+    {% set prevMonth = prevDate|date("m") %}
+    {% set prevYear = prevDate|date("Y") %}
+    
+    {% set nextDate = time|date_modify("+1 day") %}
+    {% set nextDay = nextDate|date("d") %}
+    {% set nextMonth = nextDate|date("m") %}
+    {% set nextYear = nextDate|date("Y") %}
+    
+    
+    {% set daysInMonth = time|date('t') %}
+	{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+	
+    {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
+    {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+    
+    
+    
+    <div  data-theme="a" id="calendar-page" class="day-page">
+    
+	    <div class="change_day">
+	    	<table>
+	    		<tr>
+			    	<td style="text-align: left;">
+			    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    		{% else %}
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    		{% endif %}
+			    	</td>
+			    	<td style="text-align: center;">
+					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <span>{{ time|date("d F Y") }}</span>
+					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					</td>
+				    <td style="text-align: right;">
+			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Week" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    	</td>
+			    </tr>
+		    </table>
+		</div>
+        
+	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
+	    	
+	    	<ul data-role="listview" data-inset="true">
+	        
+        		{########## Hours in day ###############}
+	        	{% for i in range(0,23) %}
+					<li><a href="#" class="ui-btn">
+						{% if appointment_list[i] is defined %}
+							<img src="" class="ui-li-thumb">
+			                <h2>
+			                	{{ "Title" }}
+		                		<p>{{ "Description" }}</p>
+		                	</h2>
+		                	<h2>
+			                	{{ appointment_list[i] }}
+		                		<p>Appointmens</p>
+		                	</h2>
+		                {% else %}
+		                	<h2></h2>
+		                {% endif %}
+		                <p class="ui-li-aside">
+		                	{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
+		                		{{ pref ~ i ~ ":00" }}
+		                </p>
+		            </a></li>
+	            {% endfor %}
+	        </ul>
+		</div> <!-- content -->
+	</div>
+	
+{% endblock %}

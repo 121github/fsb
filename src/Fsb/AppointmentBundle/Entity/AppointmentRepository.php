@@ -3,7 +3,7 @@
 namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
+use Doctrine\ORM\Query\ResultSetMapping;
 /**
  * AppointmentRepository
  *
@@ -12,4 +12,35 @@ use Doctrine\ORM\EntityRepository;
  */
 class AppointmentRepository extends EntityRepository
 {
+	/**
+	 * Get The appointments of a recruiter and in a particular month
+	 *
+	 * @param int $recruiter_id
+	 * @param int $month
+	 * @param int $year
+	 * 
+	 * @return array Appointments
+	 */
+	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year){
+	
+		$em = $this->getEntityManager();
+	
+		$dql = 'SELECT SUBSTRING(a.startDate, 9, 2) AS day, COUNT(a.id) AS numapp 
+					FROM AppointmentBundle:Appointment a
+					WHERE 
+						a.recruiter = :recruiter_id AND
+						SUBSTRING(a.startDate, 6, 2) = :month AND
+						SUBSTRING(a.startDate, 1, 4) = :year
+					GROUP BY day
+					ORDER BY a.startDate ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('recruiter_id', $recruiter_id);
+		$query->setParameter('month', (int)$month);
+		$query->setParameter('year', (int)$year);
+		
+		$recruiter_ar = $query->getResult();
+	
+		return $recruiter_ar;
+	}
 }
