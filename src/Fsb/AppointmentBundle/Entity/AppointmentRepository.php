@@ -57,14 +57,18 @@ class AppointmentRepository extends EntityRepository
 	
 		$em = $this->getEntityManager();
 	
-		$dql = 'SELECT SUBSTRING(a.startDate, 11, 6) AS hour, COUNT(a.id) AS numapp
+		$dql = 'SELECT
+					SUBSTRING(a.startDate, 11, 3) AS hour, 
+					SUBSTRING(a.startDate, 15, 2) AS minute,
+					a.id, ad.title, 
+					ad.comment 
 					FROM AppointmentBundle:Appointment a
+					JOIN a.appointmentDetail ad
 					WHERE
 						a.recruiter = :recruiter_id AND
 						SUBSTRING(a.startDate, 9, 2) = :day AND
 						SUBSTRING(a.startDate, 6, 2) = :month AND
 						SUBSTRING(a.startDate, 1, 4) = :year
-					GROUP BY hour
 					ORDER BY a.startDate ASC';
 	
 		$query = $em->createQuery($dql);

@@ -24,7 +24,7 @@ security:
     
     providers:
         users:
-            entity: { class: Fsb\USerBundle\Entity\User, property: login }
+            entity: { class: Fsb\UserBundle\Entity\User, property: login }
     
     encoders:
         Fsb\UserBundle\Entity\User: { algorithm: sha512, iterations: 10 }

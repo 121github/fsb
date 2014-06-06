@@ -62,12 +62,24 @@ class DefaultController extends Controller
     	$em = $this->getDoctrine()->getManager();
     	 
     	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year);
+    	
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentList as $appointment) {
-    		$auxList[(int)$appointment["hour"]] = $appointment["numapp"];
+    			$aux = array();
+    			$aux["id"] = $appointment["id"];
+    			$aux["minute"] = (int)$appointment["minute"];
+    			$aux["hour"] = (int)$appointment["hour"];
+	    		$aux["title"] = $appointment["title"];
+	    		$aux["comment"] = $appointment["comment"];
+	    		if ($aux["minute"] < 30) {
+	    			$auxList[(int)$appointment["hour"]][0][$appointment["id"]] = $aux;
+	    		}
+	    		else {
+	    			$auxList[(int)$appointment["hour"]][30][$appointment["id"]] = $aux;
+	    		}
     	}
-    	 
+    	
     	$appointmentList = $auxList;
     
     	return $this->render('CalendarBundle:Default:day.html.twig', array(

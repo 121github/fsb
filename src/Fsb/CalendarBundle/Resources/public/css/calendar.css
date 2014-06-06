@@ -295,6 +295,11 @@ tr:nth-child(even) {
    Day View
    ======================================================================== */
 
+.day-page .ui-listview li .ui-btn {
+	min-height: 0.625em;
+	margin-left: 22px;
+}
+
 .day-page .ui-listview li .ui-btn .ui-li-aside {
     color: white;
     text-shadow: none;
@@ -304,7 +309,8 @@ tr:nth-child(even) {
 /* A bit custom styling */
 .day-page .ui-listview li .ui-btn p {
     color: #c0c0c0;
-    display: inline;
+    padding: 5px;
+    font-size: 12px;
 }
 
 
@@ -326,6 +332,9 @@ tr:nth-child(even) {
     border-bottom-left-radius: 0;
     -webkit-border-bottom-right-radius: inherit;
     border-bottom-right-radius: inherit;
+    text-shadow: none;
+    color: white;
+    border: 1px white solid;
 }
 
 .day-page .ui-listview .ui-li-has-thumb .ui-li-aside {
@@ -383,7 +392,20 @@ tr:nth-child(even) {
    	display: none;   	
 }
 
+.day-page .ui-listview .ui-li-has-thumb h2 {
+	display: inline;
+	max-width: 5%;
+}
 
+.day-page .ui-listview .ui-li-has-thumb h2>:first-child{
+	padding-bottom: 30px;
+	max-width: 140px;
+}
+
+.day-page .ui-listview .ui-li-has-thumb {
+	background: beige;
+	padding-left: 43px;
+}
 
 
 	

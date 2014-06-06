@@ -24,7 +24,7 @@ rule:
 
 appointment:
     resource: "@AppointmentBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /calendar
 
 user:
     resource: "@UserBundle/Resources/config/routing.yml"

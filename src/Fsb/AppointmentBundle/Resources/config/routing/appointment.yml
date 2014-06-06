@@ -1,0 +1,34 @@
+appointment:
+    pattern:  /
+    defaults: { _controller: "AppointmentBundle:Appointment:index" }
+
+appointment_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "AppointmentBundle:Appointment:show" }
+
+appointment_new:
+    pattern:  /new
+    defaults: { _controller: "AppointmentBundle:Appointment:new" }
+
+appointment_new_date:
+    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}
+    defaults: { _controller: "AppointmentBundle:Appointment:newDate" }
+
+appointment_create:
+    pattern:  /create
+    defaults: { _controller: "AppointmentBundle:Appointment:create" }
+    requirements: { _method: post }
+
+appointment_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "AppointmentBundle:Appointment:edit" }
+
+appointment_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "AppointmentBundle:Appointment:update" }
+    requirements: { _method: post|put }
+
+appointment_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "AppointmentBundle:Appointment:delete" }
+    requirements: { _method: post|delete }
