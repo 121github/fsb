@@ -1,10 +1,10 @@
 /*
 
-  Backend styles
+  Calendar styles
 
   Applied to
   --------------------------------------------------------------
-   backend
+   calendar
    
 
 */
@@ -523,5 +523,33 @@ a{
 	border: 0px solid;
 	padding-left: 37px;
 }	
+
+
+
+
+/* ===========================================================================
+   Mini Calendar (menu side)
+   ======================================================================== */
+
+
+.mini-calendar th {
+	border-bottom: 1px solid #d6d6d6;
+	background:transparent;
+	color: black;
+}
+
+.mini-calendar tr {
+	border-bottom: 1px solid #d6d6d6;
+}
+
+.mini-calendar tr:nth-child(even) {
+	background:transparent;
+}
+
+
+.mini-calendar .change_day .ui-btn-inline {
+	margin: 10px;	
 	
 }
+
+

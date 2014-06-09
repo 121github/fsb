@@ -16,7 +16,6 @@
             <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar">{{ "Calendar" }}</a></li>
             
             <li>
-            	{% set time = "now"|date("U") %}
             	{% include 'CalendarBundle:Default:includes/calendar_mini.html.twig' %}
             </li>
 		</ul>
