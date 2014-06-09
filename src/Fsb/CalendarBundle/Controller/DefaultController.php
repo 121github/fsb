@@ -90,4 +90,42 @@ class DefaultController extends Controller
     			"year" => $year
     	));
     }
+    
+    
+    public function diaryAction($day,$month,$year) {
+    
+    	$recruiter = $this->get('security.context')->getToken()->getUser();
+    
+    	if (!$recruiter) {
+    		throw $this->createNotFoundException('Unable to find this recruiter.');
+    	}
+    
+    	$em = $this->getDoctrine()->getManager();
+    
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year);
+    	 
+    	//Prepare the array structure to be printed in the calendar
+    	$auxList = array();
+    	foreach ($appointmentList as $appointment) {
+    		$aux = array();
+    		$aux["id"] = $appointment["id"];
+    		$aux["date"] = $appointment["date"];
+    		$offset = date_format($appointment["date"],"D d M");
+    		$aux["title"] = $appointment["title"];
+    		$aux["comment"] = $appointment["comment"];
+    		
+    		$auxList[$offset][$aux["id"]] = $aux;
+    	}
+    	
+    	 
+    	$appointmentList = $auxList;
+    
+    	return $this->render('CalendarBundle:Default:diary.html.twig', array(
+    			'recruiter' => $recruiter,
+    			'appointment_list' => $appointmentList,
+    			'day' => $day,
+    			'month' => $month,
+    			"year" => $year
+    	));
+    }
 }

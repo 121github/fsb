@@ -50,9 +50,8 @@
 					</td>
 				    <td style="text-align: right;">
 			    		<a href="{{ path('calendar_day', {'day': firstMonthDay|date("d"), 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Week" }}</a>
 			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
 			    	</td>
 			    </tr>
 		    </table>

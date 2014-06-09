@@ -45,9 +45,10 @@ class AppointmentRepository extends EntityRepository
 	}
 	
 	/**
-	 * Get The appointments of a recruiter and in a particular month
+	 * Get The appointments of a recruiter and in a particular day
 	 *
 	 * @param int $recruiter_id
+	 * @param $day
 	 * @param int $month
 	 * @param int $year
 	 *
@@ -76,6 +77,38 @@ class AppointmentRepository extends EntityRepository
 		$query->setParameter('day', (int)$day);
 		$query->setParameter('month', (int)$month);
 		$query->setParameter('year', (int)$year);
+	
+		$recruiter_ar = $query->getResult();
+	
+		return $recruiter_ar;
+	}
+	
+	/**
+	 * Get The appointments of a recruiter and since a particular day
+	 *
+	 * @param int $recruiter_id
+	 * @param $day
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array Appointments
+	 */
+	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year){
+	
+		$em = $this->getEntityManager();
+	
+		$dql = 'SELECT
+					a.startDate as date, a.id, ad.title, ad.comment
+					FROM AppointmentBundle:Appointment a
+					JOIN a.appointmentDetail ad
+					WHERE
+						a.recruiter = :recruiter_id AND
+						a.startDate > :date
+					ORDER BY a.startDate ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('recruiter_id', $recruiter_id);
+		$query->setParameter('date', new \DateTime($year.'-'.$month.'-'.$day.' 00:00:00'));
 	
 		$recruiter_ar = $query->getResult();
 	

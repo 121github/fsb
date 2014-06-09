@@ -1,0 +1,95 @@
+{% extends '::calendar.html.twig' %}
+
+
+{% block title %}Calendar{% endblock %}
+
+{% block article -%}
+
+	{% set now = "now"|date("U") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+    
+    {% set currentDay = day %}
+    {% set currentMonth = month %}
+    {% set currentYear = year %}
+    {% set time = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
+    
+    {% set prevDate = time|date_modify("-1 day") %}
+    {% set prevDay = prevDate|date("d") %}
+    {% set prevMonth = prevDate|date("m") %}
+    {% set prevYear = prevDate|date("Y") %}
+    
+    {% set nextDate = time|date_modify("+1 day") %}
+    {% set nextDay = nextDate|date("d") %}
+    {% set nextMonth = nextDate|date("m") %}
+    {% set nextYear = nextDate|date("Y") %}
+    
+    
+    {% set daysInMonth = time|date('t') %}
+	{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+	
+    {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
+    {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+    
+    
+    
+    <div  data-theme="a" id="calendar-page" class="diary-page">
+    
+	    <div class="change_day">
+	    	<table>
+	    		<tr>
+			    	<td style="text-align: left;">
+			    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
+			    			<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    		{% else %}
+			    			<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    		{% endif %}
+			    	</td>
+			    	<td style="text-align: center;">
+					    <a href="{{ path('calendar_diary', {'day': prevDay, 'month': prevMonth, 'year': prevYear}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <span>{{ time|date("d F Y") }}</span>
+					    <a href="{{ path('calendar_diary', {'day': nextDay, 'month': nextMonth, 'year': nextYear}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					</td>
+				    <td style="text-align: right;">
+			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Diary" }}</a>
+			    	</td>
+			    </tr>
+		    </table>
+		</div>
+        
+	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
+	    	
+	    	<ul data-role="listview" data-inset="true">
+	        
+        		{########## Diary ###############}
+				{% for key, appointmentDay in appointment_list %}
+					<li>
+						<img src="" class="ui-li-thumb">
+							{% for appointment in appointmentDay %}
+								<div data-role="collapsible">
+									<h2><a href="#">
+						        		{{ appointment["title"] }}
+					                </a></h2>
+					                <p style="font-size: 20px;">{{ appointment["date"] | date("H:m") }}</p>
+					                <p> {{ key }} </p>
+					                <br />
+					                <p>{{ appointment["comment"] | truncate(100) }}</p>
+					                <br />
+					                <p><a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Edit" }}</a></p>
+					                <p><a href="{{ path('appointment_delete', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Delete" }}</a></p>
+					            </div>
+			           		{% endfor %}
+			           	<p class="ui-li-aside">
+                			{{ key }}
+                		</p>
+                	</li>
+		        {% endfor %}
+			         	
+	        </ul>
+		</div> <!-- content -->
+	</div>
+	
+{% endblock %}

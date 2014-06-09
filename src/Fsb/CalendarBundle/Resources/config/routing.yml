@@ -9,3 +9,7 @@ calendar_month:
 calendar_day:
     pattern:  /day/{day}/month/{month}/year/{year}
     defaults: { _controller: "CalendarBundle:Default:day" }
+    
+calendar_diary:
+    pattern:  /diary/day/{day}/month/{month}/year/{year}
+    defaults: { _controller: "CalendarBundle:Default:diary" }
