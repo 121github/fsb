@@ -1,15 +1,43 @@
-{% extends '::base.html.twig' %}
+{% extends '::base_dialog.html.twig' %}
 
-{% block body -%}
-    <h1>Appointment creation</h1>
+	{% block name %}
+		{{"New Appointment"}} 
+	{% endblock %}
 
-    {{ form(form) }}
+	{% block body %}
+	
+		<div data-role="content" data-theme="a">
+			<form action="{{ path('appointment_create') }}" method="post" {{ form_enctype(form) }}>
+				{{ form_errors(form) }}
+		    <fieldset>
+					<div>
+						{{ form_label(form.appointmentDetail.title) }}
+						{{ form_errors(form.appointmentDetail.title) }}
+						{{ form_widget(form.appointmentDetail.title) }}
+					</div>
+					
+					<div>
+						{{ form_label(form.appointmentDetail.comment) }}
+						{{ form_errors(form.appointmentDetail.comment) }}
+						{{ form_widget(form.appointmentDetail.comment) }}
+					</div>
+					
+					<div>
+						{{ form_label(form.startDate) }}
+						{{ form_errors(form.startDate) }}
+						{{ form_widget(form.startDate) }}
+						
+						{{ form_label(form.endDate) }}
+						{{ form_errors(form.endDate) }}
+						{{ form_widget(form.endDate) }}
+					</div>
+					
+				</fieldset>
+		
+				{{ form_rest(form) }}
+			</form>
+			
+			<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Cancel</a>
+		</div>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('appointment') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
-{% endblock %}
+	{% endblock %}

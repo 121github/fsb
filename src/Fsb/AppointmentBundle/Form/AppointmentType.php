@@ -5,6 +5,7 @@ namespace Fsb\AppointmentBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class AppointmentType extends AbstractType
 {
@@ -15,15 +16,24 @@ class AppointmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('record')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('createdBy')
-            ->add('createdDate')
-            ->add('modifiedBy')
-            ->add('modifiedDate')
-            ->add('recruiter')
-            ->add('appointmentDetail')
+            ->add('startDate', 'datetime', array('date_widget' => "single_text", 'time_widget' => "single_text"))
+            ->add('endDate', 'datetime', array('date_widget' => "single_text", 'time_widget' => "single_text"))
+            ->add('recruiter', 'entity', array(
+            		'class'         => 'Fsb\\UserBundle\\Entity\\User',
+            		'empty_value'   => 'Select a recruiter',
+            		'query_builder' => function(EntityRepository $repository) {
+            			return $repository->findUsersByRoleQuery('ROLE_RECRUITER');
+            		},
+            ))
+            ->add('record', 'entity', array(
+            		'class'         => 'Fsb\\RecordBundle\\Entity\\Record',
+            		'empty_value'   => 'Select a record',
+            		'query_builder' => function(EntityRepository $repository) {
+            			return $repository->createQueryBuilder('r')
+            			->orderBy('r.coname', 'ASC');
+            		},
+            ))
+            ->add('appointmentDetail', new AppointmentDetailType())
         ;
     }
     

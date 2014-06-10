@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}{% endblock %} | Fsb Calendar Management System</title>
+        
+		{% block stylesheets %}{% endblock %}
+        {# jquery-mobile css#}
+        <link href="{{ asset('bundles/jquery/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/calendar/css/calendar.css') }}"	rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/calendar/css/backend.css') }}"	rel="stylesheet" type="text/css" />
+        
+        {# favicon#}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+        {% block javascripts %}
+			{# jquery Lib #}
+    		<script type="text/javascript" src="{{ asset('bundles/jquery/js/jquery-1.11.0.min.js') }}" ></script>
+    		{# jquery-mobile Lib #}
+    		<script type="text/javascript" src="{{ asset('bundles/jquery/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js') }}" ></script>
+		{% endblock %}
+		
+    </head>
+    <body id="{%  block id '' %}">
+		<div data-role="dialog" data-overlay-theme="b">
+    		<header data-role="header" data-theme="a">
+				<h1>{% block name %}{% endblock %}</h1>
+			</header><!-- /header -->
+    
+			{% block body %}{% endblock %}
+		</div>	    
+    </body>
+</html>
+    

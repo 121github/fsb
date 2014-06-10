@@ -1,62 +1,67 @@
-{% extends '::backend.html.twig' %}
+{% extends '::base_dialog.html.twig' %}
 
-{% block article -%}
+	{% block name %}
+		{{"Edit User"}} 
+	{% endblock %}
 
-    <h1>User edit</h1>
+	{% block body %}
+	
+		<div data-role="content" data-theme="a">
 
-    <form action="{{ path('user_update' , { 'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }}>
-		{{ form_errors(edit_form) }}
-    <fieldset>
-			<div>
-				{{ form_label(edit_form.login) }}
-				{{ form_errors(edit_form.login) }}
-				{{ form_widget(edit_form.login) }}
-			</div>
-			
-			<div>
-{# 				{{ form_label(form.password) }}#}
-				{{ form_errors(edit_form.password) }}
-				{{ form_widget(edit_form.password) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.role) }}
-				{{ form_errors(edit_form.role) }}
-				{{ form_widget(edit_form.role) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.userDetail.firstname) }}
-				{{ form_errors(edit_form.userDetail.firstname) }}
-				{{ form_widget(edit_form.userDetail.firstname) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.userDetail.lastname) }}
-				{{ form_errors(edit_form.userDetail.lastname) }}
-				{{ form_widget(edit_form.userDetail.lastname) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.userDetail.email) }}
-				{{ form_errors(edit_form.userDetail.email) }}
-				{{ form_widget(edit_form.userDetail.email) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.userDetail.telephone) }}
-				{{ form_errors(edit_form.userDetail.telephone) }}
-				{{ form_widget(edit_form.userDetail.telephone) }}
-			</div>
-			
-			<div>
-				{{ form_label(edit_form.userDetail.mobile) }}
-				{{ form_errors(edit_form.userDetail.mobile) }}
-				{{ form_widget(edit_form.userDetail.mobile) }}
-			</div>
-		</fieldset>
-
-		{{ form_rest(edit_form) }}
-	</form>
+		    <form action="{{ path('user_update' , { 'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }}>
+				{{ form_errors(edit_form) }}
+		    <fieldset>
+					<div>
+						{{ form_label(edit_form.login) }}
+						{{ form_errors(edit_form.login) }}
+						{{ form_widget(edit_form.login) }}
+					</div>
+					
+					<div>
+		{# 				{{ form_label(form.password) }}#}
+						{{ form_errors(edit_form.password) }}
+						{{ form_widget(edit_form.password) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.role) }}
+						{{ form_errors(edit_form.role) }}
+						{{ form_widget(edit_form.role) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.userDetail.firstname) }}
+						{{ form_errors(edit_form.userDetail.firstname) }}
+						{{ form_widget(edit_form.userDetail.firstname) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.userDetail.lastname) }}
+						{{ form_errors(edit_form.userDetail.lastname) }}
+						{{ form_widget(edit_form.userDetail.lastname) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.userDetail.email) }}
+						{{ form_errors(edit_form.userDetail.email) }}
+						{{ form_widget(edit_form.userDetail.email) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.userDetail.telephone) }}
+						{{ form_errors(edit_form.userDetail.telephone) }}
+						{{ form_widget(edit_form.userDetail.telephone) }}
+					</div>
+					
+					<div>
+						{{ form_label(edit_form.userDetail.mobile) }}
+						{{ form_errors(edit_form.userDetail.mobile) }}
+						{{ form_widget(edit_form.userDetail.mobile) }}
+					</div>
+				</fieldset>
+		
+				{{ form_rest(edit_form) }}
+			</form>
+		</div>
     
 {% endblock %}

@@ -17,23 +17,37 @@ class UserRepository extends EntityRepository
 	 *
 	 * @param Role $role Get the Users  by a role
 	 *
-	 * @return array Departments
+	 * @return array Recruiters
 	 */
 	public function findUsersByRole($role){
 	
-		$em = $this->getEntityManager();
-	
-		$dql = 'SELECT u, ur
-					FROM UserBundle:User u
-					JOIN u.role ur
-					WHERE ur.name = :role
-					ORDER BY ur.name ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('role', $role);
+		$query = $this->findUsersByRoleQuery($role);
 	
 		$user_ar = $query->getResult();
 	
 		return $user_ar;
+	}
+	
+	/**
+	 * Get the Query to find all the users by a role
+	 *
+	 * @param Role $role Get the Users  by a role
+	 *
+	 * @return array Recruiters
+	 */
+	public function findUsersByRoleQuery($role)
+	{
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+			->select('u')
+			->from('UserBundle:User', 'u')
+			->innerJoin('u.role', 'ur')
+			->where('ur.name = :role')
+			->orderBy('ur.name', 'ASC')
+			->setParameter('role', $role)	
+		;
+		
+		return $query;
 	}
 }

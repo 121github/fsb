@@ -86,6 +86,23 @@ class AppointmentController extends Controller
             'form'   => $form->createView(),
         ));
     }
+    
+    /**
+     * Displays a form to create a new Appointment entity for a particular date 
+     *
+     */
+    public function newDateAction($hour, $minute, $day, $month, $year)
+    {
+    	$entity = new Appointment();
+    	$date = new \DateTime($day.'-'.$month.'-'.$year.' '.$hour.':'.$minute.':00');
+    	$entity->setStartDate($date);
+    	$form   = $this->createCreateForm($entity);
+    
+    	return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
+    			'entity' => $entity,
+    			'form'   => $form->createView(),
+    	));
+    }
 
     /**
      * Finds and displays a Appointment entity.
