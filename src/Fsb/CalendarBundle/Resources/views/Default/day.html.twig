@@ -73,66 +73,67 @@
 							{% if appointment_list[i] is defined %}
 							
 								<img src="" class="ui-li-thumb">
-								
-								{% if appointment_list[i][0] is defined %}
-									{% for appointment in appointment_list[i][0] %}
-										<h2>
-{# 												<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
-											<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
-							                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-											{{ appointment["title"] }}
-						                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
-						                </a></h2>
+								<div style="overflow: auto;">
+									{% if appointment_list[i][0] is defined %}
+										{% for appointment in appointment_list[i][0] %}
+											<h2>
+	{# 												<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
+												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
+								                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
+												{{ appointment["title"] }}
+							                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
+							                </a></h2>
+								                
+								              <!--  POPUP APPOINTMENT -->
+									   		 <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
+									    		<div data-role="header" data-theme="a" class="ui-corner-top">
+											        <h1>Appointment</h1>
+											    </div>
+											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+											        <h3 class="ui-title">{{ appointment["title"] }}</h3>
+											        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
+							                		<p>{{ appointment["comment"] }}</p>
+											        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
+											        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+											    </div>
+									  		  </div>
+								        {% endfor %}
+							       {% endif %}
+								       
+							       {% if appointment_list[i][30] is defined %}
+							       		{% for appointment in appointment_list[i][30] %}
+											<h2>
+	{# 											<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
+												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
+								        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
+							       				{{ appointment["title"] }}
+							                	<p>{{ appointment["comment"] }}</p>
+							                </a></h2>
 							                
-							              <!--  POPUP APPOINTMENT -->
-								   		 <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
-								    		<div data-role="header" data-theme="a" class="ui-corner-top">
-										        <h1>Appointment</h1>
+											<!--  POPUP APPOINTMENT -->
+										    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
+									    		<div data-role="header" data-theme="a" class="ui-corner-top">
+											        <h1>Appointment</h1>
+											    </div>
+											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+											        <h3 class="ui-title">{{ appointment["title"] }}</h3>
+											        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
+							                		<p>{{ appointment["comment"] }}</p>
+											        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
+											        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+											    </div>
 										    </div>
-										    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-										        <h3 class="ui-title">{{ appointment["title"] }}</h3>
-										        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-						                		<p>{{ appointment["comment"] }}</p>
-										        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
-										        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
-										    </div>
-								  		  </div>
-							        {% endfor %}
-						       {% endif %}
+							           	{% endfor %}
+							       {% endif %}
 							       
-						       {% if appointment_list[i][30] is defined %}
-						       		{% for appointment in appointment_list[i][30] %}
-										<h2>
-{# 											<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
-											<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
-							        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
-						       				{{ appointment["title"] }}
-						                	<p>{{ appointment["comment"] }}</p>
-						                </a></h2>
-						                
-										<!--  POPUP APPOINTMENT -->
-									    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
-								    		<div data-role="header" data-theme="a" class="ui-corner-top">
-										        <h1>Appointment</h1>
-										    </div>
-										    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-										        <h3 class="ui-title">{{ appointment["title"] }}</h3>
-										        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-						                		<p>{{ appointment["comment"] }}</p>
-										        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
-										        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
-										    </div>
-									    </div>
-						           	{% endfor %}
-						       {% endif %}
-						       
-						       <div style="display: inline;">
-						       		<a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': nextDay, 'month': nextMonth, 'year': nextYear}) }}" data-role="button" data-icon="plus" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop"></a>
-						       </div>
+							       <div style="display: inline;">
+							       		<a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-icon="plus" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop"></a>
+							       </div>
+								</div>
 					            
 			                {% else %}
 				                {% for j in range(0,1) %}
-				                	<a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': nextDay, 'month': nextMonth, 'year': nextYear}) }}" data-role="button" data-rel="dialog" data-transition="pop">
+				                	<a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-rel="dialog" data-transition="pop">
 				                		{% if j == 0 %}
 				                			<p>{{ pref ~ i ~ ":00" }}</p>
 				                		{% else %}

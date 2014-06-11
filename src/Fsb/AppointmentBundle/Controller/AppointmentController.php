@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\AppointmentBundle\Form\AppointmentType;
+use Fsb\UserBundle\Util\Util;
 
 /**
  * Appointment controller.
@@ -23,10 +24,10 @@ class AppointmentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppointmentBundle:Appointment')->findAll();
+        $appointments = $em->getRepository('AppointmentBundle:Appointment')->findAll();
 
         return $this->render('AppointmentBundle:Appointment:index.html.twig', array(
-            'entities' => $entities,
+            'entities' => $appointments,
         ));
     }
     /**
@@ -35,20 +36,57 @@ class AppointmentController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new Appointment();
-        $form = $this->createCreateForm($entity);
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	 
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
+        $appointment = new Appointment();
+        $form = $this->createCreateForm($appointment);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('appointment_show', array('id' => $entity->getId())));
+        	$em = $this->getDoctrine()->getManager();
+        	
+        	Util::setCreateAuditFields($appointment, $userLogged->getId());
+        	
+        	//AppointmentDetails
+        	$appointmentDetail = $appointment->getAppointmentDetail();
+        	$appointmentDetail->setAppointment($appointment);
+        	
+        	Util::setCreateAuditFields($appointmentDetail, $userLogged->getId());
+        	
+        	
+        	$em->persist($appointment);
+        	$em->persist($appointmentDetail);
+        	
+        	$em->flush();
+            
+            $this->get('session')->getFlashBag()->set(
+            	'success',
+            	array(
+            			'title' => 'Appointment Created!',
+            			'message' => 'The appointment has been created'
+            	)
+            );
+            
+            $startDate = $appointment->getStartDate()->getTimestamp();
+            $day = date('d',$startDate);
+            $month = date('m',$startDate);
+            $year = date('Y',$startDate);
+
+            return $this->redirect($this->generateUrl('calendar_day', array(
+            		'day' => $day,
+            		'month' => $month,
+            		'year' => $year,
+            	))
+            );
         }
 
         return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
-            'entity' => $entity,
+            'appointment' => $appointment,
             'form'   => $form->createView(),
         ));
     }
@@ -56,18 +94,21 @@ class AppointmentController extends Controller
     /**
     * Creates a form to create a Appointment entity.
     *
-    * @param Appointment $entity The entity
+    * @param Appointment $appointment The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(Appointment $entity)
+    private function createCreateForm(Appointment $appointment)
     {
-        $form = $this->createForm(new AppointmentType(), $entity, array(
+        $form = $this->createForm(new AppointmentType(), $appointment, array(
             'action' => $this->generateUrl('appointment_create'),
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array(
+        		'label' => 'Create',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        ));
 
         return $form;
     }
@@ -78,11 +119,11 @@ class AppointmentController extends Controller
      */
     public function newAction()
     {
-        $entity = new Appointment();
-        $form   = $this->createCreateForm($entity);
+        $appointment = new Appointment();
+        $form   = $this->createCreateForm($appointment);
 
         return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
-            'entity' => $entity,
+            'appointment' => $appointment,
             'form'   => $form->createView(),
         ));
     }
@@ -93,13 +134,13 @@ class AppointmentController extends Controller
      */
     public function newDateAction($hour, $minute, $day, $month, $year)
     {
-    	$entity = new Appointment();
+    	$appointment = new Appointment();
     	$date = new \DateTime($day.'-'.$month.'-'.$year.' '.$hour.':'.$minute.':00');
-    	$entity->setStartDate($date);
-    	$form   = $this->createCreateForm($entity);
+    	$appointment->setStartDate($date);
+    	$form   = $this->createCreateForm($appointment);
     
     	return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
-    			'entity' => $entity,
+    			'appointment' => $appointment,
     			'form'   => $form->createView(),
     	));
     }
@@ -112,16 +153,16 @@ class AppointmentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
 
-        if (!$entity) {
+        if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('AppointmentBundle:Appointment:show.html.twig', array(
-            'entity'      => $entity,
+            'appointment'      => $appointment,
             'delete_form' => $deleteForm->createView(),        ));
     }
 
@@ -133,17 +174,17 @@ class AppointmentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
 
-        if (!$entity) {
+        if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($appointment);
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
-            'entity'      => $entity,
+            'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -152,14 +193,14 @@ class AppointmentController extends Controller
     /**
     * Creates a form to edit a Appointment entity.
     *
-    * @param Appointment $entity The entity
+    * @param Appointment $appointment The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Appointment $entity)
+    private function createEditForm(Appointment $appointment)
     {
-        $form = $this->createForm(new AppointmentType(), $entity, array(
-            'action' => $this->generateUrl('appointment_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new AppointmentType(), $appointment, array(
+            'action' => $this->generateUrl('appointment_update', array('id' => $appointment->getId())),
             'method' => 'PUT',
         ));
 
@@ -173,26 +214,35 @@ class AppointmentController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
 
-        if (!$entity) {
+        if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($appointment);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+        	
+        	Util::setModifyAuditFields($appointment, $userLogged->getId());
+        	
             $em->flush();
 
             return $this->redirect($this->generateUrl('appointment_edit', array('id' => $id)));
         }
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
-            'entity'      => $entity,
+            'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -208,13 +258,13 @@ class AppointmentController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+            $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
 
-            if (!$entity) {
+            if (!$appointment) {
                 throw $this->createNotFoundException('Unable to find Appointment entity.');
             }
 
-            $em->remove($entity);
+            $em->remove($appointment);
             $em->flush();
         }
 

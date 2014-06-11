@@ -7,60 +7,59 @@
 	{% block body %}
 	
 		<div data-role="content" data-theme="a">
-
-		<form action="{{ path('user_create') }}" method="post" {{ form_enctype(form) }}>
+		{% set submit_id = form.vars.id ~ "_submit"%}
+		<form action="{{ path('user_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" {{ form_enctype(form) }}>
 				{{ form_errors(form) }}
-		    <fieldset>
-					<div>
-						{{ form_label(form.login) }}
-						{{ form_errors(form.login) }}
-						{{ form_widget(form.login) }}
-					</div>
-					
-					<div>
-		{# 				{{ form_label(form.password) }}#}
-						{{ form_errors(form.password) }}
-						{{ form_widget(form.password) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.role) }}
-						{{ form_errors(form.role) }}
-						{{ form_widget(form.role) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.userDetail.firstname) }}
-						{{ form_errors(form.userDetail.firstname) }}
-						{{ form_widget(form.userDetail.firstname) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.userDetail.lastname) }}
-						{{ form_errors(form.userDetail.lastname) }}
-						{{ form_widget(form.userDetail.lastname) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.userDetail.email) }}
-						{{ form_errors(form.userDetail.email) }}
-						{{ form_widget(form.userDetail.email) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.userDetail.telephone) }}
-						{{ form_errors(form.userDetail.telephone) }}
-						{{ form_widget(form.userDetail.telephone) }}
-					</div>
-					
-					<div>
-						{{ form_label(form.userDetail.mobile) }}
-						{{ form_errors(form.userDetail.mobile) }}
-						{{ form_widget(form.userDetail.mobile) }}
-					</div>
-				</fieldset>
-		
-				{{ form_rest(form) }}
+				<table>
+					<tr>
+						<td colspan="2">
+							{{ form_label(form.login) }}
+							{{ form_errors(form.login) }}
+							{{ form_widget(form.login) }}
+							
+							{{ form_label(form.userDetail.email) }}
+							{{ form_errors(form.userDetail.email) }}
+							{{ form_widget(form.userDetail.email) }}
+							
+						</td><td colspan="2">
+							{# {{ form_label(form.password) }}#}
+							{{ form_errors(form.password) }}
+							{{ form_widget(form.password) }}
+						</td>
+					</tr><tr>
+						<td>
+							{{ form_label(form.userDetail.firstname) }}
+							{{ form_errors(form.userDetail.firstname) }}
+							{{ form_widget(form.userDetail.firstname) }}
+						</td><td>
+							{{ form_label(form.userDetail.lastname) }}
+							{{ form_errors(form.userDetail.lastname) }}
+							{{ form_widget(form.userDetail.lastname) }}
+						</td><td>
+							{{ form_label(form.role) }}
+							{{ form_errors(form.role) }}
+							{{ form_widget(form.role) }}
+						</td>
+					</tr><tr>
+						<td>
+							{{ form_label(form.userDetail.telephone) }}
+							{{ form_errors(form.userDetail.telephone) }}
+							{{ form_widget(form.userDetail.telephone) }}
+						</td>
+						<td>
+							{{ form_label(form.userDetail.mobile) }}
+							{{ form_errors(form.userDetail.mobile) }}
+							{{ form_widget(form.userDetail.mobile) }}
+						</td>
+					</tr><tr>
+							<td colspan="2">
+								{{ form_rest(form) }}	
+							</td>
+							<td>
+								<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+							</td>
+						</tr>
+				</table>
 			</form>
 	</div>
 {% endblock %}

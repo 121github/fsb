@@ -7,35 +7,35 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <td>{{ appointment.id }}</td>
             </tr>
             <tr>
                 <th>Record</th>
-                <td>{{ entity.record }}</td>
+                <td>{{ appointment.record }}</td>
             </tr>
             <tr>
                 <th>Startdate</th>
-                <td>{{ entity.startDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ appointment.startDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Enddate</th>
-                <td>{{ entity.endDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ appointment.endDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Createdby</th>
-                <td>{{ entity.createdBy }}</td>
+                <td>{{ appointment.createdBy }}</td>
             </tr>
             <tr>
                 <th>Createddate</th>
-                <td>{{ entity.createdDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ appointment.createdDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Modifiedby</th>
-                <td>{{ entity.modifiedBy }}</td>
+                <td>{{ appointment.modifiedBy }}</td>
             </tr>
             <tr>
                 <th>Modifieddate</th>
-                <td>{{ entity.modifiedDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ appointment.modifiedDate|date('Y-m-d H:i:s') }}</td>
             </tr>
         </tbody>
     </table>
@@ -47,7 +47,7 @@
         </a>
     </li>
     <li>
-        <a href="{{ path('appointment_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('appointment_edit', { 'id': appointment.id }) }}">
             Edit
         </a>
     </li>

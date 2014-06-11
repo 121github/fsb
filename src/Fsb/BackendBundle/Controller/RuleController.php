@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Fsb\RuleBundle\Entity\Rule;
 use Fsb\BackendBundle\Form\Rule\RuleType;
+use Fsb\UserBundle\Util\Util;
 
 /**
  * Rule controller.
@@ -35,12 +36,21 @@ class RuleController extends Controller
      */
     public function createAction(Request $request)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
         $entity = new Rule();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            
+            Util::setCreateAuditFields($entity, $userLogged->getId());
+            
             $em->persist($entity);
             $em->flush();
             
@@ -168,6 +178,12 @@ class RuleController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('RuleBundle:Rule')->find($id);
@@ -180,6 +196,9 @@ class RuleController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+        	
+        	Util::setModifyAuditFields($entity, $userLogged->getId());
+        	
             $em->flush();
 
             $this->get('session')->getFlashBag()->set(

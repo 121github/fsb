@@ -527,9 +527,6 @@ a{
 
 
 
-/* ===========================================================================
-   Mini Calendar (menu side)
-   ======================================================================== */
 
 
 .mini-calendar th {
@@ -553,3 +550,49 @@ a{
 }
 
 
+/* ===========================================================================
+   Dialog
+   ======================================================================== */
+
+
+.ui-dialog-contain {
+	max-width: 700px;
+}
+
+
+.ui-dialog-contain table {
+	width: 100%;	
+}
+
+.ui-dialog-contain th {
+	border-bottom: 0px solid #d6d6d6;
+	background:white;
+	color: black;
+}
+
+.ui-dialog-contain tr {
+	border-bottom: 1px solid #d6d6d6;
+}
+
+.ui-dialog-contain tr:nth-child(even) {
+	background:white;	
+}
+
+
+
+/* ===========================================================================
+   Messages
+   ======================================================================== */
+.message {
+	background: yellow;
+	opacity: 0.4;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+    max-width: 40%; 
+    color: black;
+    padding: 10px;
+}
+
+.message:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+} 

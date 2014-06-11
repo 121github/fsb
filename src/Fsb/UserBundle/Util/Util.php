@@ -4,19 +4,19 @@ namespace Fsb\UserBundle\Util;
 class Util
 {
 	
-	static public function setCreateAuditFields($entity)
+	static public function setCreateAuditFields($entity, $user_id)
 	{
-		$entity->setCreatedBy(1);
+		$entity->setCreatedBy($user_id);
 		$entity->setCreatedDate(new \DateTime('now'));
-		$entity->setModifiedBy(1);
+		$entity->setModifiedBy($user_id);
 		$entity->setModifiedDate(new \DateTime('now'));
 		
 		return $entity;
 	}
 	
-	static public function setModifyAuditFields($entity)
+	static public function setModifyAuditFields($entity, $user_id)
 	{
-		$entity->setModifiedBy(1);
+		$entity->setModifiedBy($user_id);
 		$entity->setModifiedDate(new \DateTime('now'));
 	
 		return $entity;

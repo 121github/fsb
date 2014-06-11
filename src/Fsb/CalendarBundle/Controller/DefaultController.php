@@ -68,8 +68,8 @@ class DefaultController extends Controller
     	foreach ($appointmentList as $appointment) {
     			$aux = array();
     			$aux["id"] = $appointment["id"];
-    			$aux["minute"] = (int)$appointment["minute"];
-    			$aux["hour"] = (int)$appointment["hour"];
+    			$aux["minute"] = $appointment["minute"];
+    			$aux["hour"] = $appointment["hour"];
 	    		$aux["title"] = $appointment["title"];
 	    		$aux["comment"] = $appointment["comment"];
 	    		if ($aux["minute"] < 30) {

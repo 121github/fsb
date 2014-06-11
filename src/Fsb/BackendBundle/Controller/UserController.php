@@ -65,6 +65,12 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	 
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
         $user = new User();
         $form = $this->createCreateForm($user);
         $form->handleRequest($request);
@@ -83,14 +89,14 @@ class UserController extends Controller
         	
         	$user->setPassword($passwordEncoded);
         	
-        	Util::setCreateAuditFields($user);
+        	Util::setCreateAuditFields($user, $userLogged->getId());
         	
             
             //Save the EmpDetail
             $userDetail = $user->getUserDetail();
             $userDetail->setUser($user);
             
-            Util::setCreateAuditFields($userDetail);
+            Util::setCreateAuditFields($userDetail, $userLogged->getId());
             
             
             $em->persist($user);
@@ -225,6 +231,13 @@ class UserController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
+    	
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('UserBundle:User')->find($id);
@@ -254,10 +267,10 @@ class UserController extends Controller
         		$user->setPassword($passwordEncoded);
         	}
         	
-        	Util::setModifyAuditFields($user);
+        	Util::setModifyAuditFields($user, $userLogged->getId());
         	
         	$userDetail = $user->getUserDetail();
-        	Util::setModifyAuditFields($userDetail);
+        	Util::setModifyAuditFields($userDetail, $userLogged->getId());
         	$userDetail->setUser($user);
         	
         	
@@ -288,6 +301,12 @@ class UserController extends Controller
      */
     public function changePasswordAction(Request $request, $id)
     {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
     	$em = $this->getDoctrine()->getManager();
     
     	$user = $em->getRepository('UserBundle:User')->find($id);
@@ -309,7 +328,7 @@ class UserController extends Controller
     		);
     		$user->setPassword($passwordEncoded);
     		 
-    		Util::setModifyAuditFields($user);
+    		Util::setModifyAuditFields($user, $userLogged->getId());
     		 
     		$em->persist($user);
     		$em->flush();
