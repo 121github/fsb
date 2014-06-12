@@ -88,7 +88,7 @@
 								              <!--  POPUP APPOINTMENT -->
 									   		 <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
 									    		<div data-role="header" data-theme="a" class="ui-corner-top">
-											        <h1>Appointment</h1>
+											        <h1>{{ appointment["title"] }}</h1>
 											    </div>
 											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 											        <p style="float: right;">{{ time|date("d F Y") }}</p>

@@ -73,17 +73,7 @@ class AppointmentController extends Controller
             	)
             );
             
-            $startDate = $appointment->getStartDate()->getTimestamp();
-            $day = date('d',$startDate);
-            $month = date('m',$startDate);
-            $year = date('Y',$startDate);
-
-            return $this->redirect($this->generateUrl('calendar_day', array(
-            		'day' => $day,
-            		'month' => $month,
-            		'year' => $year,
-            	))
-            );
+            return $this->redirect($request->headers->get('referer'));
         }
 
         return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
@@ -261,17 +251,7 @@ class AppointmentController extends Controller
             	)
             );
             
-            $startDate = $appointment->getStartDate()->getTimestamp();
-            $day = date('d',$startDate);
-            $month = date('m',$startDate);
-            $year = date('Y',$startDate);
-
-            return $this->redirect($this->generateUrl('calendar_day', array(
-            		'day' => $day,
-            		'month' => $month,
-            		'year' => $year,
-            	))
-            );
+            return $this->redirect($request->headers->get('referer'));
         }
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
