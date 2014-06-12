@@ -61,7 +61,7 @@ class RuleController extends Controller
             				'message' => 'The rule has been created'
             		)
             );
-
+            
             return $this->redirect($this->generateUrl('rule_show', array('id' => $entity->getId())));
         }
 
@@ -198,6 +198,8 @@ class RuleController extends Controller
         if ($editForm->isValid()) {
         	
         	Util::setModifyAuditFields($entity, $userLogged->getId());
+        	
+        	$em->persist($entity);
         	
             $em->flush();
 

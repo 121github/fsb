@@ -62,9 +62,19 @@ class AppointmentRepository extends EntityRepository
 					SUBSTRING(a.startDate, 11, 3) AS hour, 
 					SUBSTRING(a.startDate, 15, 2) AS minute,
 					a.id, ad.title, 
-					ad.comment 
+					ad.comment,
+					r.coname as record,
+					ud.firstname as recruiter,
+					p.name as project,
+					o.name as outcome,
+					ad.outcomeReason
 					FROM AppointmentBundle:Appointment a
 					JOIN a.appointmentDetail ad
+					JOIN ad.project p
+					JOIN ad.outcome o
+					JOIN a.record r
+					JOIN a.recruiter u
+					JOIN u.userDetail ud
 					WHERE
 						a.recruiter = :recruiter_id AND
 						SUBSTRING(a.startDate, 9, 2) = :day AND
@@ -98,9 +108,19 @@ class AppointmentRepository extends EntityRepository
 		$em = $this->getEntityManager();
 	
 		$dql = 'SELECT
-					a.startDate as date, a.id, ad.title, ad.comment
+					a.startDate as date, a.id, ad.title, ad.comment,
+					r.coname as record,
+					ud.firstname as recruiter,
+					p.name as project,
+					o.name as outcome,
+					ad.outcomeReason
 					FROM AppointmentBundle:Appointment a
 					JOIN a.appointmentDetail ad
+					JOIN ad.project p
+					JOIN ad.outcome o
+					JOIN a.record r
+					JOIN a.recruiter u
+					JOIN u.userDetail ud
 					WHERE
 						a.recruiter = :recruiter_id AND
 						a.startDate > :date

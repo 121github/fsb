@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\AppointmentBundle\Form\AppointmentType;
 use Fsb\UserBundle\Util\Util;
+use Fsb\AppointmentBundle\Form\AppointmentEditType;
 
 /**
  * Appointment controller.
@@ -175,18 +176,18 @@ class AppointmentController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        
 
         if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
         $editForm = $this->createEditForm($appointment);
-        $deleteForm = $this->createDeleteForm($id);
+        
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
             'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -199,12 +200,15 @@ class AppointmentController extends Controller
     */
     private function createEditForm(Appointment $appointment)
     {
-        $form = $this->createForm(new AppointmentType(), $appointment, array(
+        $form = $this->createForm(new AppointmentEditType(), $appointment, array(
             'action' => $this->generateUrl('appointment_update', array('id' => $appointment->getId())),
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array(
+        		'label' => 'Update',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        ));
 
         return $form;
     }
@@ -228,23 +232,51 @@ class AppointmentController extends Controller
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($appointment);
         $editForm->handleRequest($request);
-
+        
+        $editForm->submit($request);
+        
         if ($editForm->isValid()) {
         	
-        	Util::setModifyAuditFields($appointment, $userLogged->getId());
+        	 Util::setModifyAuditFields($appointment, $userLogged->getId());
+             
+            //AppointmentDetails
+            $appointmentDetail = $appointment->getAppointmentDetail();
+            $appointmentDetail->setAppointment($appointment);
+             
+            Util::setModifyAuditFields($appointmentDetail, $userLogged->getId());
+             
+             
+            $em->persist($appointment);
+            $em->persist($appointmentDetail);
         	
             $em->flush();
 
-            return $this->redirect($this->generateUrl('appointment_edit', array('id' => $id)));
+            $this->get('session')->getFlashBag()->set(
+            	'success',
+            	array(
+            			'title' => 'Appointment Created!',
+            			'message' => 'The appointment has been created'
+            	)
+            );
+            
+            $startDate = $appointment->getStartDate()->getTimestamp();
+            $day = date('d',$startDate);
+            $month = date('m',$startDate);
+            $year = date('Y',$startDate);
+
+            return $this->redirect($this->generateUrl('calendar_day', array(
+            		'day' => $day,
+            		'month' => $month,
+            		'year' => $year,
+            	))
+            );
         }
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
             'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
     /**

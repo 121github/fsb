@@ -514,11 +514,6 @@ a{
 	padding-left: 93px;
 }
 
-.diary-page .ui-listview .ui-li-has-thumb p {
-	display: inline;
-	margin-right: 20px;
-}
-
 .diary-page .ui-collapsible-themed-content .ui-collapsible-content {
 	border: 0px solid;
 	padding-left: 37px;
@@ -590,6 +585,8 @@ a{
     max-width: 40%; 
     color: black;
     padding: 10px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .message:hover {

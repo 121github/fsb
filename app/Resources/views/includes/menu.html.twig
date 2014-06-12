@@ -1,9 +1,9 @@
 <!-- MENU -->
 {% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 	<!-- LEFT PANEL -->
-	<div data-role="panel" id="right-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a">
+	<div data-role="panel" id="right-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a" data-position-fixed="true">
 		
-		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
+		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a" >
 			
 			<li data-role="list-divider">MENU</li>
 				
@@ -23,7 +23,7 @@
 	</div><!-- /panel -->
 		    
     <!-- RIGHT PANEL -->
-    <div data-role="panel" id="left-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a">
+    <div data-role="panel" id="left-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a" data-position-fixed="true">
 
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
 			

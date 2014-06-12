@@ -36,6 +36,7 @@
     
     <div  data-theme="a" id="calendar-page" class="day-page">
     
+    	
 	    <div class="change_day">
 	    	<table>
 	    		<tr>
@@ -90,11 +91,19 @@
 											        <h1>Appointment</h1>
 											    </div>
 											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-											        <h3 class="ui-title">{{ appointment["title"] }}</h3>
-											        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-							                		<p>{{ appointment["comment"] }}</p>
-											        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
-											        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+											        <p style="float: right;">{{ time|date("d F Y") }}</p>
+												    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
+												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+							                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
+							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
+							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
+							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
+							                		
+							                		<p style="padding-top: 10px; text-align: right;">
+												        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
+												        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+												    </p>
 											    </div>
 									  		  </div>
 								        {% endfor %}
@@ -113,14 +122,22 @@
 											<!--  POPUP APPOINTMENT -->
 										    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
 									    		<div data-role="header" data-theme="a" class="ui-corner-top">
-											        <h1>Appointment</h1>
+											        <h1>{{ appointment["title"] }}</h1>
 											    </div>
 											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-											        <h3 class="ui-title">{{ appointment["title"] }}</h3>
-											        <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-							                		<p>{{ appointment["comment"] }}</p>
-											        <a href="#" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
-											        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+												    <p style="float: right;">{{ time|date("d F Y") }}</p>
+												    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
+												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+							                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
+							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
+							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
+							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
+							                		
+							                		<p style="padding-top: 10px; text-align: right;">
+												        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
+												        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+												    </p>
 											    </div>
 										    </div>
 							           	{% endfor %}

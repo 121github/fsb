@@ -10,16 +10,22 @@
 {% block name %}Admin{% endblock %}
 
 {% block body %}
+
+<script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
+
 	<div data-role="content">
 		
 		{# Info Messages #}
 		{% for type, flashMessage in app.session.flashbag.all() %}
-	        {% if flashMessage.title is defined %}
-	        	<strong>{{ flashMessage.title }}</strong>
-	        	{{ flashMessage.message }}
-	        {% else %}
-	        	{{ type }}
-	        {% endif %}
+			<div class="message" id="message">
+		        {% if flashMessage.title is defined %}
+		        	<strong>{{ flashMessage.title }}</strong>
+		        	{{ flashMessage.message }}
+		        {% else %}
+		        	{{ type }}
+		        {% endif %}
+{# 		        <a href="#" class="message-close" data-role="button" data-icon="close" data-iconpos="notext" data-mini="true" data-inline="true"></a>#}
+		  	</div>
 		{% endfor %}
 		
 		{% block article %}{% endblock %}

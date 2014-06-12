@@ -28,9 +28,8 @@ class Appointment
     private $recruiter;
 
     /**
-     * @var string
      *
-     * @ORM\Column(name="record", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Fsb\RecordBundle\Entity\Record")
      */
     private $record;
 
@@ -147,28 +146,6 @@ class Appointment
     	return $this->appointmentDetail;
     }
 
-    /**
-     * Set record
-     *
-     * @param string $record
-     * @return Appointment
-     */
-    public function setRecord($record)
-    {
-        $this->record = $record;
-
-        return $this;
-    }
-
-    /**
-     * Get record
-     *
-     * @return string 
-     */
-    public function getRecord()
-    {
-        return $this->record;
-    }
 
     /**
      * Set startDate
@@ -306,5 +283,28 @@ class Appointment
     public function getModifiedDate()
     {
         return $this->modifiedDate;
+    }
+
+    /**
+     * Set record
+     *
+     * @param \Fsb\RecordBundle\Entity\Record $record
+     * @return Appointment
+     */
+    public function setRecord(\Fsb\RecordBundle\Entity\Record $record = null)
+    {
+        $this->record = $record;
+
+        return $this;
+    }
+
+    /**
+     * Get record
+     *
+     * @return \Fsb\RecordBundle\Entity\Record 
+     */
+    public function getRecord()
+    {
+        return $this->record;
     }
 }

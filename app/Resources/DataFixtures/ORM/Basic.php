@@ -52,7 +52,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         foreach (array('ROLE_RECRUITER','ROLE_APPOINTMENT_SETTER','ROLE_ADMINISTRATOR','ROLE_SUPER_USER',) as $name) {
             $role = new UserRole();
             $role->setName($name);
-            Util::setCreateAuditFields($role);
+            Util::setCreateAuditFields($role, 1);
             
             $manager->persist($role);
         }
@@ -80,7 +80,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$passwordCoded = $encoder->encodePassword($passwordDecoded, $user->getSalt());
         		$user->setPassword($passwordCoded);
         	
-        		Util::setCreateAuditFields($user);
+        		Util::setCreateAuditFields($user, 1);
         	
         		$manager->persist($user);
         	
@@ -93,7 +93,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$userDetail->setMobile('07123456789 ');
         		$userDetail->setUser($user);
         		
-        		Util::setCreateAuditFields($userDetail);
+        		Util::setCreateAuditFields($userDetail, 1);
         	
         		$manager->persist($userDetail);
         	}	
@@ -120,7 +120,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$rule->setDescription("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
         		$rule->setRecruiter($recruiter);
         		
-        		Util::setCreateAuditFields($rule);
+        		Util::setCreateAuditFields($rule, 1);
         		 
         		$manager->persist($rule);
         	}
@@ -149,7 +149,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         	$address->setPostcode($postcodes[rand(1, count($postcodes)-1)]);
         	$address->setTown("Manchester");
         	
-        	Util::setCreateAuditFields($address);
+        	Util::setCreateAuditFields($address, 1);
         	 
         	$manager->persist($address);
         }
@@ -165,7 +165,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         foreach (array("Manager", "Director", "Other") as $position) {
         	$contactPosition = new Position();
         	$contactPosition->setName($position);
-        	Util::setCreateAuditFields($contactPosition);
+        	Util::setCreateAuditFields($contactPosition, 1);
         
         	$manager->persist($contactPosition);
         }
@@ -200,7 +200,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         			$contact->setOtherPosition("");
         		}
         
-        		Util::setCreateAuditFields($contact);
+        		Util::setCreateAuditFields($contact, 1);
         		 
         		$manager->persist($contact);
         	}
@@ -216,7 +216,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
         	$appointmentOutcome = new AppointmentOutcome();
         	$appointmentOutcome->setName($outcome);
-        	Util::setCreateAuditFields($appointmentOutcome);
+        	Util::setCreateAuditFields($appointmentOutcome, 1);
         
         	$manager->persist($appointmentOutcome);
         }
@@ -227,7 +227,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         for ($i=1;$i<20;$i++){
         	$appointmentProject = new AppointmentProject();
         	$appointmentProject->setName("Project ".$i);
-        	Util::setCreateAuditFields($appointmentProject);
+        	Util::setCreateAuditFields($appointmentProject, 1);
         	
         	$manager->persist($appointmentProject);
         }
@@ -238,7 +238,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
         	$recordOutcome = new RecordOutcome();
         	$recordOutcome->setName($outcome);
-        	Util::setCreateAuditFields($recordOutcome);
+        	Util::setCreateAuditFields($recordOutcome, 1);
         
         	$manager->persist($recordOutcome);
         }
@@ -249,7 +249,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         foreach (array("Insurance", "Motor", "Other") as $sector) {
         	$recordSector = new RecordSector();
         	$recordSector->setName($sector);
-        	Util::setCreateAuditFields($recordSector);
+        	Util::setCreateAuditFields($recordSector, 1);
         
         	$manager->persist($recordSector);
         }
@@ -281,7 +281,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$days = rand(1, 30);
         		$appointment->setEndDate(new \DateTime('now - '.$days.' days'));
         		
-        		Util::setCreateAuditFields($appointment);
+        		Util::setCreateAuditFields($appointment, 1);
         		
         		 
         		$manager->persist($appointment);
@@ -295,7 +295,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$appointmentDetail->setOutcomeReason("Lorem ipsum dolor sit amet");
         		$appointmentDetail->setProject($appointmentProjectList[rand(1, count($appointmentProjectList)-1)]);
         		
-        		Util::setCreateAuditFields($appointmentDetail);
+        		Util::setCreateAuditFields($appointmentDetail, 1);
         		 
         		$manager->persist($appointmentDetail);
         		
@@ -319,7 +319,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$record->setOutcomeReason("Lorem ipsum dolor sit amet");
         		$record->setStatus(rand(0, 1));
         		
-        		Util::setCreateAuditFields($record);
+        		Util::setCreateAuditFields($record, 1);
         		
         		$manager->persist($record);
         		

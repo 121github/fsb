@@ -22,8 +22,8 @@ class UserRepository extends EntityRepository
 	public function findUsersByRole($role){
 	
 		$query = $this->findUsersByRoleQuery($role);
-	
-		$user_ar = $query->getResult();
+		
+		$user_ar = $query->getQuery()->getResult();
 	
 		return $user_ar;
 	}

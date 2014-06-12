@@ -5,13 +5,12 @@ function checkSubmit(submit_id) {
 }
 
 $(document).ready(function() {    
-	$(".close-message").click(function () {
+	$("#message").click(function () {
         $("#message").fadeOut("slow");
     });
     
-    
     setTimeout(function(){
-        $("#message").fadeOut("slow");
-    },5000)
+    	$("#message").fadeOut("slow");
+    },3000)
 
 });

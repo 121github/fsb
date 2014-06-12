@@ -11,12 +11,14 @@
 
 {% block body %}
 
+<script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
+
 	<div data-role="content">
 	
 		{# Info Messages #}
 		{% for type, flashMessage in app.session.flashbag.all() %}
 			<div class="message" id="message">
-		        {% if flashMessage.title is defined %}
+				{% if flashMessage.title is defined %}
 		        	<strong>{{ flashMessage.title }}</strong>
 		        	{{ flashMessage.message }}
 		        {% else %}

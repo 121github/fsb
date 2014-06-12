@@ -72,6 +72,12 @@ class DefaultController extends Controller
     			$aux["hour"] = $appointment["hour"];
 	    		$aux["title"] = $appointment["title"];
 	    		$aux["comment"] = $appointment["comment"];
+	    		$aux["record"] = $appointment["record"];
+	    		$aux["recruiter"] = $appointment["recruiter"];
+	    		$aux["outcome"] = $appointment["outcome"];
+	    		$aux["outcomeReason"] = $appointment["outcomeReason"];
+	    		$aux["project"] = $appointment["project"];
+	    		
 	    		if ($aux["minute"] < 30) {
 	    			$auxList[(int)$appointment["hour"]][0][$appointment["id"]] = $aux;
 	    		}
@@ -113,6 +119,11 @@ class DefaultController extends Controller
     		$offset = date_format($appointment["date"],"D d M");
     		$aux["title"] = $appointment["title"];
     		$aux["comment"] = $appointment["comment"];
+    		$aux["record"] = $appointment["record"];
+    		$aux["recruiter"] = $appointment["recruiter"];
+    		$aux["outcome"] = $appointment["outcome"];
+    		$aux["outcomeReason"] = $appointment["outcomeReason"];
+    		$aux["project"] = $appointment["project"];
     		
     		$auxList[$offset][$aux["id"]] = $aux;
     	}
