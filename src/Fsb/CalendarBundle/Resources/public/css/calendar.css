@@ -47,9 +47,16 @@ a{
 
 /* A bit custom styling */
 .month-page .ui-listview li .ui-btn p {
-    color: #c0c0c0;
+    color: #969292;
 }
 
+.month-page .ui-listview li .ui-btn .description {
+    margin-left: 6.25em;
+}
+
+.month-page .ui-listview li.today .ui-btn {
+ 	border: 3px solid rgb(53, 117, 214);   
+}
 
 .month-page .ui-listview .ui-li-aside{
 	text-align: center;
@@ -127,6 +134,24 @@ a{
 }
 
 
+.month-page .ui-disabled { 
+    opacity: 0.8 !important;
+    /* background: -moz-repeating-linear-gradient(45deg, #969292, #eee 10px); */
+	/* background: -webkit-repeating-linear-gradient(45deg, #969292,  #eee 5px); */
+	background-color: rgb(209, 209, 209);
+	
+}
+
+.month-page .ui-listview  .ui-disabled h2 {
+	opacity: 0.3 !important;
+}
+
+.month-page .ui-listview  .ui-disabled .ui-li-aside {
+	opacity: 0.3 !important;
+}
+
+
+
 
 /* ======   Tablets and PC view   ====== */
 /* First breakpoint is 63.75em (1020px). 7 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
@@ -158,6 +183,8 @@ a{
         box-sizing: border-box;
         height: 100%;
     }
+    
+    
     .month-page .ui-listview li.ui-li-has-thumb .ui-li-thumb {
         height: auto; /* To keep aspect ratio. */
         max-width: 100%;
@@ -188,6 +215,7 @@ a{
     .month-page .ui-listview h2 {
         font-size: 1.25em;
         margin: 0;
+        top: 30px;
         padding: .125em 1em;
         bottom: 50%;
         text-shadow: none;
@@ -195,6 +223,7 @@ a{
     .month-page .ui-listview p {
         font-size: 1em;
         margin: 0;
+        top: 60px;
         padding: 0 1.25em;
         min-height: 50%;
         bottom: 0;
@@ -211,6 +240,11 @@ a{
     .ui-listview .ui-li-has-thumb p {
         min-height: 35%;
     }
+    
+    .month-page .ui-listview li .ui-btn .description {
+	    margin-left: 0px;
+	}
+    
     /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
     .month-page .ui-listview .ui-li-aside {
         padding: .125em .625em;
@@ -282,9 +316,8 @@ a{
     
     .month-page .ui-listview li.pastDays.ui-li-has-thumb p.ui-li-aside {
  	  	background: rgb(209, 209, 209);
-	}
-	
-	
+ 	  	color: black;
+	} 
 }
 
 /* For this style we used images with a size of 310x310 pixels. Just before the first breakpoint the images reach their max width: 1019px - 2 x 9px padding = 1001px x 30.9333% = ~310px */

@@ -33,6 +33,7 @@
     
     <div  data-theme="a" id="calendar-page" class="month-page">
     
+		{# CHANGE MONTH AND VIEW OPTIONS #}
 	    <div class="change_month">
 	    	<table>
 	    		<tr>
@@ -57,8 +58,10 @@
 		    </table>
 		</div>
         
+	    
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
-	    	
+	    
+	    	{# DAYS OF THE WEEK #}
 	    	<table>
 	    		<tr>
 	    			<td>Mon</td>
@@ -71,45 +74,78 @@
 	    		</tr>
 	    	</table>
 	    	
+	    	{# CALENDAR #}
 	        <ul data-role="listview" data-inset="true">
 	        
-	        	{########## Days before month ###############}
+	        	{########################################################################################################################################}
+	        	{########## Days before month ###########################################################################################################}
+				{########################################################################################################################################}
 	        	{% if startDow != 0 %}
         			{% for daysBefore in range(1,startDow) %}
-        				<li class="pastDays" ><a href="#" class="pastDays ui-btn"></a>
-        					<img src="" class="ui-li-thumb">
-			                <h2></h2>
-			                <p></p>
+        				<li class="pastDays" >
+        					{% set day = firstMonthDay|date_modify('-' ~ (startDow - daysBefore + 1) ~ 'day')|date('d') %}
+        					
+        					{% set prevDayDate = prevMonth ~ "/" ~ day ~ "/" ~ prevYear|date('U') %}
+							
+							
+							{% if ((prevDayDate|date("D") == "Sun") or (prevDayDate in bankHolidayList)) %}
+								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear}) }}" class="ui-btn pastDays ui-disabled">
+								<img src="" class="ui-li-thumb">
+								{% if prevDayDate in bankHolidayList %}
+									<h2></h2>
+									<p>{{ "Bank Holiday" }}</p>
+								{% endif %}
+							{% else %}
+								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear}) }}" class="ui-btn pastDays">
+								<img src="" class="ui-li-thumb">
+								{% if appointmentPrevList[day] is defined %}
+					                <h2>
+				                		{{ appointmentPrevList[day] }}
+				                	</h2>
+				                	<p>Appointmens</p>
+				                {% endif %}
+				            {% endif %}
 			                <p class="ui-li-aside">
 			                	{% set day = firstMonthDay|date_modify('-' ~ (startDow - daysBefore + 1) ~ 'day')|date('d/M') %}
 			                	{{ day }}
 			                </p>
-        				</li>
+        				</a></li>
         			{% endfor %}
         		{% endif %}
         		
-        		{########## Days in month ###############}
+				{########################################################################################################################################}
+        		{########## Days in month ###############################################################################################################}
+				{########################################################################################################################################}
 	        	{% for i in range(1,daysInMonth) %}
-					<li>
+	        		{% if nowDay == i %}
+	        			<li class="today">
+	        		{% else %}
+	        			<li>
+	        		{% endif %}
 						{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
 						
 						{% set currentDay = currentMonth ~ "/" ~ pref ~ i ~ "/" ~ currentYear|date('U') %}
 						
 						{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList)) %}
-							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn  ui-disabled">
+							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}"  class="ui-btn  ui-disabled">
+							
+							{% if currentDay in bankHolidayList %}
+								<h2></h2>
+								<p class="description">{{ "Bank Holiday" }}</p>
+							{% endif %}
 						{% else %}
 							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn">
-						{% endif %}
-						
-						{% if appointment_list[i] is defined %}
-							<img src="" class="ui-li-thumb">
-			                <h2>
-		                		{{ appointment_list[i] }}
-		                	</h2>
-		                	<p>Appointmens</p>
-		                {% else %}
-		                	<h2></h2>
-		                {% endif %}
+								
+							{% if appointmentList[i] is defined %}
+								<img src="" class="ui-li-thumb">
+				                <h2>
+			                		{{ appointmentList[i] }}
+			                	</h2>
+			                	<p>Appointmens</p>
+			                {% else %}
+			                	
+			                {% endif %}
+			            {% endif %}
 		                <p class="ui-li-aside">
 		                	{{ i }}
 		                <div class="day">{{ currentDay|date("D") }}</div>
@@ -117,19 +153,40 @@
 		            </a></li>
 	            {% endfor %}
 	            
-	            {########## Days after month ###############}
+				{########################################################################################################################################}
+	            {########## Days after month ############################################################################################################}
+				{########################################################################################################################################}
 	            {% set lastDow = ((startDow + (daysInMonth % 7)) % 7)  %}
-	            {% if lastDow != 6 %}
+	            {% if lastDow != 0 %}
         			{% for daysAfter in range(1,7-lastDow) %}
-        				<li class="pastDays" ><a href="#" class="pastDays ui-btn"></a>
-        					<img src="" class="ui-li-thumb">
-			                <h2></h2>
-			                <p></p>
+        				<li class="pastDays" >
+							{% set day = lastMonthDay|date_modify('+' ~ daysAfter ~ 'days')|date('d') %}
+        					
+        					{% set nextDayDate = nextMonth ~ "/" ~ day ~ "/" ~ nextYear|date('U') %}
+							
+							
+							{% if ((nextDayDate|date("D") == "Sun") or (nextDayDate in bankHolidayList)) %}
+								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear}) }}" class="ui-btn pastDays ui-disabled">
+								<img src="" class="ui-li-thumb">
+								{% if nextDayDate in bankHolidayList %}
+									<h2></h2>
+									<p>{{ "Bank Holiday" }}</p>
+								{% endif %}
+							{% else %}
+								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear}) }}" class="ui-btn pastDays">
+								<img src="" class="ui-li-thumb">
+								{% if appointmentNextList[day] is defined %}
+					                <h2>
+				                		{{ appointmentNextList[day] }}
+				                	</h2>
+				                	<p>Appointmens</p>
+				                {% endif %}
+				            {% endif %}
 			                <p class="ui-li-aside">
 								{% set day = lastMonthDay|date_modify('+' ~ daysAfter ~ 'days')|date('d/M') %}
 			                	{{ day }}
 			                </p>
-        				</li>
+        				</a></li>
         			{% endfor %}
         		{% endif %}
 	        </ul>

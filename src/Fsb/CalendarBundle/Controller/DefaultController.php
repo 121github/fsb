@@ -43,19 +43,51 @@ class DefaultController extends Controller
     		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
     	}
     	$bankHolidayList = $auxList;
+
     	
+    	$currentDate = new \DateTime('1-'.$month.'-'.$year);
+    	
+    	$prevDate = new \DateTime($currentDate->format('Y-m-d').' - 1 months');
+    	$prevMonth = $prevDate->format('m');
+    	$prevYear = $prevDate->format('Y');
+    	
+    	$nextDate = new \DateTime($currentDate->format('Y-m-d').' + 1 months');
+    	$nextMonth = $nextDate->format('m');
+    	$nextYear = $nextDate->format('Y');
+    	
+    	//Appointments in the prev month
+    	$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear);
+    	//Prepare the array structure to be printed in the calendar
+    	$auxList = array();
+    	foreach ($appointmentPrevList as $appointment) {
+    		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+    	}
+    	$appointmentPrevList = $auxList;
+    	
+    	
+    	//Appointments in the current month
     	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentList as $appointment) {
     		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
     	}
-    	
     	$appointmentList = $auxList;
+    	
+    	//Appointments in the next month
+    	$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear);
+    	//Prepare the array structure to be printed in the calendar
+    	$auxList = array();
+    	foreach ($appointmentNextList as $appointment) {
+    		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+    	}
+    	$appointmentNextList = $auxList;
     
     	return $this->render('CalendarBundle:Default:month.html.twig', array(
     			'recruiter' => $recruiter,
-    			'appointment_list' => $appointmentList,
+    			'appointmentList' => $appointmentList,
+    			'appointmentPrevList' => $appointmentPrevList,
+    			'appointmentNextList' => $appointmentNextList,
     			'bankHolidayList' => $bankHolidayList,
     			'month' => $month,
     			"year" => $year
