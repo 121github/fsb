@@ -26,6 +26,7 @@ class DefaultController extends Controller
     
     public function monthAction($month,$year) {
     	 
+    	//Recruiter (User logged)
     	$recruiter = $this->get('security.context')->getToken()->getUser();
     	
     	if (!$recruiter) {
@@ -33,6 +34,15 @@ class DefaultController extends Controller
     	}
     
     	$em = $this->getDoctrine()->getManager();
+    	
+    	//Bank Holidays
+    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
+    	
+    	$auxList = array();
+    	foreach ($bankHolidayList as $bankHoliday) {
+    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	}
+    	$bankHolidayList = $auxList;
     	
     	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year);
     	//Prepare the array structure to be printed in the calendar
@@ -46,6 +56,7 @@ class DefaultController extends Controller
     	return $this->render('CalendarBundle:Default:month.html.twig', array(
     			'recruiter' => $recruiter,
     			'appointment_list' => $appointmentList,
+    			'bankHolidayList' => $bankHolidayList,
     			'month' => $month,
     			"year" => $year
     	));

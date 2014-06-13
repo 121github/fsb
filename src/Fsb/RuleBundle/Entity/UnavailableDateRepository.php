@@ -12,4 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class UnavailableDateRepository extends EntityRepository
 {
+	
+	/**
+	 * Get The abank holidays
+	 *
+	 * @return array UnavailableDate
+	 * 
+	 */
+	public function findBankHolidays(){
+	
+		$em = $this->getEntityManager();
+	
+		$dql = 'SELECT ud.unavailableDate
+					FROM RuleBundle:UnavailableDate ud
+					JOIN ud.reason udr
+					WHERE
+						udr.reason = :reason
+					ORDER BY ud.unavailableDate ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('reason', "Bank Holiday");
+	
+		$bankHolidays = $query->getResult();
+	
+		return $bankHolidays;
+	}
 }

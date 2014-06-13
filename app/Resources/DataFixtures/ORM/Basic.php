@@ -22,6 +22,8 @@ use Fsb\RecordBundle\Entity\Address;
 use Fsb\RecordBundle\Entity\Position;
 use Fsb\RecordBundle\Entity\Postcode;
 use Fsb\RecordBundle\Entity\Contact;
+use Fsb\RuleBundle\Entity\UnavailableDateReason;
+use Fsb\RuleBundle\Entity\UnavailableDate;
 
 
 /**
@@ -124,6 +126,73 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		 
         		$manager->persist($rule);
         	}
+        }
+        
+        $manager->flush();
+        
+        /*********************************************************************/
+        /******************* UNAVAILABLE DATES  ************************************/
+        /*********************************************************************/
+        
+        //Unavailable Date Reason
+        foreach (array("Bank Holiday", "Vacation", "Other") as $reason) {
+        	$unavailableDateReason = new UnavailableDateReason();
+        	$unavailableDateReason->setReason($reason);
+        	Util::setCreateAuditFields($unavailableDateReason, 1);
+        
+        	$manager->persist($unavailableDateReason);
+        }
+        
+        $manager->flush();
+        
+        // Unavailable Dates
+        $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+        foreach ($recruiters as $recruiter) {
+        
+        	$vacationReason = $manager->getRepository('RuleBundle:UnavailableDateReason')->findBy(array(
+        		'reason' => "Vacation"
+        	));
+        	
+        	//VACATION
+        	for ($i=1; $i<=3; $i++) {
+        		 
+        		$unavailableDate = new UnavailableDate();
+        
+        		$days = rand(1, 30);
+        		$unavailableDate->setUnavailableDate(new \DateTime('now - '.$days.' days'));
+        		$unavailableDate->setReason($vacationReason[0]);
+        		$unavailableDate->setRecruiter($recruiter);
+        
+        		Util::setCreateAuditFields($unavailableDate, 1);
+        		 
+        		$manager->persist($unavailableDate);
+        	}
+        }
+        
+        $manager->flush();
+        
+        //BANK HOLIDAYS 
+        $bankHolidayReason = $manager->getRepository('RuleBundle:UnavailableDateReason')->findBy(array(
+        		'reason' => 'Bank Holiday'
+        ));
+        foreach (array(
+        			(new \DateTime('2014-01-01')),
+        			(new \DateTime('2014-04-18')),
+        			(new \DateTime('2014-04-21')),
+        			(new \DateTime('2014-05-05')),
+        			(new \DateTime('2014-05-26')),
+        			(new \DateTime('2014-08-25')),
+        			(new \DateTime('2014-12-25')),
+        			(new \DateTime('2014-12-26')),
+        ) as $bankHoliday) {
+        	
+        	$unavailableDate = new UnavailableDate();
+        	$unavailableDate->setUnavailableDate($bankHoliday);
+        	$unavailableDate->setReason($bankHolidayReason[0]);
+        	
+        	Util::setCreateAuditFields($unavailableDate, 1);
+        
+        	$manager->persist($unavailableDate);
         }
         
         $manager->flush();

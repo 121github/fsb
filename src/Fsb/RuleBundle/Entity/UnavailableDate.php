@@ -3,6 +3,7 @@
 namespace Fsb\RuleBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Translation\Tests\String;
 
 /**
  * UnavailableDate
@@ -26,11 +27,26 @@ class UnavailableDate
      * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
      */
     private $recruiter;
+    
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Fsb\RuleBundle\Entity\UnavailableDateReason")
+     */
+    private $reason;
+    
+    /**
+     * 
+     * @var String
+     * 
+     * @ORM\Column(name="other_reason", type="string", length=255, nullable=true)
+     * 
+     */
+    private $otherReason;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="unavailable_date", type="datetime")
+     * @ORM\Column(name="unavailable_date", type="date")
      */
     private $unavailableDate;
 
@@ -86,7 +102,7 @@ class UnavailableDate
     /**
      * Set unavailableDate
      *
-     * @param \DateTime $unavailableDate
+     * @param \Date $unavailableDate
      * @return UnavailableDate
      */
     public function setUnavailableDate($unavailableDate)
@@ -99,7 +115,7 @@ class UnavailableDate
     /**
      * Get unavailableDate
      *
-     * @return \DateTime 
+     * @return \Date 
      */
     public function getUnavailableDate()
     {
@@ -127,6 +143,52 @@ class UnavailableDate
     public function getRecruiter()
     {
     	return $this->recruiter;
+    }
+    
+    /**
+     * Set reason
+     *
+     * @param \Fsb\RuleBundle\Entity\UnavailableDateReason $reason
+     * @return UnavailableDate
+     */
+    public function setReason(\Fsb\RuleBundle\Entity\UnavailableDateReason $reason = null)
+    {
+    	$this->reason = $reason;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get reason
+     *
+     * @return \Fsb\RuleBundle\Entity\UnavailableDateReason
+     */
+    public function getReason()
+    {
+    	return $this->reason;
+    }
+    
+    /**
+     * Set otherReason
+     *
+     * @param string $otherReason
+     * @return UnavailableDate
+     */
+    public function setOtherReason($otherReason)
+    {
+    	$this->otherReason = $otherReason;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get otherReason
+     *
+     * @return string
+     */
+    public function getOtherReason()
+    {
+    	return $this->otherReason;
     }
     
     /**

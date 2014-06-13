@@ -90,8 +90,17 @@
         		
         		{########## Days in month ###############}
 	        	{% for i in range(1,daysInMonth) %}
-					<li><a href="{{ path('calendar_day', {'day': i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn">
-						{#<img src="{{ asset('bundles/calendar/images/appointment_b.png') }}" class="ui-li-thumb">#}
+					<li>
+						{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
+						
+						{% set currentDay = currentMonth ~ "/" ~ pref ~ i ~ "/" ~ currentYear|date('U') %}
+						
+						{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList)) %}
+							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn  ui-disabled">
+						{% else %}
+							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn">
+						{% endif %}
+						
 						{% if appointment_list[i] is defined %}
 							<img src="" class="ui-li-thumb">
 			                <h2>
@@ -103,7 +112,6 @@
 		                {% endif %}
 		                <p class="ui-li-aside">
 		                	{{ i }}
-		                	{% set currentDay = currentMonth ~ "/" ~ i ~ "/" ~ currentYear|date("U") %}
 		                <div class="day">{{ currentDay|date("D") }}</div>
 		                </p>
 		            </a></li>
