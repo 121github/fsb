@@ -5,10 +5,11 @@
 
 {% block article -%}
 
-	{% set now = "now"|date("U") %}
+	{% set now = "now"|date("") %}
     {% set nowDay = now|date("d") %}
     {% set nowMonth = now|date("m") %}
     {% set nowYear = now|date("Y") %}
+    {% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
     
     {% set currentMonth = month %}
     {% set currentYear = year %}
@@ -117,25 +118,26 @@
         		{########## Days in month ###############################################################################################################}
 				{########################################################################################################################################}
 	        	{% for i in range(1,daysInMonth) %}
-	        		{% if nowDay == i %}
+	        		{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
+					
+					{% set currentDay = currentMonth ~ "/" ~ pref ~ i ~ "/" ~ currentYear|date('U') %}
+					
+	        		{% if nowDate == currentDay %}
 	        			<li class="today">
 	        		{% else %}
 	        			<li>
 	        		{% endif %}
-						{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
-						
-						{% set currentDay = currentMonth ~ "/" ~ pref ~ i ~ "/" ~ currentYear|date('U') %}
 						
 						{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList)) %}
 							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}"  class="ui-btn  ui-disabled">
-							
+					
 							{% if currentDay in bankHolidayList %}
 								<h2></h2>
 								<p class="description">{{ "Bank Holiday" }}</p>
 							{% endif %}
 						{% else %}
 							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear}) }}" class="ui-btn">
-								
+					
 							{% if appointmentList[i] is defined %}
 								<img src="" class="ui-li-thumb">
 				                <h2>

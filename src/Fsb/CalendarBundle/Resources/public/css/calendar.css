@@ -439,6 +439,14 @@ a{
 	padding-left: 43px;
 }
 
+.day-page .ui-listview li.currentTime .ui-btn {
+ 	background: rgb(248, 209, 209);
+}
+
+.day-page .ui-listview li.currentTime .ui-btn:hover{
+ 	background: rgb(255, 147, 147);
+}
+
 
 /* ===========================================================================
    Day View

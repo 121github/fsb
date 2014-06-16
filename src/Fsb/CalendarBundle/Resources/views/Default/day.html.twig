@@ -9,6 +9,8 @@
     {% set nowDay = now|date("d") %}
     {% set nowMonth = now|date("m") %}
     {% set nowYear = now|date("Y") %}
+    {% set nowHour = now|date("H") %}
+    {% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
     
     {% set currentDay = day %}
     {% set currentMonth = month %}
@@ -69,7 +71,11 @@
 	        	{% for i in range(8,20) %}
 	        			{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
 	        		
-						<li data-role="list-divider">
+	        			{% if (nowHour == i and nowDate == time) %}
+		        			<li data-role="list-divider" class="currentTime">
+		        		{% else %}
+		        			<li data-role="list-divider">
+		        		{% endif %}
 							
 							{% if appointment_list[i] is defined %}
 							
@@ -78,7 +84,6 @@
 									{% if appointment_list[i][0] is defined %}
 										{% for appointment in appointment_list[i][0] %}
 											<h2>
-	{# 												<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
 												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
 								                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
 												{{ appointment["title"] }}
@@ -112,7 +117,6 @@
 							       {% if appointment_list[i][30] is defined %}
 							       		{% for appointment in appointment_list[i][30] %}
 											<h2>
-	{# 											<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">#}
 												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
 								        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
 							       				{{ appointment["title"] }}
