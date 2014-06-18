@@ -17,6 +17,9 @@ security:
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/calendar/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
+        - { path: ^/calendar/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
+        - { path: ^/calendar/diary/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/*, roles: [ROLE_RECRUITER, ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR, ROLE_SUPER_USER] }
         - { path: ^/reporting/*, roles: [ROLE_SUPER_USER] }
         - { path: ^/backend/*, roles: [ROLE_ADMINISTRATOR] }

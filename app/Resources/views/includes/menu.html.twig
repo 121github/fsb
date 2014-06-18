@@ -32,6 +32,11 @@
 			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Logout" }}</a></li>
 		</ul>
 		
+		
+		<div class="filter">
+			{% include '::includes/filter.html.twig' %}
+		</div>
+		
     </div><!-- /panel -->
 {% endif %}
 		    

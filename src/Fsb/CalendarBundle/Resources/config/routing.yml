@@ -3,13 +3,19 @@ calendar_homepage:
     defaults: { _controller: "CalendarBundle:Default:index" }
 
 calendar_month:
-    pattern:  /month/{month}/year/{year}
-    defaults: { _controller: "CalendarBundle:Default:month" }
+    pattern:  /month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Default:month", recruiter_id: null }
 
 calendar_day:
-    pattern:  /day/{day}/month/{month}/year/{year}
-    defaults: { _controller: "CalendarBundle:Default:day" }
+    pattern:  /day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Default:day", recruiter_id: null }
     
 calendar_diary:
-    pattern:  /diary/day/{day}/month/{month}/year/{year}
-    defaults: { _controller: "CalendarBundle:Default:diary" }
+    pattern:  /diary/day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Default:diary", recruiter_id: null }
+
+    
+calendar_filter:
+    pattern:  /filter
+    defaults: { _controller: "CalendarBundle:Default:search" }
+#    requirements: { _method: post }

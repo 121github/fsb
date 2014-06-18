@@ -78,13 +78,6 @@ class AppointmentController extends Controller
             $month = date('m',$startDate);
             $year = date('Y',$startDate);
 
-//             return $this->redirect($this->generateUrl('calendar_day', array(
-//             		'day' => $day,
-//             		'month' => $month,
-//             		'year' => $year,
-//             	))
-//             );
-
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,
             		'month' => $month,

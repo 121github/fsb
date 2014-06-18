@@ -21,25 +21,38 @@ class AppointmentRepository extends EntityRepository
 	 * 
 	 * @return array Appointments
 	 */
-	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year){
+	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null) {
 	
 		$em = $this->getEntityManager();
-	
-		$dql = 'SELECT SUBSTRING(a.startDate, 9, 2) AS day, COUNT(a.id) AS numapp 
-					FROM AppointmentBundle:Appointment a
-					WHERE 
-						a.recruiter = :recruiter_id AND
-						SUBSTRING(a.startDate, 6, 2) = :month AND
-						SUBSTRING(a.startDate, 1, 4) = :year
-					GROUP BY day
-					ORDER BY a.startDate ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('recruiter_id', $recruiter_id);
-		$query->setParameter('month', (int)$month);
-		$query->setParameter('year', (int)$year);
 		
-		$recruiter_ar = $query->getResult();
+		$query = $em->createQueryBuilder()
+		->select(array('SUBSTRING(a.startDate, 9, 2) AS day', 'COUNT(a.id) AS numapp'))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
+		->groupBy('day')
+		->orderBy('a.startDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+		
+		if (count($projects) > 0) {
+			$query
+			->andWhere('ad.project IN (:projects)')
+			->setParameter('projects', $projects);
+		}
+		
+		if (count($outcomes) > 0) {
+			$query
+			->andWhere('ad.outcome IN (:outcomes)')
+			->setParameter('outcomes', $outcomes);
+		}
+		
+		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
 	}
@@ -54,41 +67,54 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year){
+	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null) {
 	
 		$em = $this->getEntityManager();
 	
-		$dql = 'SELECT
-					SUBSTRING(a.startDate, 11, 3) AS hour, 
-					SUBSTRING(a.startDate, 15, 2) AS minute,
-					a.id, ad.title, 
-					ad.comment,
-					r.coname as record,
-					ud.firstname as recruiter,
-					p.name as project,
-					o.name as outcome,
-					ad.outcomeReason
-					FROM AppointmentBundle:Appointment a
-					JOIN a.appointmentDetail ad
-					JOIN ad.project p
-					JOIN ad.outcome o
-					JOIN a.record r
-					JOIN a.recruiter u
-					JOIN u.userDetail ud
-					WHERE
-						a.recruiter = :recruiter_id AND
-						SUBSTRING(a.startDate, 9, 2) = :day AND
-						SUBSTRING(a.startDate, 6, 2) = :month AND
-						SUBSTRING(a.startDate, 1, 4) = :year
-					ORDER BY a.startDate ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('recruiter_id', $recruiter_id);
-		$query->setParameter('day', (int)$day);
-		$query->setParameter('month', (int)$month);
-		$query->setParameter('year', (int)$year);
-	
-		$recruiter_ar = $query->getResult();
+		$query = $em->createQueryBuilder()
+		->select(array(
+				'SUBSTRING(a.startDate, 11, 3) AS hour', 
+				'SUBSTRING(a.startDate, 15, 2) AS minute',
+				'a.id, ad.title', 
+				'ad.comment',
+				'r.coname as record',
+				'ud.firstname as recruiter',
+				'p.name as project',
+				'o.name as outcome',
+				'ad.outcomeReason'
+		))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.project', 'p')
+		->innerJoin('ad.outcome', 'o')
+		->innerJoin('a.record', 'r')
+		->innerJoin('a.recruiter', 'u')
+		->innerJoin('u.userDetail', 'ud')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('SUBSTRING(a.startDate, 9, 2) = :day')
+		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
+		->orderBy('a.startDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('day', (int)$day)
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+		
+		if (count($projects) > 0) {
+			$query
+			->andWhere('ad.project IN (:projects)')
+			->setParameter('projects', $projects);
+		}
+		
+		if (count($outcomes) > 0) {
+			$query
+			->andWhere('ad.outcome IN (:outcomes)')
+			->setParameter('outcomes', $outcomes);
+		}
+		
+		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
 	}
@@ -103,7 +129,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year){
+	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -130,7 +156,47 @@ class AppointmentRepository extends EntityRepository
 		$query->setParameter('recruiter_id', $recruiter_id);
 		$query->setParameter('date', new \DateTime($year.'-'.$month.'-'.$day.' 00:00:00'));
 	
-		$recruiter_ar = $query->getResult();
+		
+		
+		
+		$query = $em->createQueryBuilder()
+		->select(array(
+				'a.startDate as date, a.id, ad.title, ad.comment',
+				'r.coname as record',
+				'ud.firstname as recruiter',
+				'p.name as project',
+				'o.name as outcome',
+				'ad.outcomeReason'
+		))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.project', 'p')
+		->innerJoin('ad.outcome', 'o')
+		->innerJoin('a.record', 'r')
+		->innerJoin('a.recruiter', 'u')
+		->innerJoin('u.userDetail', 'ud')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('a.recruiter = :recruiter_id')
+		->andWhere('a.startDate > :date')
+		->orderBy('a.startDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('date', new \DateTime($year.'-'.$month.'-'.$day.' 00:00:00'))
+		;
+		
+		if (count($projects) > 0) {
+			$query
+			->andWhere('ad.project IN (:projects)')
+			->setParameter('projects', $projects);
+		}
+		
+		if (count($outcomes) > 0) {
+			$query
+			->andWhere('ad.outcome IN (:outcomes)')
+			->setParameter('outcomes', $outcomes);
+		}
+		
+		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
 	}
