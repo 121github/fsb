@@ -13,6 +13,7 @@ use Fsb\CalendarBundle\Entity\Filter;
 use Doctrine\Tests\Common\DataFixtures\TestEntity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
+use Fsb\UserBundle\Util\Util;
 
 class DefaultController extends Controller
 {
@@ -60,7 +61,7 @@ class DefaultController extends Controller
     		 
     		$filter->setProjects($project_ar);
     	}
-    	if ($recruiter_filter) {
+    	if ($recruiter_filter && !$filter->getRecruiter()) {
     		$filter->setRecruiter($em->getRepository('UserBundle:User')->find($recruiter_filter));
     	}
     	if ($outcomes_filter) {
@@ -76,6 +77,7 @@ class DefaultController extends Controller
     	return $this->createSearchForm($filter);
     }
     
+    
     /**
      * 
      * @param unknown $month
@@ -90,16 +92,14 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	/************************************************** FILTER FORM ***************************************************************/
     	/******************************************************************************************************************************/
-    	 
+    	
     	$session = $this->getRequest()->getSession();
+    	
     	$session_fitler = $session->get('filter');
     	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
-    	
     	 
-    	$filter = new Filter();
-    	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -121,6 +121,10 @@ class DefaultController extends Controller
     	if (!$recruiter) {
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
+    	
+    	$filter = new Filter();
+    	$filter->setRecruiter($recruiter);
+    	$searchForm   = $this->getFilterForm($filter);
     	
     	
     	/******************************************************************************************************************************/
@@ -193,6 +197,7 @@ class DefaultController extends Controller
     	   
     	return $this->render('CalendarBundle:Default:month.html.twig', array(
     			'recruiter' => $recruiter,
+    			'recruiter_url' => $recruiter_id,
     			'appointmentList' => $appointmentList,
     			'appointmentPrevList' => $appointmentPrevList,
     			'appointmentNextList' => $appointmentNextList,
@@ -225,17 +230,12 @@ class DefaultController extends Controller
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
     	 
-    	$filter = new Filter();
-    	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
     	/******************************************************************************************************************************/
     	if ($recruiter_id) {
     		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
-    		//Set the session var for the recruiter
-    		$session->set('filter', $recruiter_id);
-    		$recruiter_filter = $session_fitler["recruiter"];
     	}
     	
     	elseif ($recruiter_filter) {
@@ -252,6 +252,10 @@ class DefaultController extends Controller
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
 
+    	
+    	$filter = new Filter();
+    	$filter->setRecruiter($recruiter);
+    	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
@@ -292,6 +296,7 @@ class DefaultController extends Controller
     	   
     	return $this->render('CalendarBundle:Default:day.html.twig', array(
     			'recruiter' => $recruiter,
+    			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
     			'day' => $day,
     			'month' => $month,
@@ -321,17 +326,12 @@ class DefaultController extends Controller
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
     	 
-    	$filter = new Filter();
-    	$searchForm   = $this->getFilterForm($filter);
-    	
+    
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
     	/******************************************************************************************************************************/
     	if ($recruiter_id) {
     		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
-    		//Set the session var for the recruiter
-    		$session->set('filter', $recruiter_id);
-    		$recruiter_filter = $session_fitler["recruiter"];
     	}
     	
     	elseif ($recruiter_filter) {
@@ -348,6 +348,9 @@ class DefaultController extends Controller
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
     
+    	$filter = new Filter();
+    	$filter->setRecruiter($recruiter);
+    	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
@@ -382,6 +385,7 @@ class DefaultController extends Controller
     	
     	return $this->render('CalendarBundle:Default:diary.html.twig', array(
     			'recruiter' => $recruiter,
+    			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
     			'day' => $day,
     			'month' => $month,

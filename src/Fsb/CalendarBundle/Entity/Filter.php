@@ -25,7 +25,17 @@ class Filter
      * 
      */
 	private $outcomes;
-
+	
+	/**
+	 * 
+	 */
+	private $postcode;
+	
+	/**
+	 * 
+	 */
+	private $range;
+	
     
 	public function __construct()
 	{
@@ -47,7 +57,8 @@ class Filter
      * Set recruiter
      *
      * @param \Fsb\UserBundle\Entity\User $recruiter
-     * @return Appointment
+     * 
+     * @return \Fsb\CalendarBundle\Entity\Filter
      */
     public function setRecruiter(\Fsb\UserBundle\Entity\User $recruiter = null)
     {
@@ -70,6 +81,8 @@ class Filter
      * Set recruiter
      *
      * @param ArrayCollection $projects
+     * 
+     * @return \Fsb\CalendarBundle\Entity\Filter
      */
     public function setProjects(ArrayCollection $projects)
     {
@@ -93,6 +106,8 @@ class Filter
      * Set Outcomes
      *
      * @param ArrayCollection $outcomes
+     * 
+     * @return \Fsb\CalendarBundle\Entity\Filter
      *
      */
     public function setOutcomes(ArrayCollection $outcomes)
@@ -111,5 +126,51 @@ class Filter
     {
     	return $this->outcomes;
     }
+    
+    
+    /**
+     * Get Postcode
+     * 
+     * @return String
+     */
+	public function getPostcode() {
+		return $this->postcode;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $postcode
+	 * 
+	 * 
+	 * @return \Fsb\CalendarBundle\Entity\Filter
+	 */
+	public function setPostcode($postcode) {
+		$this->postcode = $postcode;
+		return $this;
+	}
+	
+	/**
+	 * Get Range (miles)
+	 * 
+	 * @return double
+	 */
+	public function getRange() {
+		return $this->range;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $range
+	 * 
+	 * 
+	 * @return \Fsb\CalendarBundle\Entity\Filter
+	 */
+	public function setRange($range) {
+		$this->range = $range;
+		return $this;
+	}
+	
+    
+    
     
 }

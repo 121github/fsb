@@ -293,7 +293,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
         
         //AppointmetProject
-        for ($i=1;$i<20;$i++){
+        for ($i=1;$i<10;$i++){
         	$appointmentProject = new AppointmentProject();
         	$appointmentProject->setName("Project ".$i);
         	Util::setCreateAuditFields($appointmentProject, 1);
@@ -304,7 +304,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
         
         //Record Outcome
-        foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
+        foreach (array("Closed - Sale", "Closed - No Sale", "No show", "Reappointed for next step") as $outcome) {
         	$recordOutcome = new RecordOutcome();
         	$recordOutcome->setName($outcome);
         	Util::setCreateAuditFields($recordOutcome, 1);

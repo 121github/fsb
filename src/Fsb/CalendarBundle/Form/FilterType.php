@@ -44,6 +44,8 @@ class FilterType extends AbstractType
             		'multiple' => true,
             		'expanded' => true
             ))
+            ->add('postcode')
+            ->add('range')
         ;
     }
     

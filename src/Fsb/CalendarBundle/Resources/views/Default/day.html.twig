@@ -44,20 +44,20 @@
 	    		<tr>
 			    	<td style="text-align: left;">
 			    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
-			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
 			    		{% else %}
-			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
 			    		{% endif %}
 			    	</td>
 			    	<td style="text-align: center;">
-					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					    <span>{{ time|date("d F Y") }}</span>
-					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
 				    <td style="text-align: right;">
-			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
 			    	</td>
 			    </tr>
 		    </table>

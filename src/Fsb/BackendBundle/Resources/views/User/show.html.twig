@@ -2,6 +2,11 @@
 
 {% block article -%}
 
+	{% set now = "now"|date("") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+
     <h1>User Details</h1>
     
     <table class="ui-responsive ui-shadow"  data-role="table" id="user-show-table" data-mode="column">
@@ -37,6 +42,7 @@
         </tbody>
     </table>
     
+    <a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': entity.id}) }}" data-role="button" data-inline="true" data-icon="calendar" data-theme="a">View Calendar</a>
     <a href="{{ path('user_edit', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
     <a href="#popupChangePass" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="password" data-theme="a">Change Password</a>
     <a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>

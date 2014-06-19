@@ -5,7 +5,15 @@
 	<form action="{{ path('calendar_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" {{ form_enctype(searchForm) }}>
 		{{ form_errors(searchForm) }}
 		<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
-				<div data-role="collapsible" data-collapsed="false">
+				{% if recruiter_url is defined %}
+					{{ recruiter }}
+					<br /><br />
+				{% endif %}
+				{% if (is_granted('ROLE_RECRUITER') or (recruiter_url is defined and recruiter_url is not null)) %}
+					<div data-role="collapsible" data-collapsed="false" style="display: none;">
+				{% else %}
+					<div data-role="collapsible" data-collapsed="false">
+				{% endif %}
 					<h3>{{ form_label(searchForm.recruiter) }}</h3>
 					<p> {{ form_errors(searchForm.recruiter) }} </p>
 					<ul data-role="listview" data-theme="d" data-divider-theme="d">
@@ -27,6 +35,24 @@
 					<ul data-role="listview" data-theme="d" data-divider-theme="d">
 						<li data-role="list-divider"> {{ "Select the outcomes" }}</li>
 						<li>{{ form_widget(searchForm.outcomes) }}</li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchForm.postcode) }}</h3>
+					<p> {{ form_errors(searchForm.postcode) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Select the postcode" }}</li>
+						<li>
+							{{ form_widget(searchForm.postcode) }}
+						</li>
+					</ul>
+					<p> {{ form_errors(searchForm.range) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Miles" }}</li>
+						<li>
+						{# <input id="fsb_calendarbundle_filter_range" name="fsb_calendarbundle_filter[range]" data-highlight="true" min="0" max="100" value="50" type="range"> #}
+							{{ form_widget(searchForm.range, {'type' : 'range', 'attr' : {'min' : "0", 'maxlength' : "100", "data-highlight": "true" } }) }}
+						</li>
 					</ul>
 				</div>
 			</div>
