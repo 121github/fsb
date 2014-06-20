@@ -18,4 +18,4 @@ calendar_diary:
 calendar_filter:
     pattern:  /filter
     defaults: { _controller: "CalendarBundle:Default:search" }
-#    requirements: { _method: post }
+    requirements: { _method: post }

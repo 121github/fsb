@@ -1,0 +1,16 @@
+{% extends '::base_dialog.html.twig' %}
+
+
+{% block name %}Admin{% endblock %}
+
+{% block body %}
+
+	{% block javascripts %}
+	    <script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
+	{% endblock %}
+	
+	<div data-role="content" data-theme="a">
+		{% block article %}{% endblock %}
+	</div>
+
+{% endblock %}

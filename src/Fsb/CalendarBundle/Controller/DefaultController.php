@@ -404,7 +404,7 @@ class DefaultController extends Controller
     {
         
     	$form = $this->createForm(new FilterType(), $filter, array(
-    			'action' => $this->generateUrl('appointment_create'),
+    			'action' => $this->generateUrl('calendar_filter'),
     			'method' => 'POST',
     	));
     

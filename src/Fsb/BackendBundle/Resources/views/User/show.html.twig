@@ -50,7 +50,7 @@
     
     <!--  POPUP DELETE CONFIRM -->
     <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-    	<form action="{{ path('user_delete' , { 'id': entity.id}) }}" method="delete" {{ form_enctype(delete_form) }}>
+    	<form action="{{ path('user_delete' , { 'id': entity.id}) }}" method="delete" data-ajax="false" {{ form_enctype(delete_form) }}>
     		<div data-role="header" data-theme="a" class="ui-corner-top">
 		        <h1>Delete User?</h1>
 		    </div>
@@ -67,7 +67,7 @@
     
     <!--  POPUP CHANGE PASSWORD -->
     <div data-role="popup" id="popupChangePass" data-overlay-theme="a" data-theme="a" data-dismissible="true" style="max-width:400px;" class="ui-corner-all">
-    	<form action="{{ path('user_password' , { 'id': entity.id}) }}" method="post" {{ form_enctype(delete_form) }}>
+    	<form action="{{ path('user_password' , { 'id': entity.id}) }}" method="post" data-ajax="false" {{ form_enctype(delete_form) }}>
     		<div data-role="header" data-theme="a" class="ui-corner-top">
 		        <h1>Change Password</h1>
 		    </div>

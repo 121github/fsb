@@ -2,7 +2,7 @@
 {% set submit_id = searchForm.vars.id ~ "_submit" %}
 
 	<h3>{{ "Calendar Filter" }}</h3>
-	<form action="{{ path('calendar_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" {{ form_enctype(searchForm) }}>
+	<form action="{{ path('calendar_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(searchForm) }}>
 		{{ form_errors(searchForm) }}
 		<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
 				{% if recruiter_url is defined %}

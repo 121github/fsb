@@ -136,8 +136,14 @@ class AppointmentController extends Controller
     public function newDateAction($hour, $minute, $day, $month, $year)
     {
     	$appointment = new Appointment();
+    	
     	$date = new \DateTime($day.'-'.$month.'-'.$year.' '.$hour.':'.$minute.':00');
+    	
+    	$endDate = new \DateTime($day.'-'.$month.'-'.$year.' '.$hour.':'.$minute.':00');
+    	$endDate->modify('+1 hour');
+    	
     	$appointment->setStartDate($date);
+    	$appointment->setEndDate($endDate);
     	$form   = $this->createCreateForm($appointment);
     
     	return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
@@ -261,7 +267,17 @@ class AppointmentController extends Controller
             	)
             );
             
-            return $this->redirect($request->headers->get('referer'));
+            $startDate = $appointment->getStartDate()->getTimestamp();
+            $day = date('d',$startDate);
+            $month = date('m',$startDate);
+            $year = date('Y',$startDate);
+            
+            return $this->redirect($this->generateUrl('calendar_day', array(
+            		'day' => $day,
+            		'month' => $month,
+            		'year' => $year,
+            ))
+            );
         }
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(

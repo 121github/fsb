@@ -1,72 +1,69 @@
-{% extends '::base_dialog.html.twig' %}
+{% extends '::calendar_dialog.html.twig' %}
 
-	{% block name %}
-		{{"New Appointment"}} 
-	{% endblock %}
+{% block title %}New Appointment{% endblock %}
 
-	{% block body %}
-		<div data-role="content" data-theme="a">
-			{% set submit_id = form.vars.id ~ "_submit" %}
-			<form action="{{ path('appointment_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" {{ form_enctype(form) }}>
-				{{ form_errors(form) }}
-					<table>
-						<tr>
-							<td colspan="3">
-								{{ form_label(form.appointmentDetail.title) }}
-								{{ form_errors(form.appointmentDetail.title) }}
-								{{ form_widget(form.appointmentDetail.title) }}
-							</td>
-						</tr><tr>
-							<td>
-								{{ form_label(form.startDate) }}
-								{{ form_errors(form.startDate) }}
-								{{ form_widget(form.startDate) }}
-							</td><td>
-								{{ form_label(form.endDate) }}
-								{{ form_errors(form.endDate) }}
-								{{ form_widget(form.endDate) }}
-							</td>
-						</tr><tr>
-							<td>
-								{{ form_label(form.recruiter) }}
-								{{ form_errors(form.recruiter) }}
-								{{ form_widget(form.recruiter) }}
-							</td><td>
-								{{ form_label(form.record) }}
-								{{ form_errors(form.record) }}
-								{{ form_widget(form.record) }}
-							</td>
-							<td>
-								{{ form_label(form.appointmentDetail.project) }}
-								{{ form_errors(form.appointmentDetail.project) }}
-								{{ form_widget(form.appointmentDetail.project) }}
-							</td>
-						</tr><tr>
-							<td>
-								{{ form_label(form.appointmentDetail.outcome) }}
-								{{ form_errors(form.appointmentDetail.outcome) }}
-								{{ form_widget(form.appointmentDetail.outcome) }}
-							</td><td colspan="2">
-								{{ form_label(form.appointmentDetail.outcomeReason) }}
-								{{ form_errors(form.appointmentDetail.outcomeReason) }}
-								{{ form_widget(form.appointmentDetail.outcomeReason) }}
-							</td>
-						</tr><tr>
-							<td colspan="3">
-								{{ form_label(form.appointmentDetail.comment) }}
-								{{ form_errors(form.appointmentDetail.comment) }}
-								{{ form_widget(form.appointmentDetail.comment) }}
-							</td>
-						</tr><tr>
-							<td>
-								<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
-							</td>
-							<td colspan="2">
-								{{ form_rest(form) }}	
-							</td>
-						</tr>
-					</table>
-			</form>
-		</div>
 
-	{% endblock %}
+{% block article -%}
+	{% set submit_id = form.vars.id ~ "_submit" %}
+	<form action="{{ path('appointment_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+			<table>
+				<tr>
+					<td colspan="3">
+						{{ form_label(form.appointmentDetail.title) }}
+						{{ form_errors(form.appointmentDetail.title) }}
+						{{ form_widget(form.appointmentDetail.title) }}
+					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(form.startDate) }}
+						{{ form_errors(form.startDate) }}
+						{{ form_widget(form.startDate) }}
+						
+					</td><td>
+						{{ form_label(form.endDate) }}
+						{{ form_errors(form.endDate) }}
+						{{ form_widget(form.endDate) }}
+					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(form.recruiter) }}
+						{{ form_errors(form.recruiter) }}
+						{{ form_widget(form.recruiter) }}
+					</td><td>
+						{{ form_label(form.record) }}
+						{{ form_errors(form.record) }}
+						{{ form_widget(form.record) }}
+					</td>
+					<td>
+						{{ form_label(form.appointmentDetail.project) }}
+						{{ form_errors(form.appointmentDetail.project) }}
+						{{ form_widget(form.appointmentDetail.project) }}
+					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(form.appointmentDetail.outcome) }}
+						{{ form_errors(form.appointmentDetail.outcome) }}
+						{{ form_widget(form.appointmentDetail.outcome) }}
+					</td><td colspan="2">
+						{{ form_label(form.appointmentDetail.outcomeReason) }}
+						{{ form_errors(form.appointmentDetail.outcomeReason) }}
+						{{ form_widget(form.appointmentDetail.outcomeReason) }}
+					</td>
+				</tr><tr>
+					<td colspan="3">
+						{{ form_label(form.appointmentDetail.comment) }}
+						{{ form_errors(form.appointmentDetail.comment) }}
+						{{ form_widget(form.appointmentDetail.comment) }}
+					</td>
+				</tr><tr>
+					<td>
+						<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+					</td>
+					<td colspan="2">
+						{{ form_rest(form) }}	
+					</td>
+				</tr>
+			</table>
+	</form>
+{% endblock %}

@@ -51,7 +51,7 @@
 			    	</td>
 			    	<td style="text-align: center;">
 					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-					    <span>{{ time|date("d F Y") }}</span>
+					    <span>{{ time|date("D d F Y") }}</span>
 					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
 				    <td style="text-align: right;">
