@@ -38,20 +38,20 @@
 	    		<tr>
 			    	<td style="text-align: left;">
 			    		{% if (currentMonth == nowMonth and currentYear == nowYear) %}
-			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
 			    		{% else %}
-			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
 			    		{% endif %}
 			    	</td>
 			    	<td style="text-align: center;">
-					    <a href="{{ path('calendar_month', {'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_month', {'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					    <span>{{ time|date("F Y") }}</span>
-					    <a href="{{ path('calendar_month', {'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_month', {'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
 				    <td style="text-align: right;">
-			    		<a href="{{ path('calendar_day', {'day': firstMonthDay|date("d"), 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_day', {'day': firstMonthDay|date("d"), 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Month" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
 			    	</td>
 			    </tr>
 		    </table>
@@ -88,14 +88,14 @@
 							
 							
 							{% if ((prevDayDate|date("D") == "Sun") or (prevDayDate in bankHolidayList)) %}
-								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" class="ui-btn pastDays ui-disabled">
+								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays ui-disabled">
 								<img src="" class="ui-li-thumb">
 								{% if prevDayDate in bankHolidayList %}
 									<h2></h2>
 									<p>{{ "Bank Holiday" }}</p>
 								{% endif %}
 							{% else %}
-								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" class="ui-btn pastDays">
+								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">
 								<img src="" class="ui-li-thumb">
 								{% if appointmentPrevList[day] is defined %}
 					                <h2>
@@ -127,14 +127,14 @@
 	        		{% endif %}
 						
 						{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList)) %}
-							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}"  class="ui-btn  ui-disabled">
+							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false"  class="ui-btn  ui-disabled">
 					
 							{% if currentDay in bankHolidayList %}
 								<h2></h2>
 								<p class="description">{{ "Bank Holiday" }}</p>
 							{% endif %}
 						{% else %}
-							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" class="ui-btn">
+							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn">
 					
 							{% if appointmentList[i] is defined %}
 								<img src="" class="ui-li-thumb">
@@ -166,14 +166,14 @@
 							
 							
 							{% if ((nextDayDate|date("D") == "Sun") or (nextDayDate in bankHolidayList)) %}
-								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" class="ui-btn pastDays ui-disabled">
+								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays ui-disabled">
 								<img src="" class="ui-li-thumb">
 								{% if nextDayDate in bankHolidayList %}
 									<h2></h2>
 									<p>{{ "Bank Holiday" }}</p>
 								{% endif %}
 							{% else %}
-								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" class="ui-btn pastDays">
+								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">
 								<img src="" class="ui-li-thumb">
 								{% if appointmentNextList[day] is defined %}
 					                <h2>

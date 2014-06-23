@@ -1,3 +1,7 @@
 rule_homepage:
     pattern:  /hello/{name}
-    defaults: { _controller: RuleBundle:Default:index }
+    defaults: { _controller: "RuleBundle:Default:index" }
+
+RuleBundle_unavailableDate:
+     resource: "@RuleBundle/Resources/config/routing/unavailabledate.yml"
+     prefix:   /unavailabledate

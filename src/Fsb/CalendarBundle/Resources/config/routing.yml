@@ -19,3 +19,7 @@ calendar_filter:
     pattern:  /filter
     defaults: { _controller: "CalendarBundle:Default:search" }
     requirements: { _method: post }
+    
+calendar_clean_filter:
+    pattern:  /clean_filter
+    defaults: { _controller: "CalendarBundle:Default:cleanSearch" }

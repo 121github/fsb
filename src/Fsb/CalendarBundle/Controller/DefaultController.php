@@ -14,6 +14,8 @@ use Doctrine\Tests\Common\DataFixtures\TestEntity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\UserBundle\Util\Util;
+use Fsb\RuleBundle\Form\UnavailableDateType;
+use Fsb\RuleBundle\Entity\UnavailableDate;
 
 class DefaultController extends Controller
 {
@@ -266,6 +268,47 @@ class DefaultController extends Controller
     	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Bank Holidays *************************************************************/
+    	/******************************************************************************************************************************/
+    	 
+    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
+    	 
+    	$auxList = array();
+    	foreach ($bankHolidayList as $bankHoliday) {
+    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	}
+    	$bankHolidayList = $auxList;
+    	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Set Unavailable Date Form *************************************************/
+    	/******************************************************************************************************************************/
+    	$unavailableDate = new UnavailableDate();
+    	$date = new \DateTime($day.'-'.$month.'-'.$year);
+    	$unavailableDate->setUnavailableDate($date);
+    	$unavailableDate->setRecruiter($recruiter);
+    	
+    	$setUnavailableDateForm   = $this->createSetUnavailableForm($unavailableDate);
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Is unavailable this day? *************************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$unavailableDateForRecruiter = $em->getRepository('RuleBundle:UnavailableDate')->isUnavailable($unavailableDate->getUnavailableDate(), $recruiter->getId());
+    	
+    	$isUnavailable = (count($unavailableDateForRecruiter) > 0) ? true : false;
+    	
+    	if ($isUnavailable) {
+    		$unavailableDateId = $unavailableDateForRecruiter[0]["id"];
+    		$setAvailableDateForm   = $this->createSetAvailableForm($unavailableDateId);
+    	}
+    	else {
+    		$unavailableDateId = 0;
+    		$setAvailableDateForm   = $this->createSetAvailableForm($unavailableDateId);
+    	}
+    	 
+    	
+    	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	   
@@ -318,6 +361,11 @@ class DefaultController extends Controller
     			'recruiter' => $recruiter,
     			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
+    			'bankHolidayList' => $bankHolidayList,
+    			'setUnavailableForm' => $setUnavailableDateForm->createView(),
+    			'isUnavailable' => $isUnavailable,
+    			'unavailableDateId' => $unavailableDateId,
+    			'setAvailableForm' => $setAvailableDateForm->createView(),
     			'day' => $day,
     			'month' => $month,
     			"year" => $year,
@@ -374,6 +422,18 @@ class DefaultController extends Controller
     	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Bank Holidays *************************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
+    	
+    	$auxList = array();
+    	foreach ($bankHolidayList as $bankHoliday) {
+    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	}
+    	$bankHolidayList = $auxList;
+    	
+    	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	
@@ -421,6 +481,7 @@ class DefaultController extends Controller
     			'recruiter' => $recruiter,
     			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
+    			'bankHolidayList' => $bankHolidayList,
     			'day' => $day,
     			'month' => $month,
     			"year" => $year,
@@ -490,5 +551,57 @@ class DefaultController extends Controller
     			'searchForm' => $form->createView(),
     	));
     
+    }
+    
+    /**
+     * Clean the data of the calendar search filter.
+     *
+     */
+    public function cleanSearchAction()
+    {
+    	$this->getRequest()->getSession()->remove('filter');
+    
+    	$url = $this->getRequest()->headers->get("referer");
+    	return new RedirectResponse($url);
+    
+    }
+    
+    /**
+     * Creates a form to set unavailable a date.
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createSetUnavailableForm(UnavailableDate $unavailableDate)
+    {
+    
+    	$form = $this->createForm(new UnavailableDateType(), $unavailableDate, array(
+            'action' => $this->generateUrl('unavailableDate_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array(
+        		'label' => 'Yes',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        ));
+
+        return $form;
+    }
+    
+    /**
+     * Creates a form to set available a date.
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createSetAvailableForm($id)
+    {
+    	return $this->createFormBuilder()
+    	->setAction($this->generateUrl('unavailableDate_delete', array('id' => $id)))
+    	->setMethod('DELETE')
+    	->add('submit', 'submit', array(
+    			'label' => 'Yes',
+    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+    	))
+    	->getForm()
+    	;
     }
 }

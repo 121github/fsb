@@ -1,7 +1,7 @@
 <!-- MENU -->
 {% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 	<!-- LEFT PANEL -->
-	<div data-role="panel" id="right-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a" data-position-fixed="true">
+	<div data-role="panel" id="left-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a" data-position-fixed="true">
 		
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a" >
 			
@@ -23,13 +23,15 @@
 	</div><!-- /panel -->
 		    
     <!-- RIGHT PANEL -->
-    <div data-role="panel" id="left-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a" data-position-fixed="true">
+    <div data-role="panel" id="right-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a" data-position-fixed="true">
 
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
 			
-			<li data-role="list-divider">Hi {{ app.security.getToken().getUser().getUserDetail().getFirstname() }}</li>
+			<li>
+				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Hi" ~ app.security.getToken().getUser().getUserDetail().getFirstname() }}</a>
+			</li>
 			
-			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Logout" }}</a></li>
+			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power">{{ "Logout" }}</a></li>
 		</ul>
 		
 		

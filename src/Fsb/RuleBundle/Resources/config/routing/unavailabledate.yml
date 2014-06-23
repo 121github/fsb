@@ -1,0 +1,30 @@
+unavailableDate:
+    pattern:  /
+    defaults: { _controller: "RuleBundle:UnavailableDate:index" }
+
+unavailableDate_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "RuleBundle:UnavailableDate:show" }
+
+unavailableDate_new:
+    pattern:  /new
+    defaults: { _controller: "RuleBundle:UnavailableDate:new" }
+
+unavailableDate_create:
+    pattern:  /create
+    defaults: { _controller: "RuleBundle:UnavailableDate:create" }
+    requirements: { _method: post }
+
+unavailableDate_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "RuleBundle:UnavailableDate:edit" }
+
+unavailableDate_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "RuleBundle:UnavailableDate:update" }
+    requirements: { _method: post|put }
+
+unavailableDate_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "RuleBundle:UnavailableDate:delete" }
+    requirements: { _method: post|delete }

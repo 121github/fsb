@@ -35,6 +35,11 @@
     {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
     
     
+    <script type="text/javascript">
+	 function onSuccess(){
+	      $('#popupSetUnavailable').popup('open'); 
+	 }    
+	</script>
     
     <div  data-theme="a" id="calendar-page" class="day-page">
     
@@ -43,21 +48,66 @@
 	    	<table>
 	    		<tr>
 			    	<td style="text-align: left;">
+			    		{##########################}
+						{# Today Button #}
+						{##########################}
 			    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
-			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
 			    		{% else %}
-			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
 			    		{% endif %}
+			    		
+			    		{##########################}
+			    		{# Set Unavailable Button #}
+			    		{##########################}
+			    		{% if not (isUnavailable) %}
+				    		<a href="#popupSetUnavailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Set Unavailable</a>
+				    		<div data-role="popup" id="popupSetUnavailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+				    			{% set submit_id = setUnavailableForm.vars.id ~ "_submit" %}
+						    	<form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setUnavailableForm) }}>
+						    		<div data-role="header" data-theme="a" class="ui-corner-top">
+								        <h1>Set Unavailable?</h1>
+								    </div>
+								    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+								        <h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
+								        {{ form_rest(setUnavailableForm) }}
+								        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">No</a>
+								    </div>
+									
+						    	</form>
+						    </div>
+						 {% else %}
+						 	<a href="#popupSetAvailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Set Available</a>
+				    		<div data-role="popup" id="popupSetAvailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+						    	<form action="{{ path('unavailableDate_delete' , { 'id': unavailableDateId}) }}" method="delete" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
+						    		<div data-role="header" data-theme="a" class="ui-corner-top">
+								        <h1>Set Unavailable?</h1>
+								    </div>
+								    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+								        <h3 class="ui-title">Are you sure you want to set Available this day?</h3>
+								        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+								        {{ form_rest(setAvailableForm) }}
+								    </div>
+									
+						    	</form>
+						    </div>
+						 {% endif %}
 			    	</td>
+			    		{############################}
+			    		{# Prev and Next Day Button #}
+			    		{############################}
 			    	<td style="text-align: center;">
-					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					    <span>{{ time|date("D d F Y") }}</span>
-					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
+						{#############################}
+			    		{# Set Views Options Buttons #}
+			    		{#############################}
 				    <td style="text-align: right;">
-			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
 			    	</td>
 			    </tr>
 		    </table>
@@ -65,111 +115,123 @@
         
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
 	    	
-	    	<ul data-role="listview" data-inset="true">
-	        
-        		{########## Hours in day ###############}
-	        	{% for i in range(8,20) %}
-	        			{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
-	        		
-	        			{% if (nowHour == i and nowDate == time) %}
-		        			<li data-role="list-divider" class="currentTime">
-		        		{% else %}
-		        			<li data-role="list-divider">
-		        		{% endif %}
-							
-							{% if appointment_list[i] is defined %}
-							
-								<img src="" class="ui-li-thumb">
-								<div style="overflow: auto;">
-									{% if appointment_list[i][0] is defined %}
-										{% for appointment in appointment_list[i][0] %}
-											<h2>
-												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
-								                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-												{{ appointment["title"] }}
-							                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
-							                </a></h2>
+	    	{% set currentDay = time %}
+	    	
+			{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList) or (isUnavailable)) %}
+	    		{% if (currentDay|date("D") == "Sun") %}
+					{{ "You may not create appointments on Sundays" }}
+	    		{% elseif (currentDay in bankHolidayList) %}
+	    			{{ "You may not create appointments on the Bank Holidays" }}
+	    		{% elseif (isUnavailable) %}
+	    			{{ "You may not create appointments because this day is setted as unavailable" }}
+	    		{% endif %}
+	    	{% else %}
+		    	<ul data-role="listview" data-inset="true">
+		        
+	        		{########## Hours in day ###############}
+		        	{% for i in range(8,20) %}
+		        			{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
+		        		
+		        			{% if (nowHour == i and nowDate == time) %}
+			        			<li data-role="list-divider" class="currentTime">
+			        		{% else %}
+			        			<li data-role="list-divider">
+			        		{% endif %}
+								
+								{% if appointment_list[i] is defined %}
+								
+									<img src="" class="ui-li-thumb">
+									<div style="overflow: auto;">
+										{% if appointment_list[i][0] is defined %}
+											{% for appointment in appointment_list[i][0] %}
+												<h2>
+													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
+									                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
+													{{ appointment["title"] }}
+								                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
+								                </a></h2>
+									                
+									              <!--  POPUP APPOINTMENT -->
+										   		 <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
+										    		<div data-role="header" data-theme="a" class="ui-corner-top">
+												        <h1>{{ appointment["title"] }}</h1>
+												    </div>
+												    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+												        <p style="float: right;">{{ time|date("d F Y") }}</p>
+													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
+													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+								                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
+								                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
+								                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
+								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
+								                		
+								                		<p style="padding-top: 10px; text-align: right;">
+													        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
+													        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+													    </p>
+												    </div>
+										  		  </div>
+									        {% endfor %}
+								       {% endif %}
+									       
+								       {% if appointment_list[i][30] is defined %}
+								       		{% for appointment in appointment_list[i][30] %}
+												<h2>
+													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
+									        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
+								       				{{ appointment["title"] }}
+								                	<p>{{ appointment["comment"] }}</p>
+								                </a></h2>
 								                
-								              <!--  POPUP APPOINTMENT -->
-									   		 <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
-									    		<div data-role="header" data-theme="a" class="ui-corner-top">
-											        <h1>{{ appointment["title"] }}</h1>
+												<!--  POPUP APPOINTMENT -->
+											    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
+										    		<div data-role="header" data-theme="a" class="ui-corner-top">
+												        <h1>{{ appointment["title"] }}</h1>
+												    </div>
+												    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+													    <p style="float: right;">{{ time|date("d F Y") }}</p>
+													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
+													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+								                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
+								                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
+								                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
+								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
+								                		
+								                		<p style="padding-top: 10px; text-align: right;">
+													        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
+													        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
+													    </p>
+												    </div>
 											    </div>
-											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-											        <p style="float: right;">{{ time|date("d F Y") }}</p>
-												    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
-												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
-							                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
-							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
-							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
-							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
-							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
-							                		
-							                		<p style="padding-top: 10px; text-align: right;">
-												        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
-												        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
-												    </p>
-											    </div>
-									  		  </div>
-								        {% endfor %}
-							       {% endif %}
+								           	{% endfor %}
+								       {% endif %}
 								       
-							       {% if appointment_list[i][30] is defined %}
-							       		{% for appointment in appointment_list[i][30] %}
-											<h2>
-												<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true">
-								        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
-							       				{{ appointment["title"] }}
-							                	<p>{{ appointment["comment"] }}</p>
-							                </a></h2>
-							                
-											<!--  POPUP APPOINTMENT -->
-										    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
-									    		<div data-role="header" data-theme="a" class="ui-corner-top">
-											        <h1>{{ appointment["title"] }}</h1>
-											    </div>
-											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-												    <p style="float: right;">{{ time|date("d F Y") }}</p>
-												    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
-												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
-							                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
-							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
-							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
-							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
-							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
-							                		
-							                		<p style="padding-top: 10px; text-align: right;">
-												        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a" data-rel="dialog" data-transition="pop">Edit</a>
-												        <a href="#" data-role="button" data-inline="true" data-icon="delete" data-theme="a">Delete</a>
-												    </p>
-											    </div>
-										    </div>
-							           	{% endfor %}
-							       {% endif %}
-							       
-							       <div style="display: inline;">
-							       		<a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-icon="plus" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop"></a>
-							       </div>
-								</div>
-					            
-			                {% else %}
-				                {% for j in range(0,1) %}
-				                	<a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-rel="dialog" data-transition="pop">
-				                		{% if j == 0 %}
-				                			<p>{{ pref ~ i ~ ":00" }}</p>
-				                		{% else %}
-				                			<p>{{ pref ~ i ~ ":30" }}</p>
-				                		{% endif %}
-				                	</a>
-				                {% endfor %}
-			                {% endif %}
-			                <p class="ui-li-aside">
-			                	{{ pref ~ i ~ ":00" }}
-			                </p>
-			         	</li>
-			    	
-	            {% endfor %}
-	        </ul>
+								       <div style="display: inline;">
+								       		<a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-icon="plus" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop"></a>
+								       </div>
+									</div>
+						            
+				                {% else %}
+					                {% for j in range(0,1) %}
+					                	<a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-rel="dialog" data-transition="pop">
+					                		{% if j == 0 %}
+					                			<p>{{ pref ~ i ~ ":00" }}</p>
+					                		{% else %}
+					                			<p>{{ pref ~ i ~ ":30" }}</p>
+					                		{% endif %}
+					                	</a>
+					                {% endfor %}
+				                {% endif %}
+				                <p class="ui-li-aside">
+				                	{{ pref ~ i ~ ":00" }}
+				                </p>
+				         	</li>
+				    	
+		            {% endfor %}
+		        </ul>
+			{% endif %}
 		</div> <!-- content -->
 	</div>
 	

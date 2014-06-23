@@ -121,3 +121,26 @@ $(function(){
         maxTime:'21:00',
     });
 });
+
+/********************************************************************************************************/
+/******************** Datetime picker for new unavailable date ******************************************/
+/********************************************************************************************************/
+$(function(){
+	//UnavaliableDate
+    $("#fsb_rulebundle_unavailabledate_unavailableDate input").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_rulebundle_unavailabledate_unavailableDate').datetimepicker({
+        format: "Y-m-d",
+        timepicker: false,
+        datepicker: true,
+        closeOnDateSelect:true,
+        dayOfWeekStart: 1,
+        onGenerate:function( ct ){
+            jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+            .addClass('xdsoft_disabled');
+        },
+        
+    });
+});
+

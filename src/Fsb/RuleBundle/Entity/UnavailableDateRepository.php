@@ -37,4 +37,31 @@ class UnavailableDateRepository extends EntityRepository
 	
 		return $bankHolidays;
 	}
+	
+	/**
+	 * Return the unavailable date if this day is unavailable for a recruiter
+	 *
+	 * @return boolean
+	 *
+	 */
+	public function isUnavailable($date, $recruiter_id){
+	
+		$em = $this->getEntityManager();
+		
+		$dql = 'SELECT ud.id
+					FROM RuleBundle:UnavailableDate ud
+					JOIN ud.recruiter r
+					WHERE
+						ud.unavailableDate = :unavailableDate AND
+						r.id = :recruiter_id
+					ORDER BY ud.unavailableDate ASC';
+	
+		$query = $em->createQuery($dql);
+		$query->setParameter('unavailableDate', $date);
+		$query->setParameter('recruiter_id', $recruiter_id);
+	
+		$unavailableDate = $query->getResult();
+	
+		return $unavailableDate;
+	}
 }

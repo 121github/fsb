@@ -65,13 +65,20 @@
 							{% else %}
 								<div>
 							{% endif %}
-								{% set currentDate = currentMonth ~ "/" ~ i ~ "/" ~ currentYear|date('U') %}
+								{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
+					
+								{% set currentDate = currentMonth ~ "/" ~ pref ~ i ~ "/" ~ currentYear|date('U') %}
+								
 								{% if nowDate == currentDate %}
 									<div class="today" style="border: 1px solid black;">
 								{% else %}
 									<div>
 								{% endif %}
-									<a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" >{{ i }}</a>
+									{% if ((currentDate|date("D") == "Sun") or (currentDate in bankHolidayList)) %}
+										<del>{{ i }}</del>
+									{% else %}
+										<a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" data-ajax="false">{{ i }}</a>
+									{% endif %}
 								</div>
 							</div>
 							<div>
