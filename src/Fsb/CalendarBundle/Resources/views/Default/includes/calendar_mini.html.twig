@@ -1,83 +1,97 @@
-{% set now = "now"|date("U") %}
-{% set nowDay = now|date("d") %}
-{% set nowMonth = now|date("m") %}
-{% set nowYear = now|date("Y") %}
-
-{% if day is defined %}
-	{% set currentDay = day %}
-{% else %}
-	{% set currentDay = nowDay %}
-{% endif %}
-
-{% if month is defined %}
-	{% set currentMonth = month %}
-{% else %}
-	{% set currentMonth = nowMonth %}
-{% endif %}
-
-{% if year is defined %}
-	{% set currentYear = year %}
-{% else %}
-	{% set currentYear = nowYear %}
-{% endif %}
-
-{% set time = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
-
-
-{% set daysInMonth = time|date('t') %}
-{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
-{% set dow = startDow %}
-
-<div class="mini-calendar">
-	<table>
-		<thead>
-			<tr>
-				<th colspan="7" class="center" style="text-align: center;">
-				<div class="change_day">
-					<a href="#" id="prevMonth" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-					<a href="{{ path('calendar_month', {'month': currentMonth, 'year': currentYear}) }}" id="month">{{ time|date('F Y') }}</a>
-					<a href="#" id="nextMonth" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-				</div>
-				</th>
-			</tr>
-			<tr>
-				<th width="15%">Mon</th>
-				<th width="15%">Tue</th>
-				<th width="16%">Wed</th>
-				<th width="15%">Thu</th>
-				<th width="15%">Fri</th>
-				<th width="12%">Sat</th>
-				<th width="12%">Sun</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-			{% for i in range(1,daysInMonth) %}
-				{% if loop.first and startDow != 0 %}
-					<td colspan="{{ startDow }}"></td>
-				{% endif %}
-				<td style="text-align: center;">
-					<div>
-						<div>
-							<a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" >{{ i }}</a>
-						</div>
-						<div>
-							{# day content here #}
-						</div>
+{% if appointmentMiniCalendarList is defined %}
+	{% set now = "now"|date("U") %}
+	{% set nowDay = now|date("d") %}
+	{% set nowMonth = now|date("m") %}
+	{% set nowYear = now|date("Y") %}
+	{% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
+	
+	{% if day is defined %}
+		{% set currentDay = day %}
+	{% else %}
+		{% set currentDay = nowDay %}
+	{% endif %}
+	
+	{% if month is defined %}
+		{% set currentMonth = month %}
+	{% else %}
+		{% set currentMonth = nowMonth %}
+	{% endif %}
+	
+	{% if year is defined %}
+		{% set currentYear = year %}
+	{% else %}
+		{% set currentYear = nowYear %}
+	{% endif %}
+	
+	{% set time = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
+	
+	
+	{% set daysInMonth = time|date('t') %}
+	{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+	{% set dow = startDow %}
+	
+	<div class="mini-calendar">
+		<table>
+			<thead>
+				<tr>
+					<th colspan="7" class="center" style="text-align: center;">
+					<div class="change_day">
+						<a href="#" id="prevMonth" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+						<a href="{{ path('calendar_month', {'month': currentMonth, 'year': currentYear}) }}" id="month">{{ time|date('F Y') }}</a>
+						<a href="#" id="nextMonth" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</div>
-				</td>
-				{% if loop.last and dow != 6 %}
-					<td colspan="{{ 6 - dow }}">&nbsp;</td>
-				{% endif %}
-				{% if dow == 6 %}
-					{% set dow = 0 %}
-					</tr>
-					<tr>
-				{% else %}
-					{% set dow = dow + 1 %}
-				{% endif %}
-			{% endfor %}
+					</th>
 				</tr>
-		</tbody>
-	</table>
-</div>
+				<tr>
+					<th width="15%">Mon</th>
+					<th width="15%">Tue</th>
+					<th width="16%">Wed</th>
+					<th width="15%">Thu</th>
+					<th width="15%">Fri</th>
+					<th width="12%">Sat</th>
+					<th width="12%">Sun</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				{% for i in range(1,daysInMonth) %}
+					{% if loop.first and startDow != 0 %}
+						<td colspan="{{ startDow }}"></td>
+					{% endif %}
+					<td style="text-align: center;">
+						<div>
+							{% if appointmentMiniCalendarList[i] is defined %}
+								<div class="has_appointment">
+							{% else %}
+								<div>
+							{% endif %}
+								{% set currentDate = currentMonth ~ "/" ~ i ~ "/" ~ currentYear|date('U') %}
+								{% if nowDate == currentDate %}
+									<div class="today" style="border: 1px solid black;">
+								{% else %}
+									<div>
+								{% endif %}
+									<a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" >{{ i }}</a>
+								</div>
+							</div>
+							<div>
+								{# day content here #}
+							</div>
+						</div>
+					</td>
+					{% if loop.last and dow != 6 %}
+						<td colspan="{{ 6 - dow }}">&nbsp;</td>
+					{% endif %}
+					{% if dow == 6 %}
+						{% set dow = 0 %}
+						</tr>
+						<tr>
+					{% else %}
+						{% set dow = dow + 1 %}
+					{% endif %}
+				{% endfor %}
+					</tr>
+			</tbody>
+		</table>
+	</div>
+{% endif %}

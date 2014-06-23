@@ -577,12 +577,15 @@ a{
 
 
 
-
+/* ===========================================================================
+   Mini Calendar
+   ======================================================================== */
 
 .mini-calendar th {
 	border-bottom: 1px solid #d6d6d6;
 	background:transparent;
 	color: black;
+	font-weight: normal;
 }
 
 .mini-calendar tr {
@@ -593,6 +596,22 @@ a{
 	background:transparent;
 }
 
+.mini-calendar td a.ui-link {
+	font-weight: normal;
+	color: black;
+}
+
+.mini-calendar td a.ui-link:hover,
+.mini-calendar td a.ui-link:visited {
+	font-weight: bold;
+	color: black;
+}
+
+.mini-calendar .has_appointment a.ui-link,
+.mini-calendar .has_appointment a.ui-link:visited {
+	font-weight: bold;
+	color: #38c;
+}
 
 .mini-calendar .change_day .ui-btn-inline {
 	margin: 10px;	

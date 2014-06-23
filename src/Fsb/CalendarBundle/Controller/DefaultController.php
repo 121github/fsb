@@ -192,6 +192,13 @@ class DefaultController extends Controller
     	
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Get Appointments for the mini calendar ************************************/
+    	/******************************************************************************************************************************/
+    	   
+    	//Appointments in the current month
+    	$appointmentMiniCalendarList = $appointmentList;
+    	
+    	/******************************************************************************************************************************/
     	/************************************************** Render ***************************************************************/
     	/******************************************************************************************************************************/
     	   
@@ -205,6 +212,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
     
@@ -289,6 +297,18 @@ class DefaultController extends Controller
     	$appointmentList = $auxList;
     	
     	
+    	/******************************************************************************************************************************/
+    	/************************************************** Get Appointments for the mini calendar ************************************/
+    	/******************************************************************************************************************************/
+    	
+    	//Appointments in the current month
+    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter);
+    	//Prepare the array structure to be printed in the calendar
+    	$auxList = array();
+    	foreach ($appointmentMiniCalendarList as $appointment) {
+    		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+    	}
+    	$appointmentMiniCalendarList = $auxList;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Render ********************************************************************/
@@ -302,6 +322,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
     
@@ -380,6 +401,19 @@ class DefaultController extends Controller
     	$appointmentList = $auxList;
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Get Appointments for the mini calendar ************************************/
+    	/******************************************************************************************************************************/
+    	 
+    	//Appointments in the current month
+    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter);
+    	//Prepare the array structure to be printed in the calendar
+    	$auxList = array();
+    	foreach ($appointmentMiniCalendarList as $appointment) {
+    		$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+    	}
+    	$appointmentMiniCalendarList = $auxList;
+    	
+    	/******************************************************************************************************************************/
     	/************************************************** Render ********************************************************************/
     	/******************************************************************************************************************************/
     	
@@ -391,6 +425,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
     
