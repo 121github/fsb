@@ -15,21 +15,21 @@
     {% set currentDay = day %}
     {% set currentMonth = month %}
     {% set currentYear = year %}
-    {% set time = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
+    {% set currentDate = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
     
-    {% set prevDate = time|date_modify("-1 day") %}
+    {% set prevDate = currentDate|date_modify("-1 day") %}
     {% set prevDay = prevDate|date("d") %}
     {% set prevMonth = prevDate|date("m") %}
     {% set prevYear = prevDate|date("Y") %}
     
-    {% set nextDate = time|date_modify("+1 day") %}
+    {% set nextDate = currentDate|date_modify("+1 day") %}
     {% set nextDay = nextDate|date("d") %}
     {% set nextMonth = nextDate|date("m") %}
     {% set nextYear = nextDate|date("Y") %}
     
     
-    {% set daysInMonth = time|date('t') %}
-	{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+    {% set daysInMonth = currentDate|date('t') %}
+	{% set startDow = currentDate|date('F 7\\s\\t Y')|date('w') %}
 	
     {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
     {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
@@ -60,45 +60,48 @@
 			    		{##########################}
 			    		{# Set Unavailable Button #}
 			    		{##########################}
-			    		{% if not (isUnavailable) %}
-				    		<a href="#popupSetUnavailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Set Unavailable</a>
-				    		<div data-role="popup" id="popupSetUnavailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-				    			{% set submit_id = setUnavailableForm.vars.id ~ "_submit" %}
-						    	<form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setUnavailableForm) }}>
-						    		<div data-role="header" data-theme="a" class="ui-corner-top">
-								        <h1>Set Unavailable?</h1>
-								    </div>
-								    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-								        <h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
-								        {{ form_rest(setUnavailableForm) }}
-								        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">No</a>
-								    </div>
-									
-						    	</form>
-						    </div>
-						 {% else %}
-						 	<a href="#popupSetAvailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Set Available</a>
-				    		<div data-role="popup" id="popupSetAvailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-						    	<form action="{{ path('unavailableDate_delete' , { 'id': unavailableDateId}) }}" method="delete" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
-						    		<div data-role="header" data-theme="a" class="ui-corner-top">
-								        <h1>Set Unavailable?</h1>
-								    </div>
-								    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-								        <h3 class="ui-title">Are you sure you want to set Available this day?</h3>
-								        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
-								        {{ form_rest(setAvailableForm) }}
-								    </div>
-									
-						    	</form>
-						    </div>
-						 {% endif %}
+			    		{% if (currentDate|date("D") != "Sun") %}
+				    		{% if (unavailableDateList[currentDate] is not defined) %}
+					    		<a href="#popupSetUnavailable" class="available" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Available</a>
+					    		<div data-role="popup" id="popupSetUnavailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+					    			{% set submit_id = setUnavailableForm.vars.id ~ "_submit" %}
+							    	<form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setUnavailableForm) }}>
+							    		<div data-role="header" data-theme="a" class="ui-corner-top">
+									        <h1>Set Unavailable?</h1>
+									    </div>
+									    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+									        <h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
+									        {{ form_rest(setUnavailableForm) }}
+									        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">No</a>
+									    </div>
+										
+							    	</form>
+							    </div>
+							 {% else %}
+							 	<a href="#popupSetAvailable" class="unavailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Unavailable</a>
+					    		<div data-role="popup" id="popupSetAvailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+							    	<div data-role="header" data-theme="a" class="ui-corner-top">
+									       <h1>Set Unavailable?</h1>
+									</div>
+									<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+										<h3 class="ui-title">Are you sure you want to set Available this day?</h3>
+									    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+									    {% set submit_id = setAvailableForm.vars.id ~ "_submit" %}
+									    <form action="{{ path('unavailableDate_delete', { 'id': unavailableDateId }) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
+									    	<input type="hidden" name="_method" value="DELETE">
+									   		{{ form_rest(setAvailableForm) }}
+									   	</form>
+									</div>
+							    </div>
+							 {% endif %}
+						{% endif %}	
 			    	</td>
 			    		{############################}
 			    		{# Prev and Next Day Button #}
 			    		{############################}
 			    	<td style="text-align: center;">
 					    <a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-					    <span>{{ time|date("D d F Y") }}</span>
+					    <span>{{ currentDate|date("D d F Y") }}</span>
 					    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
 						{#############################}
@@ -115,16 +118,18 @@
         
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
 	    	
-	    	{% set currentDay = time %}
-	    	
-			{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList) or (isUnavailable)) %}
-	    		{% if (currentDay|date("D") == "Sun") %}
-					{{ "You may not create appointments on Sundays" }}
-	    		{% elseif (currentDay in bankHolidayList) %}
-	    			{{ "You may not create appointments on the Bank Holidays" }}
-	    		{% elseif (isUnavailable) %}
-	    			{{ "You may not create appointments because this day is setted as unavailable" }}
-	    		{% endif %}
+			{% if ((currentDate|date("D") == "Sun") or (unavailableDateList[currentDate] is defined)) %}
+				<div class="unavailable">
+		    		{% if (currentDate|date("D") == "Sun") %}
+						<h2>{{ "Unavailable Date" }}</h2>
+						<p>{{ "You may not create appointments on Sundays" }}</p>
+		    		{% elseif (unavailableDateList[currentDate]  is defined) %}
+		    			<h2>{{ "Unavailable Date" }}</h2>
+		    			<p>{{ "You may not create appointments because this day is unavailable." }}</p>
+		    			<p style="font-weight: bold;">{{ "Reason: " ~  unavailableDateList[currentDate] }}
+		    			<a href="#popupSetAvailable" style="float: right;" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Set Available</a></p>
+		    		{% endif %}
+		    	</div>
 	    	{% else %}
 		    	<ul data-role="listview" data-inset="true">
 		        
@@ -132,7 +137,7 @@
 		        	{% for i in range(8,20) %}
 		        			{% if i < 10 %}{% set pref = "0" %}{% else %}{% set pref = "" %}{% endif %}
 		        		
-		        			{% if (nowHour == i and nowDate == time) %}
+		        			{% if (nowHour == i and nowDate == currentDate) %}
 			        			<li data-role="list-divider" class="currentTime">
 			        		{% else %}
 			        			<li data-role="list-divider">
@@ -157,7 +162,7 @@
 												        <h1>{{ appointment["title"] }}</h1>
 												    </div>
 												    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-												        <p style="float: right;">{{ time|date("d F Y") }}</p>
+												        <p style="float: right;">{{ currentDate|date("d F Y") }}</p>
 													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
 													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
 								                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
@@ -190,7 +195,7 @@
 												        <h1>{{ appointment["title"] }}</h1>
 												    </div>
 												    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-													    <p style="float: right;">{{ time|date("d F Y") }}</p>
+													    <p style="float: right;">{{ currentDate|date("d F Y") }}</p>
 													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
 													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
 								                		<p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>

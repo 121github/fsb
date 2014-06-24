@@ -86,13 +86,16 @@
         					
         					{% set prevDayDate = prevMonth ~ "/" ~ day ~ "/" ~ prevYear|date('U') %}
 							
-							
-							{% if ((prevDayDate|date("D") == "Sun") or (prevDayDate in bankHolidayList)) %}
-								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays ui-disabled">
+							{% if ((prevDayDate|date("D") == "Sun") or (unavailableDateList[prevDayDate] is defined)) %}
+								{% if (prevDayDate|date("D") == "Sun") %}
+									<a href="#" data-ajax="false" class="ui-btn pastDays ui-disabled">
+								{% elseif (unavailableDateList[prevDayDate] is defined) %}
+									<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">
+								{% endif %}
 								<img src="" class="ui-li-thumb">
-								{% if prevDayDate in bankHolidayList %}
-									<h2></h2>
-									<p>{{ "Bank Holiday" }}</p>
+								<h2>{{ "Unavailable" }}</h2>
+								{% if unavailableDateList[prevDayDate] is defined %}
+									<p>{{ unavailableDateList[prevDayDate] }}</p>
 								{% endif %}
 							{% else %}
 								<a href="{{ path('calendar_day', {'day': day,'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">
@@ -126,13 +129,17 @@
 	        			<li>
 	        		{% endif %}
 						
-						{% if ((currentDay|date("D") == "Sun") or (currentDay in bankHolidayList)) %}
-							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false"  class="ui-btn  ui-disabled">
-					
-							{% if currentDay in bankHolidayList %}
-								<h2></h2>
-								<p class="description">{{ "Bank Holiday" }}</p>
+						{% if ((currentDay|date("D") == "Sun") or (unavailableDateList[currentDay] is defined)) %}
+							{% if (currentDay|date("D") == "Sun") %}
+								<a href="#" data-ajax="false" class="ui-btn pastDays ui-disabled">
+							{% elseif (unavailableDateList[currentDay] is defined) %}
+								<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false"  class="ui-btn">
 							{% endif %}
+							<h2>{{ "Unavailable" }}</h2>
+							{% if unavailableDateList[currentDay] is defined %}
+								<p class="description">{{ unavailableDateList[currentDay] }}</p>
+							{% endif %}
+								
 						{% else %}
 							<a href="{{ path('calendar_day', {'day': pref ~ i,'month': currentMonth, 'year': currentYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn">
 					
@@ -165,12 +172,16 @@
         					{% set nextDayDate = nextMonth ~ "/" ~ day ~ "/" ~ nextYear|date('U') %}
 							
 							
-							{% if ((nextDayDate|date("D") == "Sun") or (nextDayDate in bankHolidayList)) %}
-								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays ui-disabled">
+							{% if ((nextDayDate|date("D") == "Sun") or (unavailableDateList[nextDayDate] is defined)) %}
+								{% if (nextDayDate|date("D") == "Sun") %}
+									<a href="#" data-ajax="false" class="ui-btn pastDays ui-disabled">
+								{% elseif (unavailableDateList[nextDayDate] is defined) %}
+									<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">
+								{% endif %}
 								<img src="" class="ui-li-thumb">
-								{% if nextDayDate in bankHolidayList %}
-									<h2></h2>
-									<p>{{ "Bank Holiday" }}</p>
+								<h2>{{ "Unavailable" }}</h2>
+								{% if unavailableDateList[nextDayDate] is defined %}
+									<p>{{ unavailableDateList[nextDayDate] }}</p>
 								{% endif %}
 							{% else %}
 								<a href="{{ path('calendar_day', {'day': day,'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" class="ui-btn pastDays">

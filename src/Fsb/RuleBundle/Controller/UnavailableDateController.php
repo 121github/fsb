@@ -218,11 +218,11 @@ class UnavailableDateController extends Controller
             $entity = $em->getRepository('RuleBundle:UnavailableDate')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find UnavailableDate entity.');
+                throw $this->createNotFoundException('deleteAction - Unable to find UnavailableDate entity.');
             }
             
             $unavailableDate = $entity->getUnavailableDate()->getTimestamp();
-
+            
             $em->remove($entity);
             $em->flush();
             

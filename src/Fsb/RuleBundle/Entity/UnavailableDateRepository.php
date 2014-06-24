@@ -14,54 +14,28 @@ class UnavailableDateRepository extends EntityRepository
 {
 	
 	/**
-	 * Get The abank holidays
-	 *
-	 * @return array UnavailableDate
-	 * 
-	 */
-	public function findBankHolidays(){
-	
-		$em = $this->getEntityManager();
-	
-		$dql = 'SELECT ud.unavailableDate
-					FROM RuleBundle:UnavailableDate ud
-					JOIN ud.reason udr
-					WHERE
-						udr.reason = :reason
-					ORDER BY ud.unavailableDate ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('reason', "Bank Holiday");
-	
-		$bankHolidays = $query->getResult();
-	
-		return $bankHolidays;
-	}
-	
-	/**
 	 * Return the unavailable date if this day is unavailable for a recruiter
 	 *
 	 * @return boolean
 	 *
 	 */
-	public function isUnavailable($date, $recruiter_id){
+	public function getUnavailableDatesByRecruiter($recruiter_id){
 	
 		$em = $this->getEntityManager();
 		
-		$dql = 'SELECT ud.id
-					FROM RuleBundle:UnavailableDate ud
-					JOIN ud.recruiter r
-					WHERE
-						ud.unavailableDate = :unavailableDate AND
-						r.id = :recruiter_id
-					ORDER BY ud.unavailableDate ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('unavailableDate', $date);
-		$query->setParameter('recruiter_id', $recruiter_id);
-	
-		$unavailableDate = $query->getResult();
-	
+		$query = $em->createQueryBuilder()
+		->select(array('ud.unavailableDate', 'r.reason', 'ud.id'))
+		->from('RuleBundle:UnavailableDate', 'ud')
+		->innerJoin('ud.reason', 'r')
+		->where('ud.recruiter = :recruiter_id')
+		->orWhere('ud.recruiter is null')
+		->orderBy('ud.unavailableDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		;
+		
+		$unavailableDate = $query->getQuery()->getResult();
+		
 		return $unavailableDate;
 	}
 }

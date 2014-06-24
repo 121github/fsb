@@ -130,16 +130,16 @@ class DefaultController extends Controller
     	
     	
     	/******************************************************************************************************************************/
-    	/************************************************** Bank Holidays *************************************************************/
+    	/************************************************** Unavailable Dates *************************************************************/
     	/******************************************************************************************************************************/
     	
-    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
-    	
+    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->getUnavailableDatesByRecruiter($recruiter->getId());
+    	 
     	$auxList = array();
-    	foreach ($bankHolidayList as $bankHoliday) {
-    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	foreach ($unavailableDateList as $unavailableDate) {
+    		$auxList[$unavailableDate["unavailableDate"]->format('m/d/Y')] = $unavailableDate["reason"];
     	}
-    	$bankHolidayList = $auxList;
+    	$unavailableDateList = $auxList;
     	
     	
     	/******************************************************************************************************************************/
@@ -210,7 +210,7 @@ class DefaultController extends Controller
     			'appointmentList' => $appointmentList,
     			'appointmentPrevList' => $appointmentPrevList,
     			'appointmentNextList' => $appointmentNextList,
-    			'bankHolidayList' => $bankHolidayList,
+    			'unavailableDateList' => $unavailableDateList,
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
@@ -268,16 +268,28 @@ class DefaultController extends Controller
     	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
-    	/************************************************** Bank Holidays *************************************************************/
+    	/************************************************** Unavailable Dates *************************************************************/
     	/******************************************************************************************************************************/
-    	 
-    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
+    	
+    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->getUnavailableDatesByRecruiter($recruiter->getId());
     	 
     	$auxList = array();
-    	foreach ($bankHolidayList as $bankHoliday) {
-    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	$date = new \DateTime($day.'-'.$month.'-'.$year);
+    	$unavailableDateId = 0;
+    	foreach ($unavailableDateList as $unavailableDate) {
+    		$auxList[$unavailableDate["unavailableDate"]->format('m/d/Y')] = $unavailableDate["reason"];
+    		//Check if this day is unavailable to get the id for the setAvailableDateForm
+    		if (array_key_exists($date->format('m/d/Y'), $auxList)) {
+    			$unavailableDateId = $unavailableDate["id"];	
+    		}
     	}
-    	$bankHolidayList = $auxList;
+    	$unavailableDateList = $auxList;
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Set Available Date Form *************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$setAvailableDateForm   = $this->createSetAvailableForm($unavailableDateId);
     	
     	
     	/******************************************************************************************************************************/
@@ -290,22 +302,6 @@ class DefaultController extends Controller
     	
     	$setUnavailableDateForm   = $this->createSetUnavailableForm($unavailableDate);
     	
-    	/******************************************************************************************************************************/
-    	/************************************************** Is unavailable this day? *************************************************************/
-    	/******************************************************************************************************************************/
-    	
-    	$unavailableDateForRecruiter = $em->getRepository('RuleBundle:UnavailableDate')->isUnavailable($unavailableDate->getUnavailableDate(), $recruiter->getId());
-    	
-    	$isUnavailable = (count($unavailableDateForRecruiter) > 0) ? true : false;
-    	
-    	if ($isUnavailable) {
-    		$unavailableDateId = $unavailableDateForRecruiter[0]["id"];
-    		$setAvailableDateForm   = $this->createSetAvailableForm($unavailableDateId);
-    	}
-    	else {
-    		$unavailableDateId = 0;
-    		$setAvailableDateForm   = $this->createSetAvailableForm($unavailableDateId);
-    	}
     	 
     	
     	/******************************************************************************************************************************/
@@ -361,9 +357,8 @@ class DefaultController extends Controller
     			'recruiter' => $recruiter,
     			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
-    			'bankHolidayList' => $bankHolidayList,
+    			'unavailableDateList' => $unavailableDateList,
     			'setUnavailableForm' => $setUnavailableDateForm->createView(),
-    			'isUnavailable' => $isUnavailable,
     			'unavailableDateId' => $unavailableDateId,
     			'setAvailableForm' => $setAvailableDateForm->createView(),
     			'day' => $day,
@@ -422,16 +417,16 @@ class DefaultController extends Controller
     	$searchForm   = $this->getFilterForm($filter);
     	
     	/******************************************************************************************************************************/
-    	/************************************************** Bank Holidays *************************************************************/
+    	/************************************************** Unavailable Dates *************************************************************/
     	/******************************************************************************************************************************/
     	
-    	$bankHolidayList = $em->getRepository('RuleBundle:UnavailableDate')->findBankHolidays();
-    	
+    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->getUnavailableDatesByRecruiter($recruiter->getId());
+    	 
     	$auxList = array();
-    	foreach ($bankHolidayList as $bankHoliday) {
-    		array_push($auxList, $bankHoliday["unavailableDate"]->format('m/d/Y'));
+    	foreach ($unavailableDateList as $unavailableDate) {
+    		$auxList[$unavailableDate["unavailableDate"]->format('m/d/Y')] = $unavailableDate["reason"];
     	}
-    	$bankHolidayList = $auxList;
+    	$unavailableDateList = $auxList;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
@@ -481,7 +476,7 @@ class DefaultController extends Controller
     			'recruiter' => $recruiter,
     			'recruiter_url' => $recruiter_id,
     			'appointment_list' => $appointmentList,
-    			'bankHolidayList' => $bankHolidayList,
+    			'unavailableDateList' => $unavailableDateList,
     			'day' => $day,
     			'month' => $month,
     			"year" => $year,
@@ -561,9 +556,9 @@ class DefaultController extends Controller
     {
     	$this->getRequest()->getSession()->remove('filter');
     
-    	$url = $this->getRequest()->headers->get("referer");
+    	
+    	$url = $this->getRequest()->headers->get("referer");$url = $this->getRequest()->headers->get("referer");
     	return new RedirectResponse($url);
-    
     }
     
     /**
@@ -599,7 +594,7 @@ class DefaultController extends Controller
     	->setMethod('DELETE')
     	->add('submit', 'submit', array(
     			'label' => 'Yes',
-    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check'),
     	))
     	->getForm()
     	;
