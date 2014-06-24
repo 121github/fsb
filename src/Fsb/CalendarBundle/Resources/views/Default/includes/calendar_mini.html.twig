@@ -74,8 +74,10 @@
 								{% else %}
 									<div>
 								{% endif %}
-									{% if ((currentDate|date("D") == "Sun") or (unavailableDateList[currentDate] is defined)) %}
+									{% if (currentDate|date("D") == "Sun") %}
 										<del>{{ i }}</del>
+									{% elseif (unavailableDateList[currentDate] is defined) %}
+										<del><a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" data-ajax="false">{{ i }}</a></del>
 									{% else %}
 										<a href="{{ path('calendar_day', {'day': i, 'month': currentMonth, 'year': currentYear}) }}" data-ajax="false">{{ i }}</a>
 									{% endif %}

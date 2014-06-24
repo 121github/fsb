@@ -228,7 +228,7 @@ a{
     /* Text position */
     .month-page .ui-listview h2,
     .month-page .ui-listview .pastDays h2 {
-        font-size: 1.25em;
+        font-size: 1.0em;
         margin: 0;
         top: 30px;
         padding: .125em 1em;
@@ -236,7 +236,7 @@ a{
         text-shadow: none;
     }
     .month-page .ui-listview p {
-        font-size: 1em;
+        font-size: .9em;
         margin: 0;
         top: 60px;
         padding: 0 1.25em;
