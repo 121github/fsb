@@ -14,16 +14,9 @@ use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\AppointmentBundle\Entity\AppointmentDetail;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
-use Fsb\RecordBundle\Entity;
-use Fsb\RecordBundle\Entity\Record;
-use Fsb\RecordBundle\Entity\RecordOutcome;
-use Fsb\RecordBundle\Entity\RecordSector;
-use Fsb\RecordBundle\Entity\Address;
-use Fsb\RecordBundle\Entity\Position;
-use Fsb\RecordBundle\Entity\Postcode;
-use Fsb\RecordBundle\Entity\Contact;
 use Fsb\RuleBundle\Entity\UnavailableDateReason;
 use Fsb\RuleBundle\Entity\UnavailableDate;
+use Fsb\AppointmentBundle\Entity\Address;
 
 
 /**
@@ -162,6 +155,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$unavailableDate->setUnavailableDate(new \DateTime('now - '.$days.' days'));
         		$unavailableDate->setReason($vacationReason[0]);
         		$unavailableDate->setRecruiter($recruiter);
+        		$unavailableDate->setAllDay(rand(0, 1));
         
         		Util::setCreateAuditFields($unavailableDate, 1);
         		 
@@ -188,6 +182,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         	
         	$unavailableDate = new UnavailableDate();
         	$unavailableDate->setUnavailableDate($bankHoliday);
+        	$unavailableDate->setAllDay(1);
         	$unavailableDate->setReason($bankHolidayReason[0]);
         	
         	Util::setCreateAuditFields($unavailableDate, 1);
@@ -199,90 +194,11 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         
         
         /*********************************************************************/
-        /******************* ADDRESSES ************************************/
-        /*********************************************************************/
-        
-        // Address
-        $postcodes = $manager->getRepository('RecordBundle:Postcode')->findAll();
-        $numAddress = 0;
-        for ($i=1;$i<100;$i++) {
-        
-       		$numAddress++;
-	      		 
-       		$address = new Address();
-        
-        	$address->setAdd1($numAddress." Street");
-        	$address->setAdd2("Apartment ".rand(1, 700));
-        	$address->setAdd3("");
-        	$address->setCountry("UK");
-        	$address->setPostcode($postcodes[rand(1, count($postcodes)-1)]);
-        	$address->setTown("Manchester");
-        	
-        	Util::setCreateAuditFields($address, 1);
-        	 
-        	$manager->persist($address);
-        }
-        
-        $manager->flush();
-        
-        
-        /*********************************************************************/
-        /******************* CONTACTS ************************************/
-        /*********************************************************************/
-        
-        //Position
-        foreach (array("Manager", "Director", "Other") as $position) {
-        	$contactPosition = new Position();
-        	$contactPosition->setName($position);
-        	Util::setCreateAuditFields($contactPosition, 1);
-        
-        	$manager->persist($contactPosition);
-        }
-        
-        $manager->flush();
-        
-        // Contact
-        $contactPositionList = $manager->getRepository('RecordBundle:Position')->findAll();
-        $numContact = 0;
-        foreach ($contactPositionList as $contact) {
-        	 
-        	for ($i=1; $i<=10; $i++) {
-        
-        		$numContact++;
-        		 
-        		$contact = new Contact();
-        		 
-        		$contact->setFirstname('Firstname'.$numContact);
-        		$contact->setLastname('Lastname'.$numContact);
-        		$contact->setEmail('contact'.$numContact.'@localhost');
-        		$contact->setTelephone('01511234567');
-        		$contact->setMobile('07123456789');
-        		$contact->setFax('01511234568');
-        		$contact->setLinkedinUrl("http://www.linkedin.co.uk/contact".$numContact);
-        		$contact->setWebsite("http://121customerinsight.co.uk");
-        		$position = $contactPositionList[rand(1, count($contactPositionList)-1)];
-        		$contact->setPosition($position);
-        		if (strcmp($position->getName(),"Other")) {
-        			$contact->setOtherPosition("Employee");
-        		}
-        		else {
-        			$contact->setOtherPosition("");
-        		}
-        
-        		Util::setCreateAuditFields($contact, 1);
-        		 
-        		$manager->persist($contact);
-        	}
-        }
-        
-        $manager->flush();
-        
-        /*********************************************************************/
         /******************* APPOINTMENTS ************************************/
         /*********************************************************************/
         
         //Appointment Outcome
-        foreach (array("New", "No Answer", "Answer Machine", "Dead Line", "Exclusion", "Suppression request", "Customer refused a quote", "No eligible", "Call back", "Followup required", "Attempted to contact", "Qouta Full") as $outcome) {
+        foreach (array("Sale", "No Sale", "Appointment Cancelled", "Appointment Rescheduled", "No Show") as $outcome) {
         	$appointmentOutcome = new AppointmentOutcome();
         	$appointmentOutcome->setName($outcome);
         	Util::setCreateAuditFields($appointmentOutcome, 1);
@@ -303,38 +219,11 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         
         $manager->flush();
         
-        //Record Outcome
-        foreach (array("Closed - Sale", "Closed - No Sale", "No show", "Reappointed for next step") as $outcome) {
-        	$recordOutcome = new RecordOutcome();
-        	$recordOutcome->setName($outcome);
-        	Util::setCreateAuditFields($recordOutcome, 1);
-        
-        	$manager->persist($recordOutcome);
-        }
-        
-        $manager->flush();
-        
-        //Record Sector
-        foreach (array("Insurance", "Motor", "Other") as $sector) {
-        	$recordSector = new RecordSector();
-        	$recordSector->setName($sector);
-        	Util::setCreateAuditFields($recordSector, 1);
-        
-        	$manager->persist($recordSector);
-        }
-        
-        $manager->flush();
-        
         // Appointment
   	    $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
-  	    $managers = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_SUPER_USER');
   	    $appointmentOutcomeList = $manager->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
   	    $appointmentProjectList = $manager->getRepository('AppointmentBundle:AppointmentProject')->findAll();
-  	    $recordContactList = $manager->getRepository('RecordBundle:Contact')->findAll();
-  	    $recordAddressList = $manager->getRepository('RecordBundle:Address')->findAll();
   	    
-  	    $recordOutcomeList = $manager->getRepository('RecordBundle:RecordOutcome')->findAll();
-  	    $recordSectorList = $manager->getRepository('RecordBundle:RecordSector')->findAll();
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
@@ -353,8 +242,6 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		Util::setCreateAuditFields($appointment, 1);
         		
         		 
-        		$manager->persist($appointment);
-        		
         		//Appointment Details
         		$appointmentDetail = new AppointmentDetail();
         		$appointmentDetail->setTitle("Appointment ".+$numAppointment);
@@ -363,38 +250,33 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$appointmentDetail->setOutcome($appointmentOutcomeList[rand(1, count($appointmentOutcomeList)-1)]);
         		$appointmentDetail->setOutcomeReason("Lorem ipsum dolor sit amet");
         		$appointmentDetail->setProject($appointmentProjectList[rand(1, count($appointmentProjectList)-1)]);
+        		$appointmentDetail->setRecordRef(rand(0,100));
         		
         		Util::setCreateAuditFields($appointmentDetail, 1);
         		 
+        		
+        		
+        		
+        		$address = new Address();
+        		
+        		$address->setAdd1($numAppointment." Street");
+        		$address->setAdd2("Apartment ".rand(1, 700));
+        		$address->setAdd3("");
+        		$randStr = substr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ,mt_rand(0 , 25), 2);
+        		$address->setPostcode("M".rand(1, 15)." ".rand(1, 5).$randStr);
+        		$address->setCountry("UK");
+        		$address->setTown("Manchester");
+        		$address->setAppointmentDetail($appointmentDetail);
+        		 
+        		Util::setCreateAuditFields($address, 1);
+        		Util::setLatLonAddress($address, $address->getPostcode());
+        		
+        		
+        		$manager->persist($address);
+        		$appointmentDetail->setAddress($address);
         		$manager->persist($appointmentDetail);
-        		
-        		//Record
-        		$record = new Record();
-        		$record->setAddress($recordAddressList[$numAppointment]);
-        		$record->setContact($recordContactList[$numAppointment]);
-        		$record->setConame("Company ".$numAppointment);
-        		$record->setManager($managers[rand(1, count($managers)-1)]);
-        		$days = rand(1, 300);
-        		$record->setNextcall(new \DateTime('now - '.$days.' days'));
-        		$sector = $recordSectorList[rand(1, count($recordSectorList)-1)];
-        		$record->setSector($sector);
-        		if (strcmp($sector->getName(),"Other")) {
-        			$record->setOtherSector("Other");
-        		}
-        		else {
-        			$record->setOtherSector("");
-        		}
-        		$record->setOutcome($recordOutcomeList[rand(1, count($recordOutcomeList)-1)]);
-        		$record->setOutcomeReason("Lorem ipsum dolor sit amet");
-        		$record->setStatus(rand(0, 1));
-        		
-        		Util::setCreateAuditFields($record, 1);
-        		
-        		$manager->persist($record);
-        		
-        		$appointment->setRecord($record);
+        		$appointment->setAppointmentDetail($appointmentDetail);
         		$manager->persist($appointment);
-        		
         	}
         }
         

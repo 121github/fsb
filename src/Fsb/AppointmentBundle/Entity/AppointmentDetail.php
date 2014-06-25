@@ -46,11 +46,32 @@ class AppointmentDetail
      * @ORM\Column(name="outcome_reason", type="text")
      */
     private $outcomeReason;
+    
+    /**
+     *
+     * @ORM\OneToOne(targetEntity="Fsb\AppointmentBundle\Entity\Address", inversedBy="appointmentDetail")
+     *
+     */
+    private $address;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     */
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="record_ref", type="text", nullable=true)
+     */
+    private $recordRef;
+    
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="text")
      */
     private $title;
 
@@ -201,6 +222,52 @@ class AppointmentDetail
     {
         return $this->outcomeReason;
     }
+    
+    /**
+     * Set address
+     *
+     * @param \Fsb\AppointmentBundle\Entity\Address $address
+     * @return AppointmentDetail
+     */
+    public function setAddress(\Fsb\AppointmentBundle\Entity\Address $address = null)
+    {
+    	$this->address = $address;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get address
+     *
+     * @return \Fsb\AppointmentBundle\Entity\Address
+     */
+    public function getAddress()
+    {
+    	return $this->address;
+    }
+    
+    /**
+     * Set recordRef
+     *
+     * @param string $recordRed
+     * @return AppointmentDetail
+     */
+    public function setRecordRef($recordRef)
+    {
+    	$this->recordRef = $recordRef;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get recordRef
+     *
+     * @return string
+     */
+    public function getRecordRef()
+    {
+    	return $this->recordRef;
+    }
 
     /**
      * Set title
@@ -224,6 +291,7 @@ class AppointmentDetail
     {
         return $this->title;
     }
+    
 
     /**
      * Set comment

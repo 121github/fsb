@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Fsb\UserBundle\UserBundle(),
             new Fsb\AppointmentBundle\AppointmentBundle(),
             new Fsb\RuleBundle\RuleBundle(),
-            new Fsb\RecordBundle\RecordBundle(),
             new Fsb\NoteBundle\NoteBundle(),
             new Fsb\ReportingBundle\ReportingBundle(),
             new Fsb\BackendBundle\BackendBundle(),

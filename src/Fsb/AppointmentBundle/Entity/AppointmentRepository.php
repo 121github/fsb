@@ -77,7 +77,6 @@ class AppointmentRepository extends EntityRepository
 				'SUBSTRING(a.startDate, 15, 2) AS minute',
 				'a.id, ad.title', 
 				'ad.comment',
-				'r.coname as record',
 				'ud.firstname as recruiter',
 				'p.name as project',
 				'o.name as outcome',
@@ -87,7 +86,6 @@ class AppointmentRepository extends EntityRepository
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.project', 'p')
 		->innerJoin('ad.outcome', 'o')
-		->innerJoin('a.record', 'r')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
 		->where('a.recruiter = :recruiter_id')
@@ -135,7 +133,6 @@ class AppointmentRepository extends EntityRepository
 	
 		$dql = 'SELECT
 					a.startDate as date, a.id, ad.title, ad.comment,
-					r.coname as record,
 					ud.firstname as recruiter,
 					p.name as project,
 					o.name as outcome,
@@ -144,7 +141,6 @@ class AppointmentRepository extends EntityRepository
 					JOIN a.appointmentDetail ad
 					JOIN ad.project p
 					JOIN ad.outcome o
-					JOIN a.record r
 					JOIN a.recruiter u
 					JOIN u.userDetail ud
 					WHERE
@@ -162,7 +158,6 @@ class AppointmentRepository extends EntityRepository
 		$query = $em->createQueryBuilder()
 		->select(array(
 				'a.startDate as date, a.id, ad.title, ad.comment',
-				'r.coname as record',
 				'ud.firstname as recruiter',
 				'p.name as project',
 				'o.name as outcome',
@@ -172,7 +167,6 @@ class AppointmentRepository extends EntityRepository
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.project', 'p')
 		->innerJoin('ad.outcome', 'o')
-		->innerJoin('a.record', 'r')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
 		->where('a.recruiter = :recruiter_id')

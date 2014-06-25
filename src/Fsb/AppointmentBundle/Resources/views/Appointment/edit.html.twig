@@ -29,15 +29,16 @@
 						{{ form_label(edit_form.recruiter) }}
 						{{ form_errors(edit_form.recruiter) }}
 						{{ form_widget(edit_form.recruiter) }}
-					</td><td>
-						{{ form_label(edit_form.record) }}
-						{{ form_errors(edit_form.record) }}
-						{{ form_widget(edit_form.record) }}
 					</td>
 					<td>
 						{{ form_label(edit_form.appointmentDetail.project) }}
 						{{ form_errors(edit_form.appointmentDetail.project) }}
 						{{ form_widget(edit_form.appointmentDetail.project) }}
+					</td>
+					<td>
+						{{ form_label(edit_form.appointmentDetail.recordRef) }}
+						{{ form_errors(edit_form.appointmentDetail.recordRef) }}
+						{{ form_widget(edit_form.appointmentDetail.recordRef) }}
 					</td>
 				</tr><tr>
 					<td>
@@ -49,6 +50,39 @@
 						{{ form_errors(edit_form.appointmentDetail.outcomeReason) }}
 						{{ form_widget(edit_form.appointmentDetail.outcomeReason) }}
 					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(edit_form.appointmentDetail.address.add1) }}
+						{{ form_errors(edit_form.appointmentDetail.address.add1) }}
+						{{ form_widget(edit_form.appointmentDetail.address.add1) }}
+					</td><td colspan="2">
+						{{ form_label(edit_form.appointmentDetail.address.postcode) }}
+						{{ form_errors(edit_form.appointmentDetail.address.postcode) }}
+						{{ form_widget(edit_form.appointmentDetail.address.postcode) }}
+						{{ form_widget(edit_form.appointmentDetail.address.lat) }}
+						{{ form_widget(edit_form.appointmentDetail.address.lon) }}
+					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(edit_form.appointmentDetail.address.add2) }}
+						{{ form_errors(edit_form.appointmentDetail.address.add2) }}
+						{{ form_widget(edit_form.appointmentDetail.address.add2) }}
+					</td><td colspan="2">
+						{{ form_label(edit_form.appointmentDetail.address.town) }}
+						{{ form_errors(edit_form.appointmentDetail.address.town) }}
+						{{ form_widget(edit_form.appointmentDetail.address.town) }}
+					</td>
+				</tr><tr>
+					<td>
+						{{ form_label(edit_form.appointmentDetail.address.add3) }}
+						{{ form_errors(edit_form.appointmentDetail.address.add3) }}
+						{{ form_widget(edit_form.appointmentDetail.address.add3) }}
+					</td><td colspan="2">
+						{{ form_label(edit_form.appointmentDetail.address.country) }}
+						{{ form_errors(edit_form.appointmentDetail.address.country) }}
+						{{ form_widget(edit_form.appointmentDetail.address.country) }}
+					</td>
+				</tr><tr>
 				</tr><tr>
 					<td colspan="3">
 						{{ form_label(edit_form.appointmentDetail.comment) }}

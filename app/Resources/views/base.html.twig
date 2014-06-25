@@ -38,10 +38,13 @@
 				 	<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="notext"></a>
 				{% endif %}
 				<h1><a href="{{ path('index') }}"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
-				<div data-role="header">
-					<h1>{% block name %}{% endblock %}</h1>
-				    <a href="./" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-rel="back" data-ajax="false">Back</a>
-				</div>
+				{% if (is_granted('IS_AUTHENTICATED_FULLY')) %}
+					<div data-role="header">
+						<h1>{% block name %}{% endblock %}</h1>
+					    <a href="./" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-rel="back" data-ajax="false">Back</a>
+					</div>
+				{% endif %}
+				
 			</header><!-- /header -->
     
 			{% block body %}{% endblock %}

@@ -14,10 +14,6 @@ note:
     resource: "@NoteBundle/Resources/config/routing.yml"
     prefix:   /
 
-record:
-    resource: "@RecordBundle/Resources/config/routing.yml"
-    prefix:   /
-
 rule:
     resource: "@RuleBundle/Resources/config/routing.yml"
     prefix:   /

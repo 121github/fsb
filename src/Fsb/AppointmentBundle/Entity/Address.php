@@ -1,6 +1,6 @@
 <?php
 
-namespace Fsb\RecordBundle\Entity;
+namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -45,9 +45,23 @@ class Address
     /**
      * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Fsb\RecordBundle\Entity\Postcode")
+     * @ORM\Column(name="postcode", type="string", length=100)
      */
     private $postcode;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="lat", type="float", nullable=true)
+     */
+    private $lat;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="lon", type="float", nullable=true)
+     */
+    private $lon;
 
     /**
      * @var string
@@ -65,9 +79,9 @@ class Address
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="Fsb\RecordBundle\Entity\Record", mappedBy="address")
+     * @ORM\OneToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentDetail", mappedBy="address")
      */
-    private $record;
+    private $appointmentDetail;
     
     /**
      * @var integer
@@ -236,10 +250,10 @@ class Address
     /**
      * Set postcode
      *
-     * @param \Fsb\RecordBundle\Entity\Postcode $postcode
-     * @return Address
+     * @param string $postcode
+     * @return Postcode
      */
-    public function setPostcode(\Fsb\RecordBundle\Entity\Postcode $postcode = null)
+    public function setPostcode($postcode)
     {
     	$this->postcode = $postcode;
     
@@ -249,7 +263,7 @@ class Address
     /**
      * Get postcode
      *
-     * @return \Fsb\RecordBundle\Entity\Postcode
+     * @return string
      */
     public function getPostcode()
     {
@@ -257,14 +271,60 @@ class Address
     }
     
     /**
+     * Set lat
+     *
+     * @param float $lat
+     * @return Postcode
+     */
+    public function setLat($lat)
+    {
+    	$this->lat = $lat;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get lat
+     *
+     * @return float
+     */
+    public function getLat()
+    {
+    	return $this->lat;
+    }
+    
+    /**
+     * Set lon
+     *
+     * @param float $lon
+     * @return Postcode
+     */
+    public function setLon($lon)
+    {
+    	$this->lon = $lon;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get lon
+     *
+     * @return float
+     */
+    public function getLon()
+    {
+    	return $this->lon;
+    }
+    
+    /**
      * Set record
      *
-     * @param \Fsb\RecordBundle\Entity\Record $record
+     * @param \Fsb\AppointmentBundle\Entity\AppointmentDetail $appointmentDetail
      * @return Address
      */
-    public function setRecord(\Fsb\RecordBundle\Entity\Record $record = null)
+    public function setAppointmentDetail(\Fsb\AppointmentBundle\Entity\AppointmentDetail $appointmentDetail = null)
     {
-    	$this->record = $record;
+    	$this->appointmentDetail = $appointmentDetail;
     
     	return $this;
     }
@@ -272,11 +332,11 @@ class Address
     /**
      * Get record
      *
-     * @return \Fsb\RecordBundle\Entity\Record
+     * @return \Fsb\AppointmentBundle\Entity\AppointmentDetail
      */
-    public function getRecord()
+    public function getAppointmentDetail()
     {
-    	return $this->record;
+    	return $this->appointmentDetail;
     }
     
     /**

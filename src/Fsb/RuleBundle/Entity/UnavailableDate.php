@@ -4,6 +4,7 @@ namespace Fsb\RuleBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Translation\Tests\String;
+use Symfony\Component\Validator\Constraints\Time;
 
 /**
  * UnavailableDate
@@ -49,6 +50,33 @@ class UnavailableDate
      * @ORM\Column(name="unavailable_date", type="date")
      */
     private $unavailableDate;
+    
+    /**
+     * 
+     * @var Time
+     *
+     * @ORM\Column(name="start_time", type="time", nullable=true)
+     * 
+     */
+    private $endTime;
+    
+    /**
+     *
+     * @var Time
+     *
+     * @ORM\Column(name="end_time", type="time", nullable=true)
+     *
+     */
+    private $startTime;
+    
+    /**
+     *
+     * @var Boolean
+     *
+     * @ORM\Column(name="all_day", type="boolean")
+     *
+     */
+    private $allDay;
 
     /**
      * @var integer
@@ -121,7 +149,76 @@ class UnavailableDate
     {
         return $this->unavailableDate;
     }
+    
+    /**
+     * Set startTime
+     *
+     * @param \Time $startTime
+     * @return UnavailableDate
+     */
+    public function setStartTime($startTime)
+    {
+    	$this->startTime = $startTime;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get startTime
+     *
+     * @return \Time
+     */
+    public function getStartTime()
+    {
+    	return $this->startTime;
+    }
+    
+    /**
+     * Set endTime
+     *
+     * @param \Time endTime
+     * @return UnavailableDate
+     */
+    public function setEndTime($endTime)
+    {
+    	$this->endTime = $endTime;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get endTime
+     *
+     * @return \Time
+     */
+    public function getEndTime()
+    {
+    	return $this->endTime;
+    }
 
+    /**
+     * Set allDay
+     *
+     * @param Boolean allDay
+     * @return UnavailableDate
+     */
+    public function setAllDay($allDay)
+    {
+    	$this->allDay = $allDay;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get allDay
+     *
+     * @return Boolean
+     */
+    public function getAllDay()
+    {
+    	return $this->allDay;
+    }
+    
     /**
      * Set recruiter
      *
