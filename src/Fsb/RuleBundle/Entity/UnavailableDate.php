@@ -58,7 +58,7 @@ class UnavailableDate
      * @ORM\Column(name="start_time", type="time", nullable=true)
      * 
      */
-    private $endTime;
+    private $startTime;
     
     /**
      *
@@ -67,7 +67,7 @@ class UnavailableDate
      * @ORM\Column(name="end_time", type="time", nullable=true)
      *
      */
-    private $startTime;
+    private $endTime;
     
     /**
      *

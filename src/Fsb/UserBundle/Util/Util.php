@@ -36,5 +36,12 @@ class Util
 
 		return $address;
 	}
+	
+	static public function getMapUrl($lat, $lon, $postcode) {
+		
+		$url = 'https://www.google.co.uk/maps/place/'.$postcode.'/@'.$lat.','.$lon;
+		
+		return $url; 
+	}
 		
 }

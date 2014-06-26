@@ -142,5 +142,46 @@ $(function(){
         },
         
     });
+    
+  //StartTime
+  $("#fsb_rulebundle_unavailabledate_startTime input").each(function(){
+      $(this).attr("readonly","readonly");
+  });
+  $('#fsb_rulebundle_unavailabledate_startTime').datetimepicker({
+      format: "H:i",
+      timepicker: true,
+      datepicker: false,
+      step:30,
+      minTime:'08:00',
+      maxTime:'21:00',
+  });
+  
+//EndTime
+  $("#fsb_rulebundle_unavailabledate_endTime input").each(function(){
+      $(this).attr("readonly","readonly");
+  });
+  $('#fsb_rulebundle_unavailabledate_endTime').datetimepicker({
+      format: "H:i",
+      timepicker: true,
+      datepicker: false,
+      step:30,
+      minTime:'08:00',
+      maxTime:'21:00',
+  });
 });
 
+
+/********************************************************************************************************/
+/******************** Checkbox all the day to show or hidden the times of a unavailable date ************/
+/********************************************************************************************************/
+$(function(){
+	$('#fsb_rulebundle_unavailabledate_allDay').change(function(){
+	  if($(this).prop("checked")) {
+		$('#fsb_rulebundle_unavailabledate_startTime').hide();
+	    $('#fsb_rulebundle_unavailabledate_endTime').hide();
+	  } else {
+		$('#fsb_rulebundle_unavailabledate_startTime').show();
+	    $('#fsb_rulebundle_unavailabledate_endTime').show();
+	  }
+	});
+});

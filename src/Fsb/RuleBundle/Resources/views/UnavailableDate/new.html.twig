@@ -1,15 +1,23 @@
-{% extends '::base.html.twig' %}
+{% extends '::calendar_dialog.html.twig' %}
 
-{% block body -%}
-    <h1>UnavailableDate creation</h1>
+{% block title %}New Appointment{% endblock %}
 
-    {{ form(form) }}
+{% block article -%}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('unavailableDate') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+	{% set submit_id = form.vars.id ~ "_submit" %}
+    <form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
+    	<h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
+    	{{ form_errors(form) }}
+       {% if (recruiter_id) %}
+       	<div style="display: none;">
+       {% else %}
+       	<div>
+       {% endif %}
+       	{{ form_label(form.recruiter) }}
+		{{ form_errors(form.recruiter) }}
+		{{ form_widget(form.recruiter) }}
+       </div>
+       {{ form_rest(form) }}
+       <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">No</a>	
+    </form>
 {% endblock %}

@@ -155,8 +155,27 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$unavailableDate->setUnavailableDate(new \DateTime('now - '.$days.' days'));
         		$unavailableDate->setReason($vacationReason[0]);
         		$unavailableDate->setRecruiter($recruiter);
-        		$unavailableDate->setAllDay(rand(0, 1));
+        		$unavailableDate->setAllDay(1);
         
+        		Util::setCreateAuditFields($unavailableDate, 1);
+        		 
+        		$manager->persist($unavailableDate);
+        	}
+        	
+        	//Unavailable Times
+        	for ($i=1; $i<=10; $i++) {
+        		 
+        		$unavailableDate = new UnavailableDate();
+        	
+        		$days = rand(1, 30);
+        		$hours = rand(1, 2);
+        		$unavailableDate->setUnavailableDate(new \DateTime('now - '.$days.' days'));
+        		$unavailableDate->setReason($vacationReason[0]);
+        		$unavailableDate->setRecruiter($recruiter);
+        		$unavailableDate->setAllDay(0);
+        		$unavailableDate->setStartTime(new \DateTime('11:30'));
+        		$unavailableDate->setEndTime(new \DateTime('11:30 + '.$hours.' hours'));
+        	
         		Util::setCreateAuditFields($unavailableDate, 1);
         		 
         		$manager->persist($unavailableDate);

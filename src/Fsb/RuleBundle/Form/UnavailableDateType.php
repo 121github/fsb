@@ -16,9 +16,19 @@ class UnavailableDateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+        	->add('allDay', 'checkbox', array(
+        			'required'  => false,
+        ))
         	->add('unavailableDate', 'date', array(
         			'widget' => "single_text",
-//         			'disabled' => true,
+        	))
+        	->add('startTime', 'time', array(
+        			'widget' => "single_text",
+        			'required'  => false,
+        	))
+        	->add('endTime', 'time', array(
+        			'widget' => "single_text",
+        			'required'  => false,
         	))
             ->add('recruiter', 'entity', array(
             		'class'         => 'Fsb\\UserBundle\\Entity\\User',
@@ -26,7 +36,6 @@ class UnavailableDateType extends AbstractType
             		'query_builder' => function(EntityRepository $repository) {
             			return $repository->findUsersByRoleQuery('ROLE_RECRUITER');
             		},
-//             		'disabled' => true,
             ))
             ->add('reason', 'entity', array(
             		'class'         => 'Fsb\\RuleBundle\\Entity\\UnavailableDateReason',
@@ -38,6 +47,7 @@ class UnavailableDateType extends AbstractType
             ))
             ->add('otherReason', 'text', array(
             		'required'    => false,
+            		'read_only' => true,
             ))
         ;
     }

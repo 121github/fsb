@@ -285,6 +285,29 @@ class DefaultController extends Controller
     	}
     	$unavailableDateList = $auxList;
     	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Unavailable Times *********************************************************/
+    	/******************************************************************************************************************************/
+    	   
+    	$unavailableTimeList = $em->getRepository('RuleBundle:UnavailableDate')->getUnavailableTimesByRecruiter($recruiter->getId(), new \DateTime($day.'-'.$month.'-'.$year));
+    	
+    	
+    	$auxList = array();
+    	
+    	foreach ($unavailableTimeList as $unavailableTime) {
+    		$startTime = $unavailableTime["startTime"]->format('H:i');
+    		$endTime = $unavailableTime["endTime"]->format('H:i');
+    		while ($startTime < $endTime) {
+    			
+    			$auxList[$startTime] = $unavailableTime["id"];
+    			
+    			$startTime =  date("H:i", strtotime('+30 minutes', strtotime($startTime)));
+    		}
+    	}
+    	
+    	$unavailableTimeList = $auxList;
+    	
     	/******************************************************************************************************************************/
     	/************************************************** Set Available Date Form *************************************************/
     	/******************************************************************************************************************************/
@@ -323,6 +346,9 @@ class DefaultController extends Controller
 	    		$aux["outcome"] = $appointment["outcome"];
 	    		$aux["outcomeReason"] = $appointment["outcomeReason"];
 	    		$aux["project"] = $appointment["project"];
+	    		$aux["recordRef"] = $appointment["recordRef"];
+	    		$aux["postcode"] = $appointment["postcode"];
+	    		$aux["map"] = Util::getMapUrl($appointment["lat"], $appointment["lon"], $appointment["postcode"]);
 	    		
 	    		if ($aux["minute"] < 30) {
 	    			$auxList[(int)$appointment["hour"]][0][$appointment["id"]] = $aux;
@@ -333,6 +359,7 @@ class DefaultController extends Controller
     	}
     	
     	$appointmentList = $auxList;
+    	
     	
     	
     	/******************************************************************************************************************************/
@@ -360,6 +387,7 @@ class DefaultController extends Controller
     			'setUnavailableForm' => $setUnavailableDateForm->createView(),
     			'unavailableDateId' => $unavailableDateId,
     			'setAvailableForm' => $setAvailableDateForm->createView(),
+    			'unavailableTimeList' => $unavailableTimeList,
     			'day' => $day,
     			'month' => $month,
     			"year" => $year,

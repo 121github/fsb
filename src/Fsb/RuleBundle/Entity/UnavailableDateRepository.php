@@ -29,6 +29,7 @@ class UnavailableDateRepository extends EntityRepository
 		->innerJoin('ud.reason', 'r')
 		->where('ud.recruiter = :recruiter_id')
 		->orWhere('ud.recruiter is null')
+		->andWhere('ud.allDay = true')
 		->orderBy('ud.unavailableDate', 'ASC')
 		
 		->setParameter('recruiter_id', $recruiter_id)
@@ -36,6 +37,34 @@ class UnavailableDateRepository extends EntityRepository
 		
 		$unavailableDate = $query->getQuery()->getResult();
 		
+		return $unavailableDate;
+	}
+	
+	/**
+	 * Return the unavailable times for a day for a recruiter
+	 *
+	 * @return boolean
+	 *
+	 */
+	public function getUnavailableTimesByRecruiter($recruiter_id, $day){
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select(array('ud.startTime', 'ud.endTime', 'ud.id'))
+		->from('RuleBundle:UnavailableDate', 'ud')
+		->innerJoin('ud.reason', 'r')
+		->where('ud.recruiter = :recruiter_id')
+		->andWhere('ud.allDay = false')
+		->andWhere('ud.unavailableDate = :day')
+		->orderBy('ud.unavailableDate', 'ASC')
+	
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('day', $day)
+		;
+	
+		$unavailableDate = $query->getQuery()->getResult();
+	
 		return $unavailableDate;
 	}
 }

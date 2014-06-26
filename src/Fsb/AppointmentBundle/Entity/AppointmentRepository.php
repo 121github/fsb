@@ -80,12 +80,17 @@ class AppointmentRepository extends EntityRepository
 				'ud.firstname as recruiter',
 				'p.name as project',
 				'o.name as outcome',
-				'ad.outcomeReason'
+				'ad.outcomeReason',
+				'ad.recordRef',
+				'adr.postcode',
+				'adr.lat',
+				'adr.lon'
 		))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.project', 'p')
 		->innerJoin('ad.outcome', 'o')
+		->innerJoin('ad.address', 'adr')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
 		->where('a.recruiter = :recruiter_id')

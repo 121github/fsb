@@ -35,12 +35,6 @@
     {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
     
     
-    <script type="text/javascript">
-	 function onSuccess(){
-	      $('#popupSetUnavailable').popup('open'); 
-	 }    
-	</script>
-    
     <div  data-theme="a" id="calendar-page" class="day-page">
     
     	
@@ -71,6 +65,11 @@
 									    </div>
 									    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 									        <h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
+									        <div style="display: none;">
+									        	{{ form_label(setUnavailableForm.recruiter) }}
+												{{ form_errors(setUnavailableForm.recruiter) }}
+												{{ form_widget(setUnavailableForm.recruiter) }}
+									        </div>
 									        {{ form_rest(setUnavailableForm) }}
 									        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">No</a>
 									    </div>
@@ -165,9 +164,14 @@
 												        <p style="float: right;">{{ currentDate|date("d F Y") }}</p>
 													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
 													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+													    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment["recordRef"] }}</p>
 								                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
 								                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
 								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+								                		<p>
+								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
+								                			<a href="{{ appointment["map"] }}" target="_blank" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+								                		</p>
 								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 								                		
 								                		<p style="padding-top: 10px; text-align: right;">
@@ -197,9 +201,14 @@
 													    <p style="float: right;">{{ currentDate|date("d F Y") }}</p>
 													    <h2 class="ui-title">{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</h2>
 													    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+								                		<p><strong>{{ "Record Reference: " }}</strong>{{ appointment["recordRef"] }}</p>
 								                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
 								                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
 								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+								                		<p>
+								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
+								                			<a href="{{ appointment["map"] }}" target="_blank" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+								                		</p>
 								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 								                		
 								                		<p style="padding-top: 10px; text-align: right;">
@@ -218,12 +227,35 @@
 						            
 				                {% else %}
 					                {% for j in range(0,1) %}
-					                	<a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-role="button" data-rel="dialog" data-transition="pop">
-					                		{% if j == 0 %}
-					                			<p>{{ pref ~ i ~ ":00" }}</p>
-					                		{% else %}
-					                			<p>{{ pref ~ i ~ ":30" }}</p>
-					                		{% endif %}
+					                	{% if j == 0 %}
+				                			{% set time = (pref ~ i ~ ":00")|date('H:i') %}
+				                		{% else %}
+				                			{% set time = (pref ~ i ~ ":30")|date('H:i') %}
+				                		{% endif %}
+				                		
+				                		{% if (unavailableTimeList[time] is defined) %}
+					                		<a href="#action{{ time }}" class="ui-btn unavailableTime" data-rel="popup" data-position-to="origin" data-role="button" data-inline="true" data-transition="slideup" data-theme="a"><p> {{ time }} {{ " - Unavailable" }} </p></a>
+
+											<div data-role="popup" id="action{{ time }}" data-theme="a">
+												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
+													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
+													<li><a href="#" class="ui-btn ui-disabled">Create Appointment</a></li>
+													<li><a href="#">Create Note</a></li>
+													<li><a href="#">Set Available</a></li>
+												</ul>
+											</div>
+					                	{% else %}
+					                		<a href="#action{{ time }}" data-rel="popup" data-position-to="origin" data-role="button" data-inline="true" data-transition="slideup" data-theme="a"><p> {{ time }} </p></a>
+
+											<div data-role="popup" id="action{{ time }}" data-theme="a">
+												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
+													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
+													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
+													<li><a href="#">Create Note</a></li>
+													<li><a href="{{ path('unavailableDate_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
+												</ul>
+											</div>
+					                	{% endif %}
 					                	</a>
 					                {% endfor %}
 				                {% endif %}

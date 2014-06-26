@@ -486,11 +486,19 @@ a{
 }
 
 .day-page .ui-listview li.currentTime .ui-btn {
- 	background: rgb(248, 209, 209);
+ 	background: rgb(251, 255, 157);
 }
 
 .day-page .ui-listview li.currentTime .ui-btn:hover{
- 	background: rgb(255, 147, 147);
+ 	background: rgb(250, 255, 128);
+}
+
+.day-page .ui-listview a.unavailableTime.ui-btn {
+ 	background: rgb(248, 209, 209);
+}
+
+.day-page .ui-listview a.unavailableTime.ui-btn p {
+ 	font-weight: bold;
 }
 
 

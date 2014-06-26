@@ -9,6 +9,10 @@ unavailableDate_show:
 unavailableDate_new:
     pattern:  /new
     defaults: { _controller: "RuleBundle:UnavailableDate:new" }
+    
+unavailableDate_new_date:
+    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "RuleBundle:UnavailableDate:newDate", recruiter_id: null }
 
 unavailableDate_create:
     pattern:  /create

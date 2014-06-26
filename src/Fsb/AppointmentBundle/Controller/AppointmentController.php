@@ -60,8 +60,15 @@ class AppointmentController extends Controller
         	Util::setCreateAuditFields($appointmentDetail, $userLogged->getId());
         	
         	
+        	//Address
+        	$address = $appointmentDetail->getAddress();
+        	$address->setAppointmentDetail($appointmentDetail);
+        	Util::setCreateAuditFields($address, $userLogged->getId());
+        	Util::setLatLonAddress($address, $address->getPostcode());
+        	
         	$em->persist($appointment);
         	$em->persist($appointmentDetail);
+        	$em->persist($address);
         	
         	$em->flush();
             
@@ -253,17 +260,23 @@ class AppointmentController extends Controller
              
             Util::setModifyAuditFields($appointmentDetail, $userLogged->getId());
              
+            //Address
+            $address = $appointmentDetail->getAddress();
+            $address->setAppointmentDetail($appointmentDetail);
+            Util::setCreateAuditFields($address, $userLogged->getId());
+            Util::setLatLonAddress($address, $address->getPostcode());
              
             $em->persist($appointment);
             $em->persist($appointmentDetail);
+            $em->persist($address);
         	
             $em->flush();
 
             $this->get('session')->getFlashBag()->set(
             	'success',
             	array(
-            			'title' => 'Appointment Created!',
-            			'message' => 'The appointment has been created'
+            			'title' => 'Appointment Updated!',
+            			'message' => 'The appointment has been updated'
             	)
             );
             
