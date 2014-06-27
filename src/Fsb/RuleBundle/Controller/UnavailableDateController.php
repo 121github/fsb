@@ -119,6 +119,7 @@ class UnavailableDateController extends Controller
         return $this->render('RuleBundle:UnavailableDate:new.html.twig', array(
             'entity' => $unavailableDate,
             'form'   => $form->createView(),
+        	'recruiter_id' => null,
         ));
     }
     
@@ -190,7 +191,7 @@ class UnavailableDateController extends Controller
      * Displays a form to edit an existing UnavailableDate entity.
      *
      */
-    public function editAction($id)
+    public function editAction($id, $recruiter_id = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -207,6 +208,7 @@ class UnavailableDateController extends Controller
             'entity'      => $unavailableDate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        	'recruiter_id' => $recruiter_id,
         ));
     }
 
@@ -224,7 +226,10 @@ class UnavailableDateController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array(
+        		'label' => 'Update',
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-edit')
+        ));
 
         return $form;
     }
@@ -249,13 +254,24 @@ class UnavailableDateController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('unavailableDate_edit', array('id' => $id)));
+            $unavailableDateDay = $unavailableDate->getUnavailableDate()->getTimestamp();
+            $day = date('d',$unavailableDateDay);
+            $month = date('m',$unavailableDateDay);
+            $year = date('Y',$unavailableDateDay);
+
+            return $this->redirect($this->generateUrl('calendar_day', array(
+            		'day' => $day,
+            		'month' => $month,
+            		'year' => $year,
+            	))
+            );
         }
 
         return $this->render('RuleBundle:UnavailableDate:edit.html.twig', array(
             'entity'      => $unavailableDate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        	'recruiter_id' => $unavailableDate->getRecruiter()->getId(),
         ));
     }
     /**
@@ -275,20 +291,19 @@ class UnavailableDateController extends Controller
                 throw $this->createNotFoundException('deleteAction - Unable to find UnavailableDate entity.');
             }
             
-            $unavailableDate = $unavailableDate->getUnavailableDate()->getTimestamp();
-            
             $em->remove($unavailableDate);
             $em->flush();
             
-            $day = date('d',$unavailableDate);
-            $month = date('m',$unavailableDate);
-            $year = date('Y',$unavailableDate);
-            
+            $unavailableDateDay = $unavailableDate->getUnavailableDate()->getTimestamp();
+            $day = date('d',$unavailableDateDay);
+            $month = date('m',$unavailableDateDay);
+            $year = date('Y',$unavailableDateDay);
+
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,
             		'month' => $month,
             		'year' => $year,
-            ))
+            	))
             );
         }
         
@@ -308,7 +323,10 @@ class UnavailableDateController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('unavailableDate_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array(
+            		'label' => 'Delete',
+            		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete')
+            ))
             ->getForm()
         ;
     }

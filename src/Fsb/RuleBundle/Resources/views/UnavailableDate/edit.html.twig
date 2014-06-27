@@ -1,16 +1,28 @@
-{% extends '::base.html.twig' %}
+{% extends '::calendar_dialog.html.twig' %}
 
-{% block body -%}
-    <h1>UnavailableDate edit</h1>
+{% block title %}Change Availability{% endblock %}
 
-    {{ form(edit_form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('unavailableDate') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+{% block article -%}
+	{% set submit_id = edit_form.vars.id ~ "_submit" %}
+    <form action="{{ path('unavailableDate_update', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+    	<input type="hidden" name="_method" value="PUT">
+    	<h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
+    	{{ form_errors(edit_form) }}
+       {% if (recruiter_id) %}
+       	<div style="display: none;">
+       {% else %}
+       	<div>
+       {% endif %}
+       	{{ form_label(edit_form.recruiter) }}
+		{{ form_errors(edit_form.recruiter) }}
+		{{ form_widget(edit_form.recruiter) }}
+       </div>
+       {{ form_rest(edit_form) }}
+       <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>	
+    </form>
+    
+    <form action="{{ path('unavailableDate_delete', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    	<input type="hidden" name="_method" value="DELETE">
+    	{{ form(delete_form) }}
+    </form>
 {% endblock %}

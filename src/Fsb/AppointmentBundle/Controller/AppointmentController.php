@@ -220,7 +220,7 @@ class AppointmentController extends Controller
 
         $form->add('submit', 'submit', array(
         		'label' => 'Update',
-        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+        		'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-edit')
         ));
 
         return $form;

@@ -1,9 +1,9 @@
 {% extends '::calendar_dialog.html.twig' %}
 
-{% block title %}New Appointment{% endblock %}
+{% block title %}Set Unavailable{% endblock %}
+
 
 {% block article -%}
-
 	{% set submit_id = form.vars.id ~ "_submit" %}
     <form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
     	<h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>

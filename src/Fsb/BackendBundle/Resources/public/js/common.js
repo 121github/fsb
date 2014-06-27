@@ -122,12 +122,12 @@ $(function(){
     });
 });
 
-/********************************************************************************************************/
-/******************** Datetime picker for new unavailable date ******************************************/
-/********************************************************************************************************/
+///********************************************************************************************************/
+///******************** Datetime picker for new unavailable date ******************************************/
+///********************************************************************************************************/
 $(function(){
 	//UnavaliableDate
-    $("#fsb_rulebundle_unavailabledate_unavailableDate input").each(function(){
+    $("#fsb_rulebundle_unavailabledate_unavailableDate").each(function(){
         $(this).attr("readonly","readonly");
     });
     $('#fsb_rulebundle_unavailabledate_unavailableDate').datetimepicker({
@@ -143,31 +143,31 @@ $(function(){
         
     });
     
-  //StartTime
-  $("#fsb_rulebundle_unavailabledate_startTime input").each(function(){
-      $(this).attr("readonly","readonly");
-  });
-  $('#fsb_rulebundle_unavailabledate_startTime').datetimepicker({
-      format: "H:i",
-      timepicker: true,
-      datepicker: false,
-      step:30,
-      minTime:'08:00',
-      maxTime:'21:00',
-  });
+    //StartTime
+    $("#fsb_rulebundle_unavailabledate_startTime").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_rulebundle_unavailabledate_startTime').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
   
-//EndTime
-  $("#fsb_rulebundle_unavailabledate_endTime input").each(function(){
-      $(this).attr("readonly","readonly");
-  });
-  $('#fsb_rulebundle_unavailabledate_endTime').datetimepicker({
-      format: "H:i",
-      timepicker: true,
-      datepicker: false,
-      step:30,
-      minTime:'08:00',
-      maxTime:'21:00',
-  });
+    //EndTime
+    $("#fsb_rulebundle_unavailabledate_endTime").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_rulebundle_unavailabledate_endTime').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
 });
 
 
