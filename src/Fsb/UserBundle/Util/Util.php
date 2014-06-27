@@ -22,6 +22,7 @@ class Util
 		return $entity;
 	}
 	
+	
 	static public function setLatLonAddress($address, $postcode) {
 		$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($postcode).",uk&sensor=true";
 		$xml = simplexml_load_file($request_url) or die("url not loading");
@@ -42,6 +43,26 @@ class Util
 		$url = 'https://www.google.co.uk/maps/place/'.$postcode.'/@'.$lat.','.$lon;
 		
 		return $url; 
+	}
+	
+	static public function isInTheRange($postcodeOrig, $postcodeDest, $range) {
+	
+		$request_url = "http://maps.googleapis.com/maps/api/distancematrix/xml?origins=".$postcodeOrig."|UK&destinations=".$postcodeDest."|UK&mode=car&language=en-EN&sensor=false";
+	
+		$distance = -1;
+		
+		$xml = simplexml_load_file($request_url) or die("url not loading");
+		$status = $xml->status;
+		if ($status=="OK") {
+			if ($xml->row->element->distance->value)
+				$distance = $xml->row->element->distance->value;
+		}	
+		
+		if ($distance >= 0 && $distance < $range*1.6*1000) {
+			return true;
+		}
+			
+		return false;
 	}
 		
 }

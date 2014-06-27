@@ -21,7 +21,7 @@ class AppointmentRepository extends EntityRepository
 	 * 
 	 * @return array Appointments
 	 */
-	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null) {
+	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
 	
 		$em = $this->getEntityManager();
 		
@@ -29,6 +29,7 @@ class AppointmentRepository extends EntityRepository
 		->select(array('SUBSTRING(a.startDate, 9, 2) AS day', 'COUNT(a.id) AS numapp'))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
 		->where('a.recruiter = :recruiter_id')
 		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
 		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
@@ -52,6 +53,12 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
+		if (count($postcodes) > 0) {
+			$query
+			->andWhere('adr.postcode IN (:postcodes)')
+			->setParameter('postcodes', $postcodes);
+		} 
+		
 		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
@@ -67,7 +74,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null) {
+	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -117,6 +124,12 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
+		if (count($postcodes) > 0) {
+			$query
+			->andWhere('adr.postcode IN (:postcodes)')
+			->setParameter('postcodes', $postcodes);
+		}
+		
 		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
@@ -132,33 +145,10 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null) {
+	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
 	
 		$em = $this->getEntityManager();
 	
-		$dql = 'SELECT
-					a.startDate as date, a.id, ad.title, ad.comment,
-					ud.firstname as recruiter,
-					p.name as project,
-					o.name as outcome,
-					ad.outcomeReason
-					FROM AppointmentBundle:Appointment a
-					JOIN a.appointmentDetail ad
-					JOIN ad.project p
-					JOIN ad.outcome o
-					JOIN a.recruiter u
-					JOIN u.userDetail ud
-					WHERE
-						a.recruiter = :recruiter_id AND
-						a.startDate > :date
-					ORDER BY a.startDate ASC';
-	
-		$query = $em->createQuery($dql);
-		$query->setParameter('recruiter_id', $recruiter_id);
-		$query->setParameter('date', new \DateTime($year.'-'.$month.'-'.$day.' 00:00:00'));
-	
-		
-		
 		
 		$query = $em->createQueryBuilder()
 		->select(array(
@@ -166,12 +156,17 @@ class AppointmentRepository extends EntityRepository
 				'ud.firstname as recruiter',
 				'p.name as project',
 				'o.name as outcome',
-				'ad.outcomeReason'
+				'ad.outcomeReason',
+				'ad.recordRef',
+				'adr.postcode',
+				'adr.lat',
+				'adr.lon'
 		))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.project', 'p')
 		->innerJoin('ad.outcome', 'o')
+		->innerJoin('ad.address', 'adr')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
 		->where('a.recruiter = :recruiter_id')
@@ -195,8 +190,44 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
+		if (count($postcodes) > 0) {
+			$query
+			->andWhere('adr.postcode IN (:postcodes)')
+			->setParameter('postcodes', $postcodes);
+		}
+		
 		$recruiter_ar = $query->getQuery()->getResult();
 	
 		return $recruiter_ar;
+	}
+	
+	/**
+	 * Get The postcodes of the appointments of a recruiter 
+	 *
+	 * @param int $recruiter_id
+	 *
+	 * @return array Postcodes
+	 */
+	public function getPostcodesByRecruiter($recruiter_id, $month, $year) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select(array('distinct adr.postcode'))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
+	
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+	
+		$postcode_ar = $query->getQuery()->getResult();
+	
+		return $postcode_ar;
 	}
 }

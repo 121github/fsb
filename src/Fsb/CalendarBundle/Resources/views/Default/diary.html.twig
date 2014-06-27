@@ -77,17 +77,20 @@
 					                	<strong style="font-size: 20px;">{{ appointment["date"] | date("H:i") }} </strong> 
 					                	{{ key }}
 					                </p>
-					                <p><strong>{{ "Record: " }}</strong>{{ appointment["record"] }}</p>
+			                		<p><strong>{{ "Record Reference: " }}</strong>{{ appointment["recordRef"] }}</p>
 			                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
 			                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
 			                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+			                		<p>
+			                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
+			                			<a href="{{ appointment["map"] }}" target="_blank" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+			                		</p>
 			                		<p >
 			                			{{ appointment["comment"] | truncate(100) }}
 			                		</p>
 			                		<br />
 			                		<p>
-			                			<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Edit" }}</a>
-			                			<a href="{{ path('appointment_delete', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-inline="true">{{ "Delete" }}</a>
+			                			<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-mini="true" data-icon="edit" data-theme="a" data-inline="true">{{ "Edit" }}</a>
 			                		</p>
 					            </div>
 			           		{% endfor %}

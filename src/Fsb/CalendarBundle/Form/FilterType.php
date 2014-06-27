@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Range;
 
 class FilterType extends AbstractType
 {
@@ -49,6 +50,7 @@ class FilterType extends AbstractType
             ))
             ->add('range', 'number', array(
             		'required'    => false,
+            		'max_length' => 4,
             ))
         ;
     }

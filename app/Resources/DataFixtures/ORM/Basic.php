@@ -228,7 +228,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
         
         //AppointmetProject
-        for ($i=1;$i<10;$i++){
+        for ($i=1;$i<5;$i++){
         	$appointmentProject = new AppointmentProject();
         	$appointmentProject->setName("Project ".$i);
         	Util::setCreateAuditFields($appointmentProject, 1);
@@ -246,7 +246,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
-        	for ($i=1; $i<=10; $i++) {
+        	for ($i=1; $i<=40; $i++) {
         
         		$numAppointment++;
         		 

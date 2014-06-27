@@ -52,6 +52,8 @@ class DefaultController extends Controller
     	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
 	    	
 	    	
     	if ($projects_filter) {
@@ -75,8 +77,49 @@ class DefaultController extends Controller
     		 
     		$filter->setOutcomes($outcome_ar);
     	}
+    	if ($postcode_filter && !$filter->getPostcode()) {
+    		$filter->setPostcode($postcode_filter);
+    	}
+    	if ($range_filter && !$filter->getRange()) {
+    		$filter->setRange($range_filter);
+    	}
     	    
     	return $this->createSearchForm($filter);
+    }
+    
+    
+    /**
+     * 
+     * @param unknown $postcode
+     * @param unknown $range
+     * @param unknown $recruiter_id
+     * @param unknown $month
+     * @param unknown $year
+     * 
+     * 
+     */
+    private function getPostcodesFilterByRange($postcode_filter, $range, $recruiter_id, $month, $year) {
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$postcodes_filter = array();
+    	if ($postcode_filter) {
+    		array_push($postcodes_filter, $postcode_filter);
+    	}
+    	
+    	if ($range > 0) {
+    		//Get all the postcodes
+    		$postcodes_ar = $em->getRepository('AppointmentBundle:Appointment')->getPostcodesByRecruiter($recruiter_id, $month, $year);
+    		
+    		foreach ($postcodes_ar as $postcode) {
+    			$distance = Util::isInTheRange($postcode_filter, $postcode["postcode"], $range);
+    			if ($distance) {
+    				array_push($postcodes_filter, $postcode["postcode"]);
+    			}
+    		}
+    	
+    	}
+    	
+    	return $postcodes_filter;
     }
     
     
@@ -101,7 +144,8 @@ class DefaultController extends Controller
     	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
-    	 
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -123,6 +167,9 @@ class DefaultController extends Controller
     	if (!$recruiter) {
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
+    	
+    	
+    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -153,7 +200,7 @@ class DefaultController extends Controller
     	$prevYear = $prevDate->format('Y');
     	
     	//Appointments in the prev month
-    	$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear, $projects_filter, $outcomes_filter);
+    	$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear, $projects_filter, $outcomes_filter, $postcodes_filter);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentPrevList as $appointment) {
@@ -167,7 +214,7 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	   
     	//Appointments in the current month
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentList as $appointment) {
@@ -184,7 +231,7 @@ class DefaultController extends Controller
     	$nextYear = $nextDate->format('Y');
     	
     	//Appointments in the next month
-    	$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear, $projects_filter, $outcomes_filter);
+    	$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear, $projects_filter, $outcomes_filter, $postcodes_filter);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentNextList as $appointment) {
@@ -239,6 +286,8 @@ class DefaultController extends Controller
     	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
     	 
     	
     	/******************************************************************************************************************************/
@@ -262,6 +311,7 @@ class DefaultController extends Controller
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
 
+    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -331,7 +381,7 @@ class DefaultController extends Controller
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	   
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
     	
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
@@ -416,7 +466,8 @@ class DefaultController extends Controller
     	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
     	$recruiter_filter = isset($session_fitler["recruiter"]) ? $session_fitler["recruiter"] : null;
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
-    	 
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
     
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -439,6 +490,9 @@ class DefaultController extends Controller
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
     
+    	
+    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
+    	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
     	$searchForm   = $this->getFilterForm($filter);
@@ -459,7 +513,7 @@ class DefaultController extends Controller
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
     	 
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
@@ -474,6 +528,9 @@ class DefaultController extends Controller
     		$aux["outcome"] = $appointment["outcome"];
     		$aux["outcomeReason"] = $appointment["outcomeReason"];
     		$aux["project"] = $appointment["project"];
+    		$aux["recordRef"] = $appointment["recordRef"];
+    		$aux["postcode"] = $appointment["postcode"];
+    		$aux["map"] = Util::getMapUrl($appointment["lat"], $appointment["lon"], $appointment["postcode"]);
     		
     		$auxList[$offset][$aux["id"]] = $aux;
     	}
@@ -562,6 +619,8 @@ class DefaultController extends Controller
     				"projects" => ($filter->getProjects()) ? $project_ar : null,
     				"recruiter" => ($filter->getRecruiter()) ? $filter->getRecruiter()->getId() : null,
     				"outcomes" => ($filter->getOutcomes()) ? $outcome_ar : null,
+    				"postcode" => ($filter->getOutcomes()) ? $filter->getPostcode() : null,
+    				"range" => ($filter->getOutcomes()) ? $filter->getRange() : null,
     		));
 	    	
     		$url = $this->getRequest()->headers->get("referer");
