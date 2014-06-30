@@ -67,4 +67,62 @@ class UnavailableDateRepository extends EntityRepository
 	
 		return $unavailableDate;
 	}
+	
+	/**
+	 * Get The unavailable Dates by month and year
+	 *
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array UnavailableDate
+	 */
+	public function findUnavailableDatesByMonthAndYear($month,$year) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder();
+	
+		//Get the unavailable dates for a month and a year
+		$query = $em->createQueryBuilder()
+		->select(array('SUBSTRING(ud.unavailableDate,1,11) AS day', 'r.id'))
+		->from('RuleBundle:UnavailableDate', 'ud')
+		->innerJoin('ud.recruiter', 'r')
+		->where('SUBSTRING(ud.unavailableDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(ud.unavailableDate, 1, 4) = :year')
+		->andWhere('ud.allDay = true')
+		->orderBy('ud.unavailableDate', 'ASC')
+		
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+	
+		$unavailableDate_ar = $query->getQuery()->getResult();
+	
+		return $unavailableDate_ar;
+	}
+	
+	/**
+	 * Return the general unavailable dates for all recruiters (Bank Holidays, ...)
+	 *
+	 * @return boolean
+	 *
+	 */
+	public function findUnavailableDatesForAllRecruiters(){
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select(array('SUBSTRING(ud.unavailableDate,1,11) AS day', 'r.reason', 'ud.id'))
+		->from('RuleBundle:UnavailableDate', 'ud')
+		->innerJoin('ud.reason', 'r')
+		->where('ud.recruiter is null')
+		->andWhere('ud.allDay = true')
+		->orderBy('ud.unavailableDate', 'ASC')
+	
+		;
+	
+		$unavailableDate = $query->getQuery()->getResult();
+	
+		return $unavailableDate;
+	}
 }

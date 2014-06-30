@@ -602,7 +602,7 @@ a{
 
 .diary-page .ui-listview .ui-li-has-thumb h2>:first-child{
 	
-	max-width: 140px;
+
 	text-decoration: none;
 }
 
@@ -613,9 +613,7 @@ a{
 .diary-page .ui-collapsible-themed-content .ui-collapsible-content {
 	border: 0px solid;
 	padding-left: 37px;
-}	
-
-
+}
 
 
 /* ===========================================================================

@@ -1,4 +1,10 @@
 <!-- MENU -->
+
+{% set now = "now"|date("U") %}
+{% set nowDay = now|date("d") %}
+{% set nowMonth = now|date("m") %}
+{% set nowYear = now|date("Y") %}
+
 {% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 	<!-- LEFT PANEL -->
 	<div data-role="panel" id="left-panel" class="navmenu-panel" data-position="left" data-display="push" data-theme="a" data-position-fixed="true">
@@ -12,6 +18,7 @@
             {% elseif (is_granted('ROLE_ADMINISTRATOR')) %}
             	<li><a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Users" }}</a></li>
             	<li><a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action">{{ "Rules" }}</a></li>
+            	<li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search">{{ "Search Availability" }}</a></li>
             {% endif %}
             <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar">{{ "Calendar" }}</a></li>
             

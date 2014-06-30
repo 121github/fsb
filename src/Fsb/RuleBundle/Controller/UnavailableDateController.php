@@ -31,6 +31,79 @@ class UnavailableDateController extends Controller
             'entities' => $entities,
         ));
     }
+    
+    
+    private function getAvailableRecruitersByMonthAndYear($month, $year) {
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$currentDate = new \DateTime('1-'.$month.'-'.$year);
+    	$monthDays = $currentDate->format('t');
+    	
+    	//Get the unavailable dates for that month an year
+    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesByMonthAndYear($month, $year);
+    	$auxList = array();
+    	foreach ($unavailableDateList as $unavailableDate) {
+    		$auxList[$unavailableDate['day']][$unavailableDate['id']] = $unavailableDate['id'];
+    	}
+    	$unavailableDateList = $auxList;
+    	
+    	//Get all the recruiters
+    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    	$auxList = array();
+    	foreach ($recruiterList as $recruiter) {
+    		$auxList[$recruiter->getId()] = $recruiter;
+    	}
+    	$recruiterList = $auxList;
+    	
+    	//Build the month array with the available recruiters
+    	$auxList = array();
+    	for ($i=1; $i<=$monthDays; $i++) {
+    		$recruiterListAux = $recruiterList;
+    		$day = new \DateTime($i.'-'.$month.'-'.$year);
+    		if (isset($unavailableDateList[$day->format('Y-m-d')])){
+    			foreach ($unavailableDateList[$day->format('Y-m-d')] as $rec) {
+    				unset($recruiterListAux[$rec]);
+    			}
+    		}
+    		$auxList[$day->format('m/d/Y')] = $recruiterListAux;
+    	}
+    	$availableRecruiterList = $auxList;
+    	
+    	
+    	return $availableRecruiterList;
+    }
+    
+    /**
+     * Search recruiter available.
+     *
+     */
+    public function searchAvailabilityAction($month,$year)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	//Get the available recruiters
+    	$recruiterList = $this->getAvailableRecruitersByMonthAndYear($month, $year);
+    	
+    	//Get the general unavailable dates for all recruiters (bank holidays, ...)
+    	$unavailableCommonDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesForAllRecruiters($month, $year);
+    	
+    	$auxList = array();
+    	foreach ($unavailableCommonDateList as $unavailableDate) {
+    		$day = new \DateTime($unavailableDate['day']);
+    		$day = $day->format("m/d/Y");
+    		$auxList[$day] = $unavailableDate['reason'];
+    	}
+    	$unavailableCommonDateList = $auxList;
+    	
+    	return $this->render('RuleBundle:UnavailableDate:searchAvailability.html.twig', array(
+    			'recruiterList' => $recruiterList,
+    			'unavailableCommonDateList' => $unavailableCommonDateList,
+    			'month' => $month,
+    			"year" => $year,
+    	));
+    }
+    
     /**
      * Creates a new UnavailableDate entity.
      *

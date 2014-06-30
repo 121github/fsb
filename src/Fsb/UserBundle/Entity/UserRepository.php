@@ -50,4 +50,30 @@ class UserRepository extends EntityRepository
 		
 		return $query;
 	}
+	
+// 	/**
+// 	 * Get Basic data for all the users by a role
+// 	 *
+// 	 * @param Role $role Get the Users  by a role
+// 	 *
+// 	 * @return array Recruiters
+// 	 */
+// 	public function findBasicDataUsersByRole($role){
+	
+// 		$em = $this->getEntityManager();
+		
+// 		$query = $em->createQueryBuilder()
+// 			->select('u.id', 'ud.firstname')
+// 			->from('UserBundle:User', 'u')
+// 			->innerJoin('u.role', 'ur')
+// 			->innerJoin('u.userDetail', 'ud')
+// 			->where('ur.name = :role')
+// 			->orderBy('ur.name', 'ASC')
+// 			->setParameter('role', $role)	
+// 		;
+	
+// 		$user_ar = $query->getQuery()->getResult();
+	
+// 		return $user_ar;
+// 	}
 }

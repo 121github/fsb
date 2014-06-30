@@ -4,4 +4,4 @@ rule_homepage:
 
 RuleBundle_unavailableDate:
      resource: "@RuleBundle/Resources/config/routing/unavailabledate.yml"
-     prefix:   /unavailabledate
+     prefix:   /calendar/unavailabledate

@@ -2,6 +2,10 @@ unavailableDate:
     pattern:  /
     defaults: { _controller: "RuleBundle:UnavailableDate:index" }
 
+unavailableDate_search_availability:
+    pattern:  searchAvailability/month/{month}/year/{year}
+    defaults: { _controller: "RuleBundle:UnavailableDate:searchAvailability"}
+
 unavailableDate_show:
     pattern:  /{id}/show
     defaults: { _controller: "RuleBundle:UnavailableDate:show" }

@@ -254,9 +254,13 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		
         		$appointment->setRecruiter($recruiter);
         		$days = rand(1, 30);
-        		$appointment->setStartDate(new \DateTime('now - '.$days.' days'));
-        		$days = rand(1, 30);
-        		$appointment->setEndDate(new \DateTime('now - '.$days.' days'));
+        		$hour = rand(8,19);
+        		$minute = array(0,30);
+        		$minute = $minute[rand(0, 1)];
+        		$symbol = array("+","-");
+        		$symbol = $symbol[rand(0, 1)];
+        		$appointment->setStartDate(new \DateTime('now '.$hour.':'.$minute.':00'.$symbol.' '.$days.' days'));
+        		$appointment->setEndDate(new \DateTime('now '.$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
         		
         		Util::setCreateAuditFields($appointment, 1);
         		
