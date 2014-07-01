@@ -20,6 +20,7 @@ security:
         - { path: ^/calendar/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/diary/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
+        - { path: ^/calendar/unavailabledate/searchAvailability/*, roles: [ROLE_ADMINISTRATOR, ROLE_APPOINTMENT_SETTER] }
         - { path: ^/calendar/*, roles: [ROLE_RECRUITER, ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR, ROLE_SUPER_USER] }
         - { path: ^/reporting/*, roles: [ROLE_SUPER_USER] }
         - { path: ^/backend/*, roles: [ROLE_ADMINISTRATOR] }

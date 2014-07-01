@@ -92,7 +92,7 @@ class Filter
     }
     
     /**
-     * Get project
+     * Get projects
      *
      * @return ArrayCollection
      */

@@ -6,6 +6,10 @@ unavailableDate_search_availability:
     pattern:  searchAvailability/month/{month}/year/{year}
     defaults: { _controller: "RuleBundle:UnavailableDate:searchAvailability"}
 
+unavailabledate_clean_availability_filter:
+    pattern:  /clean_availability_filter
+    defaults: { _controller: "RuleBundle:UnavailableDate:cleanSearchAvailability" }
+
 unavailableDate_show:
     pattern:  /{id}/show
     defaults: { _controller: "RuleBundle:UnavailableDate:show" }

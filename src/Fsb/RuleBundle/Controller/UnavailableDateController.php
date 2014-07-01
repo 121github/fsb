@@ -9,6 +9,9 @@ use Fsb\RuleBundle\Entity\UnavailableDate;
 use Fsb\RuleBundle\Form\UnavailableDateType;
 use Fsb\UserBundle\Util\Util;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Fsb\RuleBundle\Entity\AvailabilityFilter;
+use Fsb\RuleBundle\Form\AvailabilityFilterType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * UnavailableDate controller.
@@ -32,78 +35,7 @@ class UnavailableDateController extends Controller
         ));
     }
     
-    
-    private function getAvailableRecruitersByMonthAndYear($month, $year) {
-    	
-    	$em = $this->getDoctrine()->getManager();
-    	
-    	$currentDate = new \DateTime('1-'.$month.'-'.$year);
-    	$monthDays = $currentDate->format('t');
-    	
-    	//Get the unavailable dates for that month an year
-    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesByMonthAndYear($month, $year);
-    	$auxList = array();
-    	foreach ($unavailableDateList as $unavailableDate) {
-    		$auxList[$unavailableDate['day']][$unavailableDate['id']] = $unavailableDate['id'];
-    	}
-    	$unavailableDateList = $auxList;
-    	
-    	//Get all the recruiters
-    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
-    	$auxList = array();
-    	foreach ($recruiterList as $recruiter) {
-    		$auxList[$recruiter->getId()] = $recruiter;
-    	}
-    	$recruiterList = $auxList;
-    	
-    	//Build the month array with the available recruiters
-    	$auxList = array();
-    	for ($i=1; $i<=$monthDays; $i++) {
-    		$recruiterListAux = $recruiterList;
-    		$day = new \DateTime($i.'-'.$month.'-'.$year);
-    		if (isset($unavailableDateList[$day->format('Y-m-d')])){
-    			foreach ($unavailableDateList[$day->format('Y-m-d')] as $rec) {
-    				unset($recruiterListAux[$rec]);
-    			}
-    		}
-    		$auxList[$day->format('m/d/Y')] = $recruiterListAux;
-    	}
-    	$availableRecruiterList = $auxList;
-    	
-    	
-    	return $availableRecruiterList;
-    }
-    
-    /**
-     * Search recruiter available.
-     *
-     */
-    public function searchAvailabilityAction($month,$year)
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	
-    	//Get the available recruiters
-    	$recruiterList = $this->getAvailableRecruitersByMonthAndYear($month, $year);
-    	
-    	//Get the general unavailable dates for all recruiters (bank holidays, ...)
-    	$unavailableCommonDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesForAllRecruiters($month, $year);
-    	
-    	$auxList = array();
-    	foreach ($unavailableCommonDateList as $unavailableDate) {
-    		$day = new \DateTime($unavailableDate['day']);
-    		$day = $day->format("m/d/Y");
-    		$auxList[$day] = $unavailableDate['reason'];
-    	}
-    	$unavailableCommonDateList = $auxList;
-    	
-    	return $this->render('RuleBundle:UnavailableDate:searchAvailability.html.twig', array(
-    			'recruiterList' => $recruiterList,
-    			'unavailableCommonDateList' => $unavailableCommonDateList,
-    			'month' => $month,
-    			"year" => $year,
-    	));
-    }
-    
+  
     /**
      * Creates a new UnavailableDate entity.
      *
@@ -138,18 +70,17 @@ class UnavailableDateController extends Controller
             
             $em->persist($unavailableDate);
             $em->flush();
-
-            $unavailableDate = $unavailableDate->getUnavailableDate()->getTimestamp();
-            $day = date('d',$unavailableDate);
-            $month = date('m',$unavailableDate);
-            $year = date('Y',$unavailableDate);
-
-            return $this->redirect($this->generateUrl('calendar_day', array(
-            		'day' => $day,
-            		'month' => $month,
-            		'year' => $year,
-            	))
+            
+            $this->get('session')->getFlashBag()->set(
+            		'success',
+            		array(
+            				'title' => 'Set Unavailable!',
+            				'message' => 'The availability has changed'
+            		)
             );
+
+            $url = $this->getRequest()->headers->get("referer");
+            return new RedirectResponse($url);
         }
 
         return $this->render('RuleBundle:UnavailableDate:new.html.twig', array(
@@ -326,18 +257,18 @@ class UnavailableDateController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
-
-            $unavailableDateDay = $unavailableDate->getUnavailableDate()->getTimestamp();
-            $day = date('d',$unavailableDateDay);
-            $month = date('m',$unavailableDateDay);
-            $year = date('Y',$unavailableDateDay);
-
-            return $this->redirect($this->generateUrl('calendar_day', array(
-            		'day' => $day,
-            		'month' => $month,
-            		'year' => $year,
-            	))
+            
+            $this->get('session')->getFlashBag()->set(
+            		'success',
+            		array(
+            				'title' => 'Update availability!',
+            				'message' => 'The availability has been modified'
+            		)
             );
+
+            $url = $this->getRequest()->headers->get("referer");
+            return new RedirectResponse($url);
+            
         }
 
         return $this->render('RuleBundle:UnavailableDate:edit.html.twig', array(
@@ -402,5 +333,194 @@ class UnavailableDateController extends Controller
             ))
             ->getForm()
         ;
+    }
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** SEARCH AVAILABILITY ACTION ******************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    
+    /**
+     * Creates a form in order to search the available recruiters.
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createSearchAvailabilityForm(AvailabilityFilter $filter, $month, $year)
+    {
+    
+    	$form = $this->createForm(new AvailabilityFilterType(), $filter, array(
+    			'action' => $this->generateUrl('unavailableDate_search_availability', array('month' => $month, 'year' => $year)),
+    			'method' => 'POST',
+    	));
+    
+    	$form->add('submit', 'submit', array(
+    			'label' => 'Apply',
+    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+    	));
+    
+    	return $form;
+    }
+    
+    /**
+     *
+     * @param unknown $month
+     * @param unknown $year
+     * @param AvailabilityFilter $filter
+     * @return Ambigous <multitype:, unknown>
+     */
+    private function getAvailableRecruitersByMonthAndYear($month, $year, AvailabilityFilter $filter) {
+    	 
+    	$em = $this->getDoctrine()->getManager();
+    	 
+    	$currentDate = new \DateTime('1-'.$month.'-'.$year);
+    	$monthDays = $currentDate->format('t');
+    	 
+    	//Get the unavailable dates for that month an year
+    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesByMonthAndYear($month, $year, $filter->getStartTime(), $filter->getEndTime());
+    	 
+    	$auxList = array();
+    	foreach ($unavailableDateList as $unavailableDate) {
+    		$auxList[$unavailableDate['day']][$unavailableDate['id']] = $unavailableDate['id'];
+    	}
+    	$unavailableDateList = $auxList;
+    	 
+    	//Get all the recruiters
+    	if (count($filter->getRecruiters()) > 0) {
+    		$recruiterList = $filter->getRecruiters();
+    	}
+    	else {
+    		$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    	}
+    	$auxList = array();
+    	foreach ($recruiterList as $recruiter) {
+    		$auxList[$recruiter->getId()] = $recruiter;
+    	}
+    	$recruiterList = $auxList;
+    	 
+    	//Build the month array with the available recruiters
+    	$auxList = array();
+    	for ($i=1; $i<=$monthDays; $i++) {
+    		$recruiterListAux = $recruiterList;
+    		$day = new \DateTime($i.'-'.$month.'-'.$year);
+    		if (isset($unavailableDateList[$day->format('Y-m-d')])){
+    			foreach ($unavailableDateList[$day->format('Y-m-d')] as $rec) {
+    				unset($recruiterListAux[$rec]);
+    			}
+    		}
+    		$auxList[$day->format('m/d/Y')] = $recruiterListAux;
+    	}
+    	$availableRecruiterList = $auxList;
+    	 
+    	 
+    	return $availableRecruiterList;
+    }
+    
+    /**
+     * Search recruiter available.
+     *
+     */
+    public function searchAvailabilityAction($month,$year)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Build the form with the session values if are isset ***********************/
+    	/******************************************************************************************************************************/
+    	$session = $this->getRequest()->getSession();
+    	 
+    	$filter = new AvailabilityFilter();
+    	 
+    	$session_fitler = $session->get('availability_filter');
+    
+    	$recruiters_filter = isset($session_fitler["recruiters"]) ? $session_fitler["recruiters"] : null;
+    	$startTime_filter = isset($session_fitler["startTime"]) ? $session_fitler["startTime"] : null;
+    	$endTime_filter = isset($session_fitler["endTime"]) ? $session_fitler["endTime"] : null;
+    	 
+    	if ($recruiters_filter) {
+    		$recruiter_ar = new ArrayCollection();
+    		 
+    		foreach ($recruiters_filter as $recruiter) {
+    			$recruiter_ar->add($em->getRepository('UserBundle:User')->find($recruiter));
+    		}
+    		 
+    		$filter->setRecruiters($recruiter_ar);
+    	}
+    
+    	if ($startTime_filter && !$filter->getStartTime()) {
+    		$filter->setStartTime($startTime_filter);
+    	}
+    
+    	if ($endTime_filter && !$filter->getEndTime()) {
+    		$filter->setEndTime($endTime_filter);
+    	}
+    	 
+    	$form = $this->createSearchAvailabilityForm($filter, $month, $year);
+    	 
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Get the values submited in the form *************** ***********************/
+    	/******************************************************************************************************************************/
+    	$request = $this->getRequest();
+    	$form->handleRequest($request);
+    	 
+    	if ($form->isValid()) {
+    		$recruiter_ar = array();
+    		foreach ($filter->getRecruiters() as $recruiter) {
+    			array_push($recruiter_ar,$recruiter->getId());
+    		}
+    
+    		//Save the form fields in the session
+    		$this->getRequest()->getSession()->set('availability_filter',array(
+    				"recruiters" => ($filter->getRecruiters()) ? $recruiter_ar : null,
+    				"startTime" => ($filter->getStartTime()) ? $filter->getStartTime() : null,
+    				"endTime" => ($filter->getEndTime()) ? $filter->getEndTime() : null,
+    		));
+    	}
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Get the available recruiters **********************************************/
+    	/******************************************************************************************************************************/
+    	$recruiterList = $this->getAvailableRecruitersByMonthAndYear($month, $year, $filter);
+    	 
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Get the general unavailable dates for all recruiters (bank holidays, ...) */
+    	/******************************************************************************************************************************/
+    	$unavailableCommonDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesForAllRecruiters($month, $year);
+    	$auxList = array();
+    	foreach ($unavailableCommonDateList as $unavailableDate) {
+    		$day = new \DateTime($unavailableDate['day']);
+    		$day = $day->format("m/d/Y");
+    		$auxList[$day] = $unavailableDate['reason'];
+    	}
+    	$unavailableCommonDateList = $auxList;
+    	 
+    	 
+    	/******************************************************************************************************************************/
+    	/********************************************* RENDER *************************************************************************/
+    	/******************************************************************************************************************************/
+    	return $this->render('RuleBundle:UnavailableDate:searchAvailability.html.twig', array(
+    			'recruiterList' => $recruiterList,
+    			'unavailableCommonDateList' => $unavailableCommonDateList,
+    			'month' => $month,
+    			"year" => $year,
+    			'searchAvailabilityForm' => $form->createView(),
+    	));
+    }
+    
+    /**
+     * Clean the data of the search availability filter.
+     *
+     */
+    public function cleanSearchAvailabilityAction()
+    {
+    	$this->getRequest()->getSession()->remove('availability_filter');
+    
+    	 
+    	$url = $this->getRequest()->headers->get("referer");$url = $this->getRequest()->headers->get("referer");
+    	return new RedirectResponse($url);
     }
 }

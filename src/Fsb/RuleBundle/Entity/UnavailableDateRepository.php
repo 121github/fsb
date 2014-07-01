@@ -69,14 +69,16 @@ class UnavailableDateRepository extends EntityRepository
 	}
 	
 	/**
-	 * Get The unavailable Dates by month and year
+	 * Get The unavailable Dates by month and year and time
 	 *
 	 * @param int $month
 	 * @param int $year
+	 * @param time $startTime
+	 * @param time $endTime
 	 *
 	 * @return array UnavailableDate
 	 */
-	public function findUnavailableDatesByMonthAndYear($month,$year) {
+	public function findUnavailableDatesByMonthAndYear($month,$year, $startTime = null, $endTime = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -91,10 +93,34 @@ class UnavailableDateRepository extends EntityRepository
 		->andWhere('SUBSTRING(ud.unavailableDate, 1, 4) = :year')
 		->andWhere('ud.allDay = true')
 		->orderBy('ud.unavailableDate', 'ASC')
-		
+	
 		->setParameter('month', (int)$month)
 		->setParameter('year', (int)$year)
 		;
+		
+		if ($startTime && $endTime) {
+			$query
+			->orWhere('(ud.allDay = false AND
+					   ud.startTime <= :startTime AND
+					   ud.endTime >= :endTime AND
+					   SUBSTRING(ud.unavailableDate, 6, 2) = :month AND
+					   SUBSTRING(ud.unavailableDate, 1, 4) = :year)'
+			)
+			->setParameter('startTime', $startTime)
+			->setParameter('endTime', $endTime);
+		}
+		
+		if ($startTime && !$endTime) {
+			$query
+			->orWhere('ud.allDay = false AND ud.startTime = :startTime')
+			->setParameter('startTime', $startTime);
+		}
+		
+		if (!$startTime && $endTime) {
+			$query
+			->orWhere('ud.allDay = false AND ud.endTime = :endTime')
+			->setParameter('endTime', $endTime);
+		}
 	
 		$unavailableDate_ar = $query->getQuery()->getResult();
 	

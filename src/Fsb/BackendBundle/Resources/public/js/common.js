@@ -185,3 +185,36 @@ $(function(){
 	  }
 	});
 });
+
+
+///********************************************************************************************************/
+///******************** Datetime picker for search availability filter ******************************************/
+///********************************************************************************************************/
+$(function(){
+  
+  //StartTime
+  $("#fsb_rulebundle_availabilityfilter_startTime").each(function(){
+      $(this).attr("readonly","readonly");
+  });
+  $('#fsb_rulebundle_availabilityfilter_startTime').datetimepicker({
+      format: "H:i",
+      timepicker: true,
+      datepicker: false,
+      step:30,
+      minTime:'08:00',
+      maxTime:'21:00',
+  });
+
+  //EndTime
+  $("#fsb_rulebundle_availabilityfilter_endTime").each(function(){
+      $(this).attr("readonly","readonly");
+  });
+  $('#fsb_rulebundle_availabilityfilter_endTime').datetimepicker({
+      format: "H:i",
+      timepicker: true,
+      datepicker: false,
+      step:30,
+      minTime:'08:00',
+      maxTime:'21:00',
+  });
+});

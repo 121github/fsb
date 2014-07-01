@@ -52,7 +52,7 @@
 				    <td style="text-align: right;">
 			    		<a href="{{ path('calendar_day', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
 			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
 			    	</td>
 			    </tr>
 		    </table>
@@ -76,7 +76,7 @@
 								{{ "SUNDAY" }}
 							{% elseif (recruiterList[day]|length > 0) %}
 								<h2><a href="#">
-					        		{{ "There are " ~ recruiterList[day]|length ~ " available recruiter(s)" }}
+					        		{{ recruiterList[day]|length ~ " available recruiter(s)" }}
 				                </a></h2>
 				                {% for key, recruiter in recruiterList[day] %}
 			                		<p>
@@ -86,10 +86,10 @@
 			                			<div data-role="popup" id="popup{{ recruiter.id ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
 											<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 												<li data-role="divider" data-theme="b">{{ recruiter.userDetail ~ " - " ~ day|date("D d M Y") }}</li>
-												<li><a href="#">Create Appointment</a></li>
+												<li><a href="{{ path('appointment_new_date', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
 												<li><a href="#">Create Note</a></li>
-												<li><a href="#">Set Unavailable</a></li>
-												<li><a href="#">Go to this day</a></li>
+												<li><a href="{{ path('unavailableDate_new_date', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
+												<li><a href="#">Day View</a></li>
 											</ul>
 										</div>
 			                		</p>
