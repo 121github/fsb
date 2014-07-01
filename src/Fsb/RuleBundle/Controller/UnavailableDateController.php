@@ -298,17 +298,8 @@ class UnavailableDateController extends Controller
             $em->remove($unavailableDate);
             $em->flush();
             
-            $unavailableDateDay = $unavailableDate->getUnavailableDate()->getTimestamp();
-            $day = date('d',$unavailableDateDay);
-            $month = date('m',$unavailableDateDay);
-            $year = date('Y',$unavailableDateDay);
-
-            return $this->redirect($this->generateUrl('calendar_day', array(
-            		'day' => $day,
-            		'month' => $month,
-            		'year' => $year,
-            	))
-            );
+            $url = $this->getRequest()->headers->get("referer");
+            return new RedirectResponse($url);
         }
         
         $url = $this->getRequest()->headers->get("referer");
