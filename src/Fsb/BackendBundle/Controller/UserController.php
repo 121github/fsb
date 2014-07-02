@@ -12,6 +12,10 @@ use Fsb\BackendBundle\Form\User\UserChangePasswordType;
 use Fsb\UserBundle\Util\Util;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Fsb\UserBundle\Entity\UserFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Fsb\BackendBundle\Form\User\UserFilterType;
 
 /**
  * User controller.
@@ -19,6 +23,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserController extends Controller
 {
+	
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************** LOGIN ACTION ********************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
 
 	/**
 	 * Login action
@@ -39,11 +51,41 @@ class UserController extends Controller
 				SecurityContext::AUTHENTICATION_ERROR,
 				$session->get(SecurityContext::AUTHENTICATION_ERROR)
 		);
-		 
+		
 		return $this->render('BackendBundle:User:login.html.twig', array(
 				'last_username' => $session->get(SecurityContext::LAST_USERNAME),
 				'error' => $error
 		));
+	}
+	
+	
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************** USER ACTION *********************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	/******************************************************************************************************************************/
+	
+	/**
+	 * Creates a form in order to filter the users.
+	 *
+	 * @return \Symfony\Component\Form\Form The form
+	 */
+	private function createSearchUserForm(UserFilter $filter)
+	{
+	
+		$form = $this->createForm(new UserFilterType(), $filter, array(
+				'action' => $this->generateUrl('user'),
+				'method' => 'POST',
+		));
+	
+		$form->add('submit', 'submit', array(
+				'label' => 'Apply',
+				'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+		));
+	
+		return $form;
 	}
 	
     /**
@@ -57,13 +99,83 @@ class UserController extends Controller
     	}
     	
         $em = $this->getDoctrine()->getManager();
+        
+        /******************************************************************************************************************************/
+        /************************************************** Build the form with the session values if are isset ***********************/
+        /******************************************************************************************************************************/
+        $session = $this->getRequest()->getSession();
+        
+        $filter = new UserFilter();
+        
+        $session_fitler = $session->get('user_filter');
+        
+        $roles_filter = isset($session_fitler["roles"]) ? $session_fitler["roles"] : null;
+        
+        if ($roles_filter) {
+        	$role_ar = new ArrayCollection();
+        	 
+        	foreach ($roles_filter as $role) {
+        		$role_ar->add($em->getRepository('UserBundle:UserRole')->find($role));
+        	}
+        	 
+        	$filter->setRoles($role_ar);
+        }
+        
+        $form = $this->createSearchUserForm($filter);
+        
+        /******************************************************************************************************************************/
+        /************************************************** Get the values submited in the form *************** ***********************/
+        /******************************************************************************************************************************/
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+        	$role_aux = array();
+        	foreach ($filter->getRoles() as $role) {
+        		array_push($role_aux,$role->getId());
+        	}
+        
+        	//Save the form fields in the session
+        	$this->getRequest()->getSession()->set('user_filter',array(
+        			"roles" => ($filter->getRoles()) ? $role_aux : null,
+        	));
+        	
+        	return $this->redirect($this->generateUrl('user'));
+        }
+        
+        /******************************************************************************************************************************/
+        /************************************************** Get the users *************** ***********************/
+        /******************************************************************************************************************************/
 
-        $entities = $em->getRepository('UserBundle:User')->findAll();
-
+        $entities = $em->getRepository('UserBundle:User')->findAllOrderByName($roles_filter);
+        
         return $this->render('BackendBundle:User:index.html.twig', array(
             'entities' => $entities,
+        	'searchUserForm' => $form->createView(),
         ));
     }
+    
+    /**
+     * Clean the data of the search user filter.
+     *
+     */
+    public function cleanSearchUserAction()
+    {
+    	$this->getRequest()->getSession()->remove('user_filter');
+    
+    	$url = $this->getRequest()->headers->get("referer");$url = $this->getRequest()->headers->get("referer");
+    	return new RedirectResponse($url);
+    }
+    
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** CREATE USER ACTION **************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    
     /**
      * Creates a new User entity.
      *
@@ -96,7 +208,6 @@ class UserController extends Controller
         	
         	Util::setCreateAuditFields($user, $userLogged->getId());
         	
-            
             //Save the EmpDetail
             $userDetail = $user->getUserDetail();
             $userDetail->setUser($user);
@@ -117,7 +228,7 @@ class UserController extends Controller
             		)
             );
 
-            return $this->redirect($this->generateUrl('user_show', array('id' => $user->getId())));
+            return $this->redirect($this->generateUrl('user'));
         }
 
         return $this->render('BackendBundle:User:new.html.twig', array(
@@ -163,6 +274,18 @@ class UserController extends Controller
         ));
     }
 
+    
+    
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** SHOW USER ACTION ****************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    
+    
     /**
      * Finds and displays a User entity.
      *
@@ -187,6 +310,15 @@ class UserController extends Controller
         ));
     }
 
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** EDIT USER ACTION ****************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    
     /**
      * Displays a form to edit an existing User entity.
      *
@@ -202,10 +334,12 @@ class UserController extends Controller
         }
 
         $editForm = $this->createEditForm($user);
+        $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('BackendBundle:User:edit.html.twig', array(
             'entity'      => $user,
             'edit_form'   => $editForm->createView(),
+        	'delete_form'   => $deleteForm->createView(),
         ));
     }
 
@@ -252,10 +386,13 @@ class UserController extends Controller
         }
 
         $editForm = $this->createEditForm($user);
+        $deleteForm = $this->createDeleteForm($id);
+        
         $editForm->handleRequest($request);
         
         $originalPassword = $editForm->getData()->getPassword();
         
+        $editForm->submit($request);
         if ($editForm->isValid()) {
  
         	if (null == $user->getPassword()) {
@@ -287,18 +424,28 @@ class UserController extends Controller
             		'success',
             		array(
             				'title' => 'User Changed!',
-            				'message' => 'The user has been updated'
+            				'message' => 'The user '.$user->getLogin().' has been updated'
             		)
             );
 
-            return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
+            	return $this->redirect($this->generateUrl('user'));
         }
 
         return $this->render('BackendBundle:User:edit.html.twig', array(
             'entity'      => $user,
             'edit_form'   => $editForm->createView(),
+        	'delete_form'   => $deleteForm->createView(),
         ));
     }
+    
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** CHANGE PASSWORD ACTION **********************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
     
     /**
      * Change password
@@ -323,6 +470,7 @@ class UserController extends Controller
     	$passwordForm = $this->createChangePasswordForm($user);
     	$passwordForm->handleRequest($request);
     
+    	$passwordForm->submit($request);
     	if ($passwordForm->isValid()) {
     
     		$encoder = $this->get('security.encoder_factory')->getEncoder($user);
@@ -346,23 +494,23 @@ class UserController extends Controller
     				)
     		);
     
-    		return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
+    		return $this->redirect($this->generateUrl('user'));
     	}
     
-//     	return $this->render('BackendBundle:User:edit.html.twig', array(
-//     			'entity'      => $user,
-//     			'password_form'   => $passwordForm->createView(),
-//     	));
+    	return $this->render('BackendBundle:User:password.html.twig', array(
+    			'entity'      => $user,
+    			'password_form'   => $passwordForm->createView(),
+    	));
 
-    	$this->get('session')->getFlashBag()->set(
-    			'success',
-    			array(
-    					'title' => 'ERROR!',
-    					'message' => 'The user password has NOT been updated'
-    			)
-    	);
+//     	$this->get('session')->getFlashBag()->set(
+//     			'success',
+//     			array(
+//     					'title' => 'ERROR!',
+//     					'message' => 'The user password has NOT been updated'
+//     			)
+//     	);
 
-    	return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
+//     	return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
     }
     
     /**
@@ -386,6 +534,15 @@ class UserController extends Controller
     	 
     	return $form;
     }
+    
+    
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************** DELETE ACTION *******************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
+    /******************************************************************************************************************************/
     
     /**
      * Deletes a User entity.
@@ -413,7 +570,7 @@ class UserController extends Controller
             		'success',
             		array(
             				'title' => 'User Deleted!',
-            				'message' => 'The user has been deleted'
+            				'message' => 'The user '.$user->getUserDetail().' has been deleted'
             		)
             );
         }

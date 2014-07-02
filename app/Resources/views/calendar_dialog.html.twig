@@ -1,13 +1,13 @@
 {% extends '::base_dialog.html.twig' %}
 
+{% block stylesheets %}
+	<link href="{{ asset('bundles/calendar/css/calendar.css') }}"	rel="stylesheet" type="text/css" />
+{% endblock %}
 
 {% block name %}Calendar{% endblock %}
 
 {% block body %}
-
-	{% block javascripts %}
-	    <script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
-	{% endblock %}
+	<script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
 	
 	<div data-role="content" data-theme="a">
 		{% block article %}{% endblock %}

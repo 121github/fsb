@@ -1,31 +1,80 @@
 {% extends '::backend.html.twig' %}
-
-{% block title %} Backend {% endblock %}
-
-{% block article -%}
-    <h1>User list</h1>
-
-    <table class="ui-responsive ui-shadow"  data-role="table" id="user-table" data-mode="column">
-        <thead>
-            <tr>
-                <th>Login</th>
-                <th>Role</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.login }}</a></td>
-                <td>{{ entity.role }}</td>
-                <td>{{ entity.userDetail.firstname }}</td>
-                <td>{{ entity.userDetail.lastname }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('user_new') }}" data-role="button" data-inline="true" data-icon="plus" data-theme="a" >New User</a>
    
+{% block title %} Backend {% endblock %}
+   
+{% block article -%}
+  
+  	{% set now = "now"|date("") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+  
+  <div id="sorter">
+		<ul data-role="listview">
+	    	<li><span>A</span></li>
+	        <li><span>B</span></li>
+	        <li><span>C</span></li>
+	        <li><span>D</span></li>
+	        <li><span>E</span></li>
+	        <li><span>F</span></li>
+	        <li><span>G</span></li>
+	        <li><span>H</span></li>
+	        <li><span>I</span></li>
+	        <li><span>J</span></li>
+	        <li><span>K</span></li>
+	        <li><span>L</span></li>
+	        <li><span>M</span></li>
+	        <li><span>N</span></li>
+	        <li><span>O</span></li>
+	        <li><span>P</span></li>
+	        <li><span>Q</span></li>
+	        <li><span>R</span></li>
+	        <li><span>S</span></li>
+	        <li><span>T</span></li>
+	        <li><span>U</span></li>
+	        <li><span>V</span></li>
+	        <li><span>W</span></li>
+	        <li><span>X</span></li>
+	        <li><span>Y</span></li>
+	        <li><span>Z</span></li>
+		</ul>
+	</div><!-- /sorter -->
+    <ul data-role="listview" data-autodividers="true" id="sortedList">
+    	{% for entity in entities %}
+        	
+        	<li>
+        		<a href="#popup{{ entity.id }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">
+        			{{ entity.userDetail }}
+        			<p>{{ entity.role }}</p>
+        		</a>
+        	</li>
+        	
+        	 <!--  POPUP USer -->
+	   		 <div data-role="popup" id="popup{{ entity.id }}" data-overlay-theme="a" data-theme="a" style="min-width:350px; max-width:500px;" class="ui-corner-all">
+	    		<div data-role="header" data-theme="b" class="ui-corner-top">
+			        <h1>{{ entity.userDetail }}</h1>
+			    </div>
+			    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+			    	<p>{{ entity.role }}</p>
+				    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Login: " }}</strong>{{ entity.login }}</p>
+				    <p><strong>{{ "Email: " }}</strong>{{ entity.userDetail.email }}</p>
+				    <p><strong>{{ "Telephone: " }}</strong>{{ entity.userDetail.telephone }}</p>
+				    <p><strong>{{ "Mobile: " }}</strong>{{ entity.userDetail.mobile }}</p>
+				    <p style="text-align: right;">
+				    	{% if (entity.role == 'ROLE_RECRUITER') %}
+			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': entity.id}) }}" data-iconpos="notext" data-role="button" data-ajax="false" data-inline="true" data-icon="calendar" data-theme="a">View Calendar</a>
+			    		{% endif %}
+						<a href="{{ path('user_edit', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="edit" data-theme="a">Edit</a>
+						<a href="{{ path('user_password', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="lock" data-theme="a">Change Password</a>
+			    	</p>
+			    </div>
+			   	
+			</div>
+        {% endfor %}
+	</ul><!-- /listview -->
+	    
 {% endblock %}
+
+
+
+ 

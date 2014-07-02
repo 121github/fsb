@@ -14,13 +14,13 @@
 			<li data-role="list-divider">MENU</li>
 				
 			{% if (is_granted('ROLE_SUPER_USER')) %}
-            	<li><a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-grid">{{ "Reporting" }}</a></li>
+            	<li><a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-grid" data-ajax="false">{{ "Reporting" }}</a></li>
             {% elseif (is_granted('ROLE_ADMINISTRATOR')) %}
-            	<li><a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Users" }}</a></li>
-            	<li><a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action">{{ "Rules" }}</a></li>
-            	<li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search">{{ "Search Availability" }}</a></li>
+            	<li><a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user" data-ajax="false">{{ "Users" }}</a></li>
+            	<li><a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Rules" }}</a></li>
+            	<li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Availability" }}</a></li>
             {% endif %}
-            <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar">{{ "Calendar" }}</a></li>
+            <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar" data-ajax="false">{{ "Calendar" }}</a></li>
             
             <li>
             	{% include 'CalendarBundle:Default:includes/calendar_mini.html.twig' %}
@@ -35,10 +35,10 @@
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
 			
 			<li>
-				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Hi" ~ app.security.getToken().getUser().getUserDetail().getFirstname() }}</a>
+				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Hi " ~ app.security.getToken().getUser().getUserDetail() }}</a>
 			</li>
 			
-			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power">{{ "Logout" }}</a></li>
+			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power" data-ajax="false">{{ "Logout" }}</a></li>
 		</ul>
 		
 		
@@ -47,6 +47,9 @@
 		</div>
 		<div class="filter">
 			{% include '::includes/availabilityFilter.html.twig' %}
+		</div>
+		<div class="filter">
+			{% include '::includes/userFilter.html.twig' %}
 		</div>
 		
     </div><!-- /panel -->

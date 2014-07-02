@@ -1,6 +1,10 @@
 user:
     pattern:  /
     defaults: { _controller: "BackendBundle:User:index" }
+    
+user_filter:
+    pattern:  /clean_user_filter
+    defaults: { _controller: "BackendBundle:User:cleanSearchUser" }
 
 user_show:
     pattern:  /{id}/show
@@ -27,7 +31,6 @@ user_update:
 user_password:
     pattern:  /{id}/changepass
     defaults: { _controller: "BackendBundle:User:changePassword" }
-    requirements: { _method: post|put }
 
 user_delete:
     pattern:  /{id}/delete

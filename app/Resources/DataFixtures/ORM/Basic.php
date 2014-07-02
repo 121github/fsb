@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -54,6 +54,9 @@ class Basico implements FixtureInterface, ContainerAwareInterface
 
         $manager->flush();
         
+        //Names
+        $firstname_ar = array("Harry", "Oliver", "Jack", "Charlie", "Jacob", "Thomas", "Alfie", "Riley", "Williams", "James", "Amelia", "Olivia", "Jessica", "Emily", "Lily", "Ava", "Isla", "Sophie", "Mia", "Isabella");
+        $lastname_ar = array("Smith", "Jones", "Taylor", "Brown", "Williamns", "Wilson", "Johnson", "Davies", "Robinson", "Wright", "Thompson", "Evans", "Walker", "Roberts", "Green", "Hall", "Wood", "Jackson", "Clarke");
         
         // Users
         $userRoles = $manager->getRepository('UserBundle:UserRole')->findAll();
@@ -81,8 +84,8 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         	
         		//User Details
         		$userDetail = new UserDetail();
-        		$userDetail->setFirstname('Firstname'.$numUser);
-        		$userDetail->setLastname('Lastname'.$numUser);
+        		$userDetail->setFirstname($firstname_ar[rand(0,count($firstname_ar)-1)]);
+        		$userDetail->setLastname($lastname_ar[rand(0,count($lastname_ar)-1)]);
         		$userDetail->setEmail('user'.$numUser.'@localhost');
         		$userDetail->setTelephone('01511234567 ');
         		$userDetail->setMobile('07123456789 ');

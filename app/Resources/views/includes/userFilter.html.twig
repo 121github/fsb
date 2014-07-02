@@ -1,0 +1,20 @@
+{% if searchUserForm is defined %}
+	{% set submit_id = searchUserForm.vars.id ~ "_submit" %}
+
+	<h3>{{ "User Filter" }}</h3>
+	<form action="{{ path('user') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(searchUserForm) }}>
+		{{ form_errors(searchUserForm) }}
+			{% if recruiter_url is defined %}
+				{{ recruiter }}
+				<br /><br />
+			{% endif %}
+			<h4>{{ "Roles" }}</h4>
+			<p> {{ form_errors(searchUserForm.roles) }} </p>
+			<ul data-role="listview" data-theme="d" data-divider-theme="d">
+				<li>{{ form_widget(searchUserForm.roles) }}</li>
+			</ul>
+			
+			{{ form_rest(searchUserForm) }}
+			<a href="{{ path('user_filter') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
+	</form>
+{% endif %}

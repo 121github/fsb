@@ -1,11 +1,10 @@
 {% extends '::backend_dialog.html.twig' %}
 
 {% block title %}Edit User{% endblock %}
-
-
 {% block article -%}
 
-    <form action="{{ path('user_update' , { 'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }}>
+	{% set submit_id = edit_form.vars.id ~ "_submit" %}
+    <form action="{{ path('user_update' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
 		{{ form_errors(edit_form) }}
     <table>
 			<tr>
@@ -13,15 +12,14 @@
 					{{ form_label(edit_form.login) }}
 					{{ form_errors(edit_form.login) }}
 					{{ form_widget(edit_form.login) }}
-					
-					{{ form_label(edit_form.userDetail.email) }}
-					{{ form_errors(edit_form.userDetail.email) }}
-					{{ form_widget(edit_form.userDetail.email) }}
-					
 				</td><td colspan="2">
 					{# {{ form_label(edit_form.password) }}#}
 					{{ form_errors(edit_form.password) }}
 					{{ form_widget(edit_form.password) }}
+					
+					{{ form_label(edit_form.userDetail.email) }}
+					{{ form_errors(edit_form.userDetail.email) }}
+					{{ form_widget(edit_form.userDetail.email) }}
 				</td>
 			</tr><tr>
 				<td>
@@ -58,4 +56,22 @@
 				</tr>
 		</table>
 	</form>
+	<a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>
+	<!--  POPUP DELETE CONFIRM -->
+    <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+    	{% set submit_delete_id = delete_form.vars.id ~ "_submit" %}
+    	<form action="{{ path('user_delete' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>Delete User?</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+		        <h3 class="ui-title">Are you sure you want to delete this user?</h3>
+		        <p>This action cannot be undone.</p>
+		        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+		        <input type="hidden" name="_method" value="DELETE">
+		        {{ form_rest(delete_form) }}
+		    </div>
+			
+    	</form>
+    </div>
 {% endblock %}

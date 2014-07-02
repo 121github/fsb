@@ -51,29 +51,32 @@ class UserRepository extends EntityRepository
 		return $query;
 	}
 	
-// 	/**
-// 	 * Get Basic data for all the users by a role
-// 	 *
-// 	 * @param Role $role Get the Users  by a role
-// 	 *
-// 	 * @return array Recruiters
-// 	 */
-// 	public function findBasicDataUsersByRole($role){
+	/**
+	 * Get All Users ordered by firstname
+	 *
+	 *
+	 * @return array Users
+	 */
+	public function findAllOrderByName($roles = null){
 	
-// 		$em = $this->getEntityManager();
+		$em = $this->getEntityManager();
 		
-// 		$query = $em->createQueryBuilder()
-// 			->select('u.id', 'ud.firstname')
-// 			->from('UserBundle:User', 'u')
-// 			->innerJoin('u.role', 'ur')
-// 			->innerJoin('u.userDetail', 'ud')
-// 			->where('ur.name = :role')
-// 			->orderBy('ur.name', 'ASC')
-// 			->setParameter('role', $role)	
-// 		;
+		$query = $em->createQueryBuilder()
+			->select('u')
+			->from('UserBundle:User', 'u')
+			->innerJoin('u.userDetail', 'ud')
+			->innerJoin('u.role', 'r')
+			->orderBy('ud.firstname', 'ASC')	
+		;
+		
+		if ($roles) {
+			$query
+			->andWhere('r.id IN (:roles)')
+			->setParameter('roles', $roles);
+		}
 	
-// 		$user_ar = $query->getQuery()->getResult();
+		$user_ar = $query->getQuery()->getResult();
 	
-// 		return $user_ar;
-// 	}
+		return $user_ar;
+	}
 }
