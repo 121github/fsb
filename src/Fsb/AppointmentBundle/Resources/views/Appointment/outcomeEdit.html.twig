@@ -1,0 +1,30 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Edit Appointment Outcome{% endblock %}
+
+{% block article -%}
+	{% set submit_id = edit_form.vars.id ~ "_submit" %}
+	<form action="{{ path('appointment_outcome_edit', { 'id': appointment.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+		{{ form_errors(edit_form) }}
+			<table>
+				<tr>
+					<td>
+						{{ form_label(edit_form.outcome) }}
+						{{ form_errors(edit_form.outcome) }}
+						{{ form_widget(edit_form.outcome) }}
+					</td><td colspan="2">
+						{{ form_label(edit_form.outcomeReason) }}
+						{{ form_errors(edit_form.outcomeReason) }}
+						{{ form_widget(edit_form.outcomeReason) }}
+					</td>
+				</tr><tr>
+					<td>
+						<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+					</td>
+					<td colspan="2">
+						{{ form_rest(edit_form) }}	
+					</td>
+				</tr>
+			</table>
+	</form>
+{% endblock %}

@@ -153,7 +153,11 @@
 								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 								                		
 								                		<p style="padding-top: 10px; text-align: right;">
-													        <a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+								                		{% if (is_granted('ROLE_RECRUITER')) %}
+													        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+													    {% else %}
+													    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+													    {% endif %}
 													        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 													    </p>
 												    </div>
@@ -205,7 +209,7 @@
 											<div data-role="popup" id="action{{ time }}" data-theme="a">
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
-													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year}) }}" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
+													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
 													<li><a href="#">Create Note</a></li>
 												</ul>
 											</div>
@@ -237,7 +241,7 @@
 											<div data-role="popup" id="action{{ time }}" data-theme="a">
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
-													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
+													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
 													<li><a href="#">Create Note</a></li>
 													<li><a href="{{ path('unavailableDate_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
 												</ul>

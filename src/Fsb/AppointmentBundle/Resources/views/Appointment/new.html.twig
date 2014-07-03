@@ -9,6 +9,12 @@
 		{{ form_errors(form) }}
 			<table>
 				<tr>
+					<td>
+						{{ form_label(form.recruiter) }}
+						{{ form_errors(form.recruiter) }}
+						{{ form_widget(form.recruiter) }}
+					</td>
+				</tr><tr>
 					<td colspan="3">
 						{{ form_label(form.appointmentDetail.title) }}
 						{{ form_errors(form.appointmentDetail.title) }}
@@ -26,11 +32,6 @@
 						{{ form_widget(form.endDate) }}
 					</td>
 				</tr><tr>
-					<td>
-						{{ form_label(form.recruiter) }}
-						{{ form_errors(form.recruiter) }}
-						{{ form_widget(form.recruiter) }}
-					</td>
 					<td>
 						{{ form_label(form.appointmentDetail.project) }}
 						{{ form_errors(form.appointmentDetail.project) }}

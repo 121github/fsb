@@ -62,8 +62,9 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $userRoles = $manager->getRepository('UserBundle:UserRole')->findAll();
         $numUser = 0;
         foreach ($userRoles as $role) {
+        	$max = ($role->getName() == "ROLE_RECRUITER") ? 5 : 2;
         	
-        	for ($i=1; $i<=3; $i++) {
+        	for ($i=1; $i<=$max; $i++) {
         		
         		$numUser++;
         	
@@ -249,14 +250,14 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
-        	for ($i=1; $i<=40; $i++) {
+        	for ($i=1; $i<=50; $i++) {
         
         		$numAppointment++;
         		 
         		$appointment = new Appointment();
         		
         		$appointment->setRecruiter($recruiter);
-        		$days = rand(1, 30);
+        		$days = rand(1, 180);
         		$hour = rand(8,19);
         		$minute = array(0,30);
         		$minute = $minute[rand(0, 1)];
@@ -287,7 +288,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		
         		$address->setAdd1($numAppointment." Street");
         		$address->setAdd2("Apartment ".rand(1, 700));
-        		$address->setAdd3("");
+        		$address->setAdd3("House ".rand(1, 23));
         		$randStr = substr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ,mt_rand(0 , 25), 2);
         		$address->setPostcode("M".rand(1, 15)." ".rand(1, 5).$randStr);
         		$address->setCountry("UK");

@@ -11,8 +11,8 @@ appointment_new:
     defaults: { _controller: "AppointmentBundle:Appointment:new" }
 
 appointment_new_date:
-    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}
-    defaults: { _controller: "AppointmentBundle:Appointment:newDate" }
+    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "AppointmentBundle:Appointment:newDate", recruiter_id: null }
 
 appointment_create:
     pattern:  /create
@@ -32,3 +32,7 @@ appointment_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "AppointmentBundle:Appointment:delete" }
     requirements: { _method: post|delete }
+
+appointment_outcome_edit:
+    pattern:  /{id}/outcome_edit
+    defaults: { _controller: "AppointmentBundle:Appointment:outcomeEdit" }

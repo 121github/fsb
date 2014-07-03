@@ -501,16 +501,6 @@ class UserController extends Controller
     			'entity'      => $user,
     			'password_form'   => $passwordForm->createView(),
     	));
-
-//     	$this->get('session')->getFlashBag()->set(
-//     			'success',
-//     			array(
-//     					'title' => 'ERROR!',
-//     					'message' => 'The user password has NOT been updated'
-//     			)
-//     	);
-
-//     	return $this->redirect($this->generateUrl('user_show', array('id' => $id)));
     }
     
     /**

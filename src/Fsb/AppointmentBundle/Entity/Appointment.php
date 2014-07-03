@@ -3,6 +3,7 @@
 namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Appointment
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Fsb\AppointmentBundle\Entity\AppointmentRepository")
  */
+
 class Appointment
 {
     /**
@@ -74,6 +76,7 @@ class Appointment
      */
     private $modifiedDate;
 
+    
     /**
      *
      * @return string
@@ -278,5 +281,6 @@ class Appointment
     {
         return $this->modifiedDate;
     }
+    
 
 }

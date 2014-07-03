@@ -59,9 +59,9 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('postcodes', $postcodes);
 		} 
 		
-		$recruiter_ar = $query->getQuery()->getResult();
+		$appointment_ar = $query->getQuery()->getResult();
 	
-		return $recruiter_ar;
+		return $appointment_ar;
 	}
 	
 	/**
@@ -130,9 +130,9 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('postcodes', $postcodes);
 		}
 		
-		$recruiter_ar = $query->getQuery()->getResult();
+		$appointment_ar = $query->getQuery()->getResult();
 	
-		return $recruiter_ar;
+		return $appointment_ar;
 	}
 	
 	/**
@@ -196,9 +196,9 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('postcodes', $postcodes);
 		}
 		
-		$recruiter_ar = $query->getQuery()->getResult();
+		$appointment_ar = $query->getQuery()->getResult();
 	
-		return $recruiter_ar;
+		return $appointment_ar;
 	}
 	
 	/**
@@ -229,5 +229,44 @@ class AppointmentRepository extends EntityRepository
 		$postcode_ar = $query->getQuery()->getResult();
 	
 		return $postcode_ar;
+	}
+	
+	/**
+	 * 
+	 * Find the appointments that are between two dates for a particular recruiter
+	 * 
+	 * @param \DateTime $startDate
+	 * @param \DateTime $endDate
+	 */
+	public function findAppointmentsWithCollision(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
+		$em = $this->getEntityManager();
+		
+		$query = $em->createQueryBuilder()
+		->select(array('a.id'))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('
+				(((SUBSTRING(a.startDate, 1, 10)) <= SUBSTRING(:startDate, 1, 10) AND (SUBSTRING(a.endDate, 1, 10)) >= SUBSTRING(:endDate, 1, 10)) OR
+				((SUBSTRING(a.startDate, 1, 10)) <= SUBSTRING(:startDate, 1, 10) AND (SUBSTRING(a.endDate, 1, 10)) <= SUBSTRING(:endDate, 1, 10) AND (SUBSTRING(a.endDate, 1, 10)) > SUBSTRING(:startDate, 1, 10)) OR
+				((SUBSTRING(a.startDate, 1, 10)) >= SUBSTRING(:startDate, 1, 10) AND (SUBSTRING(a.endDate, 1, 10)) <= SUBSTRING(:endDate, 1, 10)) OR
+				((SUBSTRING(a.startDate, 1, 10)) >= SUBSTRING(:startDate, 1, 10) AND (SUBSTRING(a.endDate, 1, 10)) >= SUBSTRING(:endDate, 1, 10) AND (SUBSTRING(a.startDate, 1, 10)) <= SUBSTRING(:endDate, 1, 10)))
+				AND
+				(((SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) >= SUBSTRING(:endDate, 12, 8)) OR
+				((SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) > SUBSTRING(:startDate, 12, 8)) OR
+				((SUBSTRING(a.startDate, 12, 8)) >= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8)) OR
+				((SUBSTRING(a.startDate, 12, 8)) >= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) >= SUBSTRING(:endDate, 12, 8) AND (SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8)))
+		')
+		->orderBy('a.startDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('startDate', $startDate)
+		->setParameter('endDate', $endDate)
+		;
+		
+		$appointment_ar = $query->getQuery()->getResult();
+		
+		return $appointment_ar;
 	}
 }
