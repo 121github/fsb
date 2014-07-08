@@ -4,11 +4,25 @@
 
 
 {% block article -%}
+
 	{% set submit_id = edit_form.vars.id ~ "_submit" %}
 	<form action="{{ path('appointment_update', { 'id': appointment.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
 		{{ form_errors(edit_form) }}
 			<table>
 				<tr>
+					<td>
+						{% if (is_granted('ROLE_RECRUITER')) %}
+							<h2> {{ appointment.recruiter }} </h2>
+				       		<div style="display: none;">
+				       	{% else %}
+				       		<div>
+				       	{% endif %}
+				       		{{ form_label(edit_form.recruiter) }}
+							{{ form_errors(edit_form.recruiter) }}
+							{{ form_widget(edit_form.recruiter) }}
+				  		</div>
+					</td>
+				</tr><tr>
 					<td colspan="3">
 						{{ form_label(edit_form.appointmentDetail.title) }}
 						{{ form_errors(edit_form.appointmentDetail.title) }}
@@ -19,17 +33,13 @@
 						{{ form_label(edit_form.startDate) }}
 						{{ form_errors(edit_form.startDate) }}
 						{{ form_widget(edit_form.startDate) }}
+						
 					</td><td>
 						{{ form_label(edit_form.endDate) }}
 						{{ form_errors(edit_form.endDate) }}
 						{{ form_widget(edit_form.endDate) }}
 					</td>
 				</tr><tr>
-					<td>
-						{{ form_label(edit_form.recruiter) }}
-						{{ form_errors(edit_form.recruiter) }}
-						{{ form_widget(edit_form.recruiter) }}
-					</td>
 					<td>
 						{{ form_label(edit_form.appointmentDetail.project) }}
 						{{ form_errors(edit_form.appointmentDetail.project) }}
@@ -83,7 +93,6 @@
 						{{ form_widget(edit_form.appointmentDetail.address.country) }}
 					</td>
 				</tr><tr>
-				</tr><tr>
 					<td colspan="3">
 						{{ form_label(edit_form.appointmentDetail.comment) }}
 						{{ form_errors(edit_form.appointmentDetail.comment) }}
@@ -91,7 +100,7 @@
 					</td>
 				</tr><tr>
 					<td>
-						<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+						<a href="{{ path('calendar_day', {'day': day, 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>				
 					</td>
 					<td colspan="2">
 						{{ form_rest(edit_form) }}	

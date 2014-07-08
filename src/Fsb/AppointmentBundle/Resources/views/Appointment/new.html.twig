@@ -4,15 +4,23 @@
 
 
 {% block article -%}
+
 	{% set submit_id = form.vars.id ~ "_submit" %}
 	<form action="{{ path('appointment_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
 		{{ form_errors(form) }}
 			<table>
 				<tr>
 					<td>
-						{{ form_label(form.recruiter) }}
-						{{ form_errors(form.recruiter) }}
-						{{ form_widget(form.recruiter) }}
+						{% if (is_granted('ROLE_RECRUITER')) %}
+							<h2> {{ appointment.recruiter }} </h2>
+				       		<div style="display: none;">
+				       	{% else %}
+				       		<div>
+				       	{% endif %}
+				       		{{ form_label(form.recruiter) }}
+							{{ form_errors(form.recruiter) }}
+							{{ form_widget(form.recruiter) }}
+				  		</div>
 					</td>
 				</tr><tr>
 					<td colspan="3">
@@ -92,7 +100,7 @@
 					</td>
 				</tr><tr>
 					<td>
-						<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+						<a href="{{ path('calendar_day', {'day': day, 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>				
 					</td>
 					<td colspan="2">
 						{{ form_rest(form) }}	

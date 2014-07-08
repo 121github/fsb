@@ -31,14 +31,14 @@ class Address
     /**
      * @var string
      *
-     * @ORM\Column(name="add2", type="string", length=255)
+     * @ORM\Column(name="add2", type="string", length=255, nullable=true)
      */
     private $add2;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="add3", type="string", length=255)
+     * @ORM\Column(name="add3", type="string", length=255, nullable=true)
      */
     private $add3;
 

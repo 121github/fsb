@@ -24,11 +24,13 @@
     		<script type="text/javascript" src="{{ asset('bundles/jquery/js/jquery.datetimepicker/jquery.datetimepicker.js') }}" ></script>
     		{# common Lib #}
     		<script type="text/javascript" src="{{ asset('bundles/backend/js/common.js') }}" ></script>
+    		{# google maps api Lib #}
+    		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 		{% endblock %}
 		
     </head>
     <body id="{%  block id '' %}">
-		<div data-role="dialog" data-overlay-theme="b">
+		<div data-role="dialog" data-overlay-theme="b" data-close-btn="none">
     		<header data-role="header" data-theme="a">
 				<h1>{% block name %}{% endblock %}</h1>
 			</header><!-- /header -->

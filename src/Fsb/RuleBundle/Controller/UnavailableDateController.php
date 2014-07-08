@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Fsb\RuleBundle\Entity\AvailabilityFilter;
 use Fsb\RuleBundle\Form\AvailabilityFilterType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\Form;
 
 /**
  * UnavailableDate controller.
@@ -35,6 +37,53 @@ class UnavailableDateController extends Controller
         ));
     }
     
+    
+    /**
+     * Check if the endTime is posterior to the startTime 
+     *
+     * @param UnavailableDate $unavailableDate
+     */
+    private function endTimeAfterStartTime(UnavailableDate $unavailableDate, Form $form) {
+    
+    	if (!$unavailableDate->getAllDay()) {
+    		if (strtotime($unavailableDate->getEndTime()->format('H:i:s')) <= strtotime($unavailableDate->getStartTime()->format('H:i:s'))) {
+    			$form->addError(new FormError("The endTime has to be posterior to the startTime"));
+    		}
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * Check if Other reason has been selected
+     *
+     * @param UnavailableDate $unavailableDate
+     */
+    private function otherReasonSelected(UnavailableDate $unavailableDate, Form $form) {
+    
+    	if (($unavailableDate->getReason() == "Other") && ($unavailableDate->getOtherReason() == "")) {
+    		$form->addError(new FormError("Please specify other reason"));
+    	}
+    
+    	return true;
+    }
+    
+    /**
+     * Check if is possible to create a new unavailableDate
+     *
+     * @param UnavailableDate $unavailableDate
+     */
+    private function checkNewUnavailableDateRestrictions(UnavailableDate $unavailableDate, Form $form) {
+    	 
+    	//The endTime has to be posterior to the startTime
+    	$this->endTimeAfterStartTime($unavailableDate, $form);
+    	
+    	//Other reason selected
+    	$this->otherReasonSelected($unavailableDate, $form);
+    	 
+    	return true;
+    }
+    
   
     /**
      * Creates a new UnavailableDate entity.
@@ -51,6 +100,20 @@ class UnavailableDateController extends Controller
         $unavailableDate = new UnavailableDate();
         $form = $this->createCreateForm($unavailableDate);
         $form->handleRequest($request);
+        
+        //Before save the unavailableDate we have to check some constraints
+        $this->checkNewUnavailableDateRestrictions($unavailableDate, $form);
+        
+        $currentDate = $unavailableDate->getUnavailableDate();
+        $day = $currentDate->format('d');
+        $month = $currentDate->format('m');
+        $year = $currentDate->format('Y');
+        
+        $recruiter_id = $unavailableDate->getRecruiter()->getId();
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	$recruiter_id = null;
+        }
+        
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -78,14 +141,17 @@ class UnavailableDateController extends Controller
             				'message' => 'The availability has changed'
             		)
             );
-
-            $url = $this->getRequest()->headers->get("referer");
-            return new RedirectResponse($url);
+            
+            return $this->redirect($this->generateUrl('calendar_day', array('day' => $day, 'month' => $month, 'year' => $year, 'recruiter_id' => $recruiter_id)));
         }
 
         return $this->render('RuleBundle:UnavailableDate:new.html.twig', array(
             'entity' => $unavailableDate,
             'form'   => $form->createView(),
+        	'recruiter_id' => $recruiter_id,
+        	'day' => $day,
+        	'month' => $month,
+        	'year' => $year,
         ));
     }
 
@@ -163,10 +229,14 @@ class UnavailableDateController extends Controller
     	
     	$form   = $this->createCreateForm($unavailableDate);
     
+    	
     	return $this->render('RuleBundle:UnavailableDate:new.html.twig', array(
             'entity' => $unavailableDate,
             'form'   => $form->createView(),
     		'recruiter_id' => $recruiter_id,
+    		'day' => $day,
+    		'month' => $month,
+    		'year' => $year,
         ));
     }
 
@@ -207,12 +277,20 @@ class UnavailableDateController extends Controller
 
         $editForm = $this->createEditForm($unavailableDate);
         $deleteForm = $this->createDeleteForm($id);
+        
+        $currentDate = $unavailableDate->getUnavailableDate();
+        $day = $currentDate->format('d');
+        $month = $currentDate->format('m');
+        $year = $currentDate->format('Y');
 
         return $this->render('RuleBundle:UnavailableDate:edit.html.twig', array(
             'entity'      => $unavailableDate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         	'recruiter_id' => $recruiter_id,
+        	'day' => $day,
+        	'month' => $month,
+        	'year' => $year,
         ));
     }
 
@@ -254,6 +332,19 @@ class UnavailableDateController extends Controller
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($unavailableDate);
         $editForm->handleRequest($request);
+        
+        //Before save the unavailableDate we have to check some constraints
+        $this->checkNewUnavailableDateRestrictions($unavailableDate, $editForm);
+        
+        $currentDate = $unavailableDate->getUnavailableDate();
+        $day = $currentDate->format('d');
+        $month = $currentDate->format('m');
+        $year = $currentDate->format('Y');
+        
+        $recruiter_id = $unavailableDate->getRecruiter()->getId();
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	$recruiter_id = null;
+        }
 
         if ($editForm->isValid()) {
             $em->flush();
@@ -266,8 +357,7 @@ class UnavailableDateController extends Controller
             		)
             );
 
-            $url = $this->getRequest()->headers->get("referer");
-            return new RedirectResponse($url);
+            return $this->redirect($this->generateUrl('calendar_day', array('day' => $day, 'month' => $month, 'year' => $year, 'recruiter_id' => $recruiter_id)));
             
         }
 
@@ -275,7 +365,10 @@ class UnavailableDateController extends Controller
             'entity'      => $unavailableDate,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        	'recruiter_id' => $unavailableDate->getRecruiter()->getId(),
+        	'recruiter_id' => $recruiter_id,
+       		'day' => $day,
+       		'month' => $month,
+       		'year' => $year,
         ));
     }
     /**
@@ -297,6 +390,14 @@ class UnavailableDateController extends Controller
             
             $em->remove($unavailableDate);
             $em->flush();
+            
+            $this->get('session')->getFlashBag()->set(
+            		'success',
+            		array(
+            				'title' => 'Set Available!',
+            				'message' => 'The time is now available'
+            		)
+            );
             
             $url = $this->getRequest()->headers->get("referer");
             return new RedirectResponse($url);

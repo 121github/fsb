@@ -79,9 +79,9 @@ class AppointmentController extends Controller
      */
     private function endDateAfterStartDate(Appointment $appointment, Form $form) {
     
-//     	if (strtotime($appointment->getEndDate()->format('Y-m-d H:i:s')) >= strtotime($appointment->getStartDate()->format('Y-m-d H:i:s'))) {
-//     		$form->addError(new FormError("The endDate has to be posterior to the startDate"));
-//     	}
+    	if (strtotime($appointment->getEndDate()->format('Y-m-d H:i:s')) <= strtotime($appointment->getStartDate()->format('Y-m-d H:i:s'))) {
+    		$form->addError(new FormError("The endDate has to be posterior to the startDate"));
+    	}
     
     	return true;
     }
@@ -123,9 +123,18 @@ class AppointmentController extends Controller
         $form = $this->createCreateForm($appointment);
         $form->handleRequest($request);
         
-        
         //Before save the appointment we have to check some constraints
         $this->checkNewAppointmentRestrictions($appointment, $form);
+        
+        $startDate = $appointment->getStartDate()->getTimestamp();
+        $day = date('d',$startDate);
+        $month = date('m',$startDate);
+        $year = date('Y',$startDate);
+        
+        $recruiter_id = $appointment->getRecruiter()->getId();
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	$recruiter_id = null;
+        }
         
         if ($form->isValid()) {
         	
@@ -157,16 +166,12 @@ class AppointmentController extends Controller
             			'message' => 'The appointment has been created'
             	)
             );
-            
-            $startDate = $appointment->getStartDate()->getTimestamp();
-            $day = date('d',$startDate);
-            $month = date('m',$startDate);
-            $year = date('Y',$startDate);
 
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,
             		'month' => $month,
             		'year' => $year,
+            		'recruiter_id' => $recruiter_id,
             	))
             );
         }
@@ -174,6 +179,10 @@ class AppointmentController extends Controller
         return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
             'appointment' => $appointment,
             'form'   => $form->createView(),
+        	'day' => $day,
+        	'month' => $month,
+        	'year' => $year,
+        	'recruiter_id' => $recruiter_id,
         ));
     }
 
@@ -246,6 +255,9 @@ class AppointmentController extends Controller
     	return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
     			'appointment' => $appointment,
     			'form'   => $form->createView(),
+    			'day' => $day,
+    			'month' => $month,
+    			'year' => $year,
     	));
     }
 
@@ -263,11 +275,29 @@ class AppointmentController extends Controller
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-
         return $this->render('AppointmentBundle:Appointment:show.html.twig', array(
             'appointment'      => $appointment,
-            'delete_form' => $deleteForm->createView(),        ));
+        ));
+    }
+    
+    
+    /**
+     * Check if is possible to edit an appointment
+     *
+     * @param Appointment $appointment
+     */
+    private function checkEditAppointmentRestrictions(Appointment $appointment, Form $form) {
+    	 
+    	//Check if exist any other appointment in the same datetime for the same recruiter
+    	//$this->appointmentAlreadyExist($appointment, $form);
+    	 
+    	//Check the postcode
+    	$this->postcodeExist($appointment, $form);
+    	 
+    	//The endDate has to be after the startDate
+    	$this->endDateAfterStartDate($appointment, $form);
+    	 
+    	return true;
     }
 
     /**
@@ -287,10 +317,23 @@ class AppointmentController extends Controller
 
         $editForm = $this->createEditForm($appointment);
         
+        $startDate = $appointment->getStartDate()->getTimestamp();
+        $day = date('d',$startDate);
+        $month = date('m',$startDate);
+        $year = date('Y',$startDate);
+        
+        $recruiter_id = $appointment->getRecruiter()->getId();
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	$recruiter_id = null;
+        }
 
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
             'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
+        	'day' => $day,
+        	'month' => $month,
+        	'year' => $year,
+        	'recruiter_id' => $recruiter_id,
         ));
     }
 
@@ -340,6 +383,19 @@ class AppointmentController extends Controller
         
         $editForm->submit($request);
         
+        //Before save the appointment we have to check some constraints
+        $this->checkEditAppointmentRestrictions($appointment, $editForm);
+        
+        $startDate = $appointment->getStartDate()->getTimestamp();
+        $day = date('d',$startDate);
+        $month = date('m',$startDate);
+        $year = date('Y',$startDate);
+        
+        $recruiter_id = $appointment->getRecruiter()->getId();
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	$recruiter_id = null;
+        }
+        
         if ($editForm->isValid()) {
         	
         	 Util::setModifyAuditFields($appointment, $userLogged->getId());
@@ -370,15 +426,11 @@ class AppointmentController extends Controller
             	)
             );
             
-            $startDate = $appointment->getStartDate()->getTimestamp();
-            $day = date('d',$startDate);
-            $month = date('m',$startDate);
-            $year = date('Y',$startDate);
-            
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,
             		'month' => $month,
             		'year' => $year,
+            		'recruiter_id' => $recruiter_id,
             ))
             );
         }
@@ -386,6 +438,10 @@ class AppointmentController extends Controller
         return $this->render('AppointmentBundle:Appointment:edit.html.twig', array(
             'appointment'      => $appointment,
             'edit_form'   => $editForm->createView(),
+        	'day' => $day,
+        	'month' => $month,
+        	'year' => $year,
+        	'recruiter_id' => $recruiter_id,
         ));
     }
     /**

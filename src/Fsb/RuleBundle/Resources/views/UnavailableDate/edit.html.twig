@@ -3,6 +3,7 @@
 {% block title %}Change Availability{% endblock %}
 
 {% block article -%}
+	
 	{% set submit_id = edit_form.vars.id ~ "_submit" %}
     <form action="{{ path('unavailableDate_update', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
     	<input type="hidden" name="_method" value="PUT">
@@ -17,12 +18,25 @@
 		{{ form_errors(edit_form.recruiter) }}
 		{{ form_widget(edit_form.recruiter) }}
        </div>
-       {{ form_rest(edit_form) }}
-       <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>	
+       {{ form_rest(edit_form) }}	
+       <a href="{{ path('calendar_day', {'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter_id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
     </form>
     
-    <form action="{{ path('unavailableDate_delete', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
-    	<input type="hidden" name="_method" value="DELETE">
-    	{{ form(delete_form) }}
-    </form>
+    <a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>
+	<!--  POPUP DELETE CONFIRM -->
+    <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+    	{% set submit_delete_id = delete_form.vars.id ~ "_submit" %}
+    	<form action="{{ path('unavailableDate_delete' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>Set Available?</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+		        <h3 class="ui-title">Are you sure to set available this time?</h3>
+		        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+		        <input type="hidden" name="_method" value="DELETE">
+		        {{ form_rest(delete_form) }}
+		    </div>
+			
+    	</form>
+    </div>
 {% endblock %}

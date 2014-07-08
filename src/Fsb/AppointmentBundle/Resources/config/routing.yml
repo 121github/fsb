@@ -2,6 +2,6 @@ appointment_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: "AppointmentBundle:Default:index" }
     
-UserBundle_rule:
+AppointmentBundle_appointment:
      resource: "@AppointmentBundle/Resources/config/routing/appointment.yml"
      prefix:   /appointment

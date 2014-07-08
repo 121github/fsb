@@ -1,56 +1,65 @@
-{% extends '::base.html.twig' %}
+{% extends '::calendar_dialog.html.twig' %}
 
-{% block body -%}
-    <h1>Appointment</h1>
+{% block title %}Appointment{% endblock %}
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ appointment.id }}</td>
-            </tr>
-            <tr>
-                <th>Record</th>
-                <td>{{ appointment.record }}</td>
-            </tr>
-            <tr>
-                <th>Startdate</th>
-                <td>{{ appointment.startDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Enddate</th>
-                <td>{{ appointment.endDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Createdby</th>
-                <td>{{ appointment.createdBy }}</td>
-            </tr>
-            <tr>
-                <th>Createddate</th>
-                <td>{{ appointment.createdDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Modifiedby</th>
-                <td>{{ appointment.modifiedBy }}</td>
-            </tr>
-            <tr>
-                <th>Modifieddate</th>
-                <td>{{ appointment.modifiedDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('appointment') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('appointment_edit', { 'id': appointment.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+{% block article -%}
+
+<style>
+      #map-canvas {
+        height: 300px;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    
+    <script>
+		function initialize() {
+		  var lat = {{ appointment.appointmentDetail.address.lat }};
+		  var lng = {{ appointment.appointmentDetail.address.lon }};
+		  var myLatlng = new google.maps.LatLng(lat,lng);
+		  var mapOptions = {
+		    zoom: 12,
+		    center: myLatlng
+		  }
+		  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		
+		  var marker = new google.maps.Marker({
+		      position: myLatlng,
+		      map: map,
+		      title: '{{ appointment.appointmentDetail.title }}'
+		  });
+		  var infowindow = new google.maps.InfoWindow({
+              content: '<span><b>Appointment</b><br></span>Recruiter'
+          });
+            google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+          });                             
+		}
+		
+		google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+    <div id="map-canvas"></div>
+    
+    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment.appointmentDetail.recordRef }}</p>
+    <p><strong>{{ "Project: " }}</strong>{{ appointment.appointmentDetail.project }}</p>
+    <p><strong>{{ "Outcome: " }}</strong>{{ appointment.appointmentDetail.outcome }}</p>
+    <p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment.appointmentDetail.outcomeReason }}</p>
+	<p>
+        <strong>{{ "Postcode: " }}</strong>{{ appointment.appointmentDetail.address.postcode }}
+		<a href="{{ "#" }}" target="_blank" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+    </p>
+    <p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment.appointmentDetail.comment }}</p>
+    
+    <p style="padding-top: 10px; text-align: right;">
+    {% if (is_granted('ROLE_RECRUITER')) %}
+        <a href="{{ path('appointment_outcome_edit', {'id': appointment.appointmentDetail.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+    {% else %}
+    	<a href="{{ path('appointment_edit', {'id': appointment.appointmentDetail.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+    {% endif %}
+        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Close</a>
+    </p>
+    
 {% endblock %}

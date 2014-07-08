@@ -47,7 +47,6 @@ class UnavailableDateType extends AbstractType
             ))
             ->add('otherReason', 'text', array(
             		'required'    => false,
-            		'read_only' => true,
             ))
         ;
     }

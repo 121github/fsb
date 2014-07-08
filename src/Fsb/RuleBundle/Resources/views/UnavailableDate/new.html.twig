@@ -4,11 +4,12 @@
 
 
 {% block article -%}
+
 	{% set submit_id = form.vars.id ~ "_submit" %}
     <form action="{{ path('unavailableDate_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
     	<h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
     	{{ form_errors(form) }}
-       {% if (recruiter_id) %}
+       {% if (recruiter_id is defined) %}
        	<div style="display: none;">
        {% else %}
        	<div>
@@ -18,6 +19,7 @@
 		{{ form_widget(form.recruiter) }}
        </div>
        {{ form_rest(form) }}
-       <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">No</a>	
+       
+       <a href="{{ path('calendar_day', {'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter_id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "No" }}</a>	
     </form>
 {% endblock %}
