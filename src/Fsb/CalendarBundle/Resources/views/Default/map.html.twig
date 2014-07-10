@@ -1,0 +1,53 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Map{% endblock %}
+
+{% block article -%}
+
+{% set appointment_ar = appointmentList %}
+<style>
+	#map-canvas {
+  	  height: 600px;
+    	margin: 0px;
+    	padding: 0px
+    }
+</style>
+    
+    
+    
+    <div id="map-canvas"></div>
+    
+    <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Close</a>
+
+  <script type="text/javascript">
+
+	var locations = {{ appointment_ar|json_encode|raw }};
+	var centerLat = {{ centerLat }};
+	var centerLon = {{ centerLon }};
+
+    var map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 12,
+      center: new google.maps.LatLng(centerLat, centerLon),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
+    
+{% endblock %}

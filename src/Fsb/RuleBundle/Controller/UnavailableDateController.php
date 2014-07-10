@@ -530,6 +530,8 @@ class UnavailableDateController extends Controller
     	$recruiters_filter = isset($session_fitler["recruiters"]) ? $session_fitler["recruiters"] : null;
     	$startTime_filter = isset($session_fitler["startTime"]) ? $session_fitler["startTime"] : null;
     	$endTime_filter = isset($session_fitler["endTime"]) ? $session_fitler["endTime"] : null;
+    	
+    	$searchAvailabilityFormSubmitted = ($recruiters_filter || $startTime_filter || $endTime_filter)? true : false;
     	 
     	if ($recruiters_filter) {
     		$recruiter_ar = new ArrayCollection();
@@ -600,6 +602,7 @@ class UnavailableDateController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchAvailabilityForm' => $form->createView(),
+    			'searchAvailabilityFormSubmitted' => $searchAvailabilityFormSubmitted,
     	));
     }
     

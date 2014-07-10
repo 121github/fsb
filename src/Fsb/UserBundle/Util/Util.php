@@ -44,25 +44,26 @@ class Util
 		
 		return $url; 
 	}
+
 	
-	static public function isInTheRange($postcodeOrig, $postcodeDest, $range) {
-	
-		$request_url = "http://maps.googleapis.com/maps/api/distancematrix/xml?origins=".$postcodeOrig."|UK&destinations=".$postcodeDest."|UK&mode=car&language=en-EN&sensor=false";
-	
-		$distance = -1;
+	static public function postcodeToCoords($postcode){
+		//Contact the google maps api to get the lat & `long` from the postcode
+		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . '&sensor=false';
+		$json = json_decode(file_get_contents($url));
 		
-		$xml = simplexml_load_file($request_url) or die("url not loading");
-		$status = $xml->status;
-		if ($status=="OK") {
-			if ($xml->row->element->distance->value)
-				$distance = $xml->row->element->distance->value;
-		}	
-		
-		if ($distance >= 0 && $distance < $range*1.6*1000) {
-			return true;
+		if (!empty($json->results)) {
+			$coord = array(
+					'lat' => $json->results[0]->geometry->location->lat,
+					'lng' => $json->results[0]->geometry->location->lng
+			);
 		}
-			
-		return false;
+		else {
+			$coord = array(
+				'lat' => null,
+				'lng' => null
+			);
+		}		
+		return $coord;
 	}
 		
 }

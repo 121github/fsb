@@ -60,6 +60,12 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        dql:
+            numeric_functions:
+                ACOS: Fsb\CalendarBundle\DQL\NumericFunctions\Acos
+                SIN: Fsb\CalendarBundle\DQL\NumericFunctions\Sin
+                COS: Fsb\CalendarBundle\DQL\NumericFunctions\Cos
+                PI: Fsb\CalendarBundle\DQL\NumericFunctions\Pi
 
 # Swiftmailer Configuration
 swiftmailer:

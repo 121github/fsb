@@ -23,3 +23,11 @@ calendar_filter:
 calendar_clean_filter:
     pattern:  /clean_filter
     defaults: { _controller: "CalendarBundle:Default:cleanSearch" }
+    
+calendar_map_day:
+    pattern:  /map/day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Default:mapDay" }
+
+calendar_map_month:
+    pattern:  /map/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Default:mapMonth" }

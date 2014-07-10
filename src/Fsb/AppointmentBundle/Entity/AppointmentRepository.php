@@ -4,6 +4,7 @@ namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
+
 /**
  * AppointmentRepository
  *
@@ -21,7 +22,7 @@ class AppointmentRepository extends EntityRepository
 	 * 
 	 * @return array Appointments
 	 */
-	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
+	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 		
@@ -53,12 +54,89 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
-		if (count($postcodes) > 0) {
+		if ($postcode_lat && $postcode_lon && $distance) {
+			
 			$query
-			->andWhere('adr.postcode IN (:postcodes)')
-			->setParameter('postcodes', $postcodes);
+			->andWhere($query->expr()->between(':lat', 'adr.lat - :distance', 'adr.lat + :distance'))
+			->andWhere($query->expr()->between(':lon', 'adr.lon - :distance', 'adr.lon + :distance'))
+			->andWhere('
+					((((	
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+			->setParameter('lat', $postcode_lat)
+						->setParameter('lon', $postcode_lon)
+						->setParameter('lat', $postcode_lat)
+						->setParameter('distance', $distance)
+			;
 		} 
 		
+		$appointment_ar = $query->getQuery()->getResult();
+	
+		return $appointment_ar;
+	}
+	
+	/**
+	 * Get The appointments of a recruiter and in a particular month
+	 *
+	 * @param int $recruiter_id
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array Appointments
+	 */
+	public function findAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select('a.id, ad.title, adr.lat, adr.lon')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
+		->orderBy('a.startDate', 'ASC')
+	
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+	
+		if (count($projects) > 0) {
+			$query
+			->andWhere('ad.project IN (:projects)')
+			->setParameter('projects', $projects);
+		}
+	
+		if (count($outcomes) > 0) {
+			$query
+			->andWhere('ad.outcome IN (:outcomes)')
+			->setParameter('outcomes', $outcomes);
+		}
+	
+		if ($postcode_lat && $postcode_lon && $distance) {
+			
+			$query
+			->andWhere($query->expr()->between(':lat', 'adr.lat - :distance', 'adr.lat + :distance'))
+			->andWhere($query->expr()->between(':lon', 'adr.lon - :distance', 'adr.lon + :distance'))
+			->andWhere('
+					((((	
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+			->setParameter('lat', $postcode_lat)
+						->setParameter('lon', $postcode_lon)
+						->setParameter('lat', $postcode_lat)
+						->setParameter('distance', $distance)
+			;
+		}
+	
 		$appointment_ar = $query->getQuery()->getResult();
 	
 		return $appointment_ar;
@@ -74,7 +152,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
+	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -124,10 +202,23 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
-		if (count($postcodes) > 0) {
+		if ($postcode_lat && $postcode_lon && $distance) {
+			
 			$query
-			->andWhere('adr.postcode IN (:postcodes)')
-			->setParameter('postcodes', $postcodes);
+			->andWhere($query->expr()->between(':lat', 'adr.lat - :distance', 'adr.lat + :distance'))
+			->andWhere($query->expr()->between(':lon', 'adr.lon - :distance', 'adr.lon + :distance'))
+			->andWhere('
+					((((	
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+			->setParameter('lat', $postcode_lat)
+						->setParameter('lon', $postcode_lon)
+						->setParameter('lat', $postcode_lat)
+						->setParameter('distance', $distance)
+			;
 		}
 		
 		$appointment_ar = $query->getQuery()->getResult();
@@ -145,7 +236,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcodes = null) {
+	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -190,45 +281,28 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('outcomes', $outcomes);
 		}
 		
-		if (count($postcodes) > 0) {
+		if ($postcode_lat && $postcode_lon && $distance) {
+			
 			$query
-			->andWhere('adr.postcode IN (:postcodes)')
-			->setParameter('postcodes', $postcodes);
+			->andWhere($query->expr()->between(':lat', 'adr.lat - :distance', 'adr.lat + :distance'))
+			->andWhere($query->expr()->between(':lon', 'adr.lon - :distance', 'adr.lon + :distance'))
+			->andWhere('
+					((((	
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+			->setParameter('lat', $postcode_lat)
+						->setParameter('lon', $postcode_lon)
+						->setParameter('lat', $postcode_lat)
+						->setParameter('distance', $distance)
+			;
 		}
 		
 		$appointment_ar = $query->getQuery()->getResult();
 	
 		return $appointment_ar;
-	}
-	
-	/**
-	 * Get The postcodes of the appointments of a recruiter 
-	 *
-	 * @param int $recruiter_id
-	 *
-	 * @return array Postcodes
-	 */
-	public function getPostcodesByRecruiter($recruiter_id, $month, $year) {
-	
-		$em = $this->getEntityManager();
-	
-		$query = $em->createQueryBuilder()
-		->select(array('distinct adr.postcode'))
-		->from('AppointmentBundle:Appointment', 'a')
-		->innerJoin('a.appointmentDetail', 'ad')
-		->innerJoin('ad.address', 'adr')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
-		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
-	
-		->setParameter('recruiter_id', $recruiter_id)
-		->setParameter('month', (int)$month)
-		->setParameter('year', (int)$year)
-		;
-	
-		$postcode_ar = $query->getQuery()->getResult();
-	
-		return $postcode_ar;
 	}
 	
 	/**

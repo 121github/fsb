@@ -86,6 +86,7 @@
 					{#############################}
 		    		{# Set Views Options Buttons #}
 		    		{#############################}
+		    		<a href="{{ path('calendar_map_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
 		    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
 		    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
 		    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>

@@ -16,6 +16,7 @@ use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\UserBundle\Util\Util;
 use Fsb\RuleBundle\Form\UnavailableDateType;
 use Fsb\RuleBundle\Entity\UnavailableDate;
+use Fsb\AppointmentBundle\Entity\Address;
 
 class DefaultController extends Controller
 {
@@ -90,41 +91,6 @@ class DefaultController extends Controller
     
     /**
      * 
-     * @param unknown $postcode
-     * @param unknown $range
-     * @param unknown $recruiter_id
-     * @param unknown $month
-     * @param unknown $year
-     * 
-     * 
-     */
-    private function getPostcodesFilterByRange($postcode_filter, $range, $recruiter_id, $month, $year) {
-    	$em = $this->getDoctrine()->getManager();
-    	
-    	$postcodes_filter = array();
-    	if ($postcode_filter) {
-    		array_push($postcodes_filter, $postcode_filter);
-    	}
-    	
-    	if ($range > 0) {
-    		//Get all the postcodes
-    		$postcodes_ar = $em->getRepository('AppointmentBundle:Appointment')->getPostcodesByRecruiter($recruiter_id, $month, $year);
-    		
-    		foreach ($postcodes_ar as $postcode) {
-    			$distance = Util::isInTheRange($postcode_filter, $postcode["postcode"], $range);
-    			if ($distance) {
-    				array_push($postcodes_filter, $postcode["postcode"]);
-    			}
-    		}
-    	
-    	}
-    	
-    	return $postcodes_filter;
-    }
-    
-    
-    /**
-     * 
      * @param unknown $month
      * @param unknown $year
      * @param string $recruiter_id
@@ -146,6 +112,8 @@ class DefaultController extends Controller
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
     	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
     	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
+    	
+    	$searchFormSubmitted = ($projects_filter || $recruiter_filter || $outcomes_filter || $postcode_filter || $range_filter)? true : false;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -169,7 +137,14 @@ class DefaultController extends Controller
     	}
     	
     	
-    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode Filter ***********************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_lat = $postcode_coord['lat'];
+    	$postcode_lon = $postcode_coord['lng'];
+    	$distance = $range_filter*1.1515;
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -200,7 +175,7 @@ class DefaultController extends Controller
     	$prevYear = $prevDate->format('Y');
     	
     	//Appointments in the prev month
-    	$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear, $projects_filter, $outcomes_filter, $postcodes_filter);
+    	$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentPrevList as $appointment) {
@@ -214,7 +189,7 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	   
     	//Appointments in the current month
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentList as $appointment) {
@@ -231,7 +206,7 @@ class DefaultController extends Controller
     	$nextYear = $nextDate->format('Y');
     	
     	//Appointments in the next month
-    	$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear, $projects_filter, $outcomes_filter, $postcodes_filter);
+    	$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentNextList as $appointment) {
@@ -261,6 +236,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'searchFormSubmitted' => $searchFormSubmitted,
     			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
@@ -289,6 +265,7 @@ class DefaultController extends Controller
     	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
     	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
     	 
+    	$searchFormSubmitted = ($projects_filter || $recruiter_filter || $outcomes_filter || $postcode_filter || $range_filter)? true : false;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -311,7 +288,14 @@ class DefaultController extends Controller
     		throw $this->createNotFoundException('Unable to find this recruiter.');
     	}
 
-    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode Filter ***********************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_lat = $postcode_coord['lat'];
+    	$postcode_lon = $postcode_coord['lng'];
+    	$distance = $range_filter*1.1515;
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -374,14 +358,13 @@ class DefaultController extends Controller
     	$unavailableDate->setRecruiter($recruiter);
     	
     	$setUnavailableDateForm   = $this->createSetUnavailableForm($unavailableDate);
-    	
-    	 
+
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	   
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
@@ -417,7 +400,7 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	
     	//Appointments in the current month
-    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter);
+    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentMiniCalendarList as $appointment) {
@@ -442,6 +425,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'searchFormSubmitted' => $searchFormSubmitted,
     			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
@@ -468,6 +452,8 @@ class DefaultController extends Controller
     	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
     	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
     	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
+    	
+    	$searchFormSubmitted = ($projects_filter || $recruiter_filter || $outcomes_filter || $postcode_filter || $range_filter)? true : false;
     
     	/******************************************************************************************************************************/
     	/************************************************** Recruiter *************************************************************/
@@ -491,7 +477,14 @@ class DefaultController extends Controller
     	}
     
     	
-    	$postcodes_filter = $this->getPostcodesFilterByRange($postcode_filter, $range_filter, $recruiter->getId(), $month, $year);
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode Filter ***********************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_lat = $postcode_coord['lat'];
+    	$postcode_lon = $postcode_coord['lng'];
+    	$distance = $range_filter*1.1515;
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -513,7 +506,7 @@ class DefaultController extends Controller
     	/************************************************** Get The Current (day) Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     	
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcodes_filter);
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	 
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
@@ -543,7 +536,7 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	 
     	//Appointments in the current month
-    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter);
+    	$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	//Prepare the array structure to be printed in the calendar
     	$auxList = array();
     	foreach ($appointmentMiniCalendarList as $appointment) {
@@ -564,6 +557,7 @@ class DefaultController extends Controller
     			'month' => $month,
     			"year" => $year,
     			'searchForm' => $searchForm->createView(),
+    			'searchFormSubmitted' => $searchFormSubmitted,
     			'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
     	));
     }
@@ -683,5 +677,156 @@ class DefaultController extends Controller
     	))
     	->getForm()
     	;
+    }
+    
+    
+    /**
+     * Map Day view
+     *
+     */
+    public function mapDayAction($day, $month, $year, $recruiter_id)
+    {
+    	$lat = null;
+    	$lon = null;
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** FILTER FORM ***************************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$session = $this->getRequest()->getSession();
+    	$session_fitler = $session->get('filter');
+    	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
+    	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode Filter ***********************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_lat = $postcode_coord['lat'];
+    	$postcode_lon = $postcode_coord['lng'];
+    	$distance = $range_filter*1.1515;
+    	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Get The Current (month) Appointments ***************************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	//Appointments in the current month
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter_id, $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+    	
+    	$auxList = array();
+    	$i = 0;
+    	foreach ($appointmentList as $appointment) {
+    		$auxList[$i] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $i+1);
+    		$i++;
+    	}
+    	$appointmentList = $auxList;
+    	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode to center the map ***************************************************************/
+    	/******************************************************************************************************************************/
+    	 //If the postcode exist as a filter
+    	 if ($postcode_filter) {
+    	 	$address = new Address();
+    	 	Util::setLatLonAddress($address, $postcode_filter);
+    	 	$lat = $address->getLat();
+    	 	$lon = $address->getLon();
+    	 }
+    	 else {
+    	 	$lat = "53.4508777";
+    	 	$lon = "-2.2294364";
+    	 }
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Render ***************************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	return $this->render('CalendarBundle:Default:map.html.twig', array(
+    			'appointmentList' => $appointmentList,
+    			"centerLat" => $lat,
+    			"centerLon" => $lon,
+    	));
+    
+    }
+    
+    /**
+     * Map Month view
+     *
+     */
+    public function mapMonthAction($month, $year, $recruiter_id)
+    {
+    	$lat = null;
+    	$lon = null;
+    	 
+    	$em = $this->getDoctrine()->getManager();
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** FILTER FORM ***************************************************************/
+    	/******************************************************************************************************************************/
+    	 
+    	$session = $this->getRequest()->getSession();
+    	$session_fitler = $session->get('filter');
+    	$projects_filter = isset($session_fitler["projects"]) ? $session_fitler["projects"] : null;
+    	$outcomes_filter = isset($session_fitler["outcomes"]) ? $session_fitler["outcomes"] : null;
+    	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
+    	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode Filter ***********************************************************/
+    	/******************************************************************************************************************************/
+    	
+    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_lat = $postcode_coord['lat'];
+    	$postcode_lon = $postcode_coord['lng'];
+    	$distance = $range_filter*1.1515;
+    	 
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Get The Current (month) Appointments ***************************************************************/
+    	/******************************************************************************************************************************/
+    	 
+    	//Appointments in the current month
+    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByMonth($recruiter_id, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+    	 
+    	$auxList = array();
+    	$i = 0;
+    	foreach ($appointmentList as $appointment) {
+    		$auxList[$i] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $i+1);
+    		$i++;
+    	}
+    	$appointmentList = $auxList;
+    	 
+    	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Postcode to center the map ***************************************************************/
+    	/******************************************************************************************************************************/
+    	//If the postcode exist as a filter
+    	if ($postcode_filter) {
+    		$address = new Address();
+    		Util::setLatLonAddress($address, $postcode_filter);
+    		$lat = $address->getLat();
+    		$lon = $address->getLon();
+    	}
+    	else {
+    		$lat = "53.4508777";
+    		$lon = "-2.2294364";
+    	}
+    
+    	/******************************************************************************************************************************/
+    	/************************************************** Render ***************************************************************/
+    	/******************************************************************************************************************************/
+    	 
+    	return $this->render('CalendarBundle:Default:map.html.twig', array(
+    			'appointmentList' => $appointmentList,
+    			"centerLat" => $lat,
+    			"centerLon" => $lon,
+    	));
+    
     }
 }
