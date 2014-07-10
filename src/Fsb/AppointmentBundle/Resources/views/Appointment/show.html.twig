@@ -29,14 +29,16 @@
 		      map: map,
 		      title: '{{ appointment.appointmentDetail.title }}'
 		  });
+
 		  var infowindow = new google.maps.InfoWindow({
               content: '<span><b>Appointment</b><br></span>Recruiter'
           });
-            google.maps.event.addListener(marker, 'click', function() {
+
+          google.maps.event.addListener(marker, 'click', function() {
             infowindow.open(map,marker);
           });                             
 		}
-		
+
 		google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>

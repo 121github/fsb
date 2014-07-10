@@ -19,6 +19,7 @@
             	<li><a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user" data-ajax="false">{{ "Users" }}</a></li>
             	<li><a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Rules" }}</a></li>
             	<li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Availability" }}</a></li>
+            	<li><a href="{{ path('appointment_filter', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Appointment" }}</a></li>
             {% endif %}
             <li><a href="{{ path('calendar_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-calendar" data-ajax="false">{{ "Calendar" }}</a></li>
             
@@ -35,7 +36,10 @@
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
 			
 			<li>
-				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">{{ "Hi " ~ app.security.getToken().getUser().getUserDetail() }}</a>
+				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">
+					<h2>{{ "Hi " ~ app.security.getToken().getUser().getUserDetail() }}</h2>
+					<p>{{ "[" ~ app.security.getToken().getUser().getRole() ~ "]" }}</p>
+				</a>
 			</li>
 			
 			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power" data-ajax="false">{{ "Logout" }}</a></li>
@@ -47,6 +51,9 @@
 		</div>
 		<div class="filter">
 			{% include '::includes/availabilityFilter.html.twig' %}
+		</div>
+		<div class="filter">
+			{% include '::includes/appointmentFilter.html.twig' %}
 		</div>
 		<div class="filter">
 			{% include '::includes/userFilter.html.twig' %}

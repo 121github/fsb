@@ -20,7 +20,7 @@
     <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Close</a>
 
   <script type="text/javascript">
-
+  function initialize() {
 	var locations = {{ appointment_ar|json_encode|raw }};
 	var centerLat = {{ centerLat }};
 	var centerLon = {{ centerLon }};
@@ -48,6 +48,9 @@
         }
       })(marker, i));
     }
+  }
+
+  google.maps.event.addDomListener(window, 'load', initialize);
   </script>
     
 {% endblock %}

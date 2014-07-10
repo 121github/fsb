@@ -150,6 +150,9 @@
 								                		<p>
 								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
 								                			<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+								                			{% if appointment["distance"] is defined %}
+																{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
+															{% endif %}
 								                		</p>
 								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 								                		
@@ -162,7 +165,7 @@
 													        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 													    </p>
 												    </div>
-										  		  </div>
+										  		</div>
 									        {% endfor %}
 								       {% endif %}
 									       
@@ -176,7 +179,7 @@
 								                </a></h2>
 								                
 												<!--  POPUP APPOINTMENT -->
-											    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">
+											    <div data-role="popup" id="popup{{ appointment["id"] }}" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
 										    		<div data-role="header" data-theme="a" class="ui-corner-top">
 												        <h1>{{ appointment["title"] }}</h1>
 												    </div>
@@ -191,6 +194,9 @@
 								                		<p>
 								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
 															<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+															{% if appointment["distance"] is defined %}
+																{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
+															{% endif %}
 								                		</p>
 								                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 								                		

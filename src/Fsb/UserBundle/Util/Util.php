@@ -23,21 +23,6 @@ class Util
 	}
 	
 	
-	static public function setLatLonAddress($address, $postcode) {
-		$request_url = "http://maps.googleapis.com/maps/api/geocode/xml?address=".urlencode($postcode).",uk&sensor=true";
-		$xml = simplexml_load_file($request_url) or die("url not loading");
-		$status = $xml->status;
-		if ($status=="OK") {
-			$lat = $xml->result->geometry->location->lat;
-			$lon = $xml->result->geometry->location->lng;
-			
-			$address->setLat($lat);
-			$address->setLon($lon);
-		}
-
-		return $address;
-	}
-	
 	static public function getMapUrl($lat, $lon, $postcode) {
 		
 		$url = 'https://www.google.co.uk/maps/place/'.$postcode.'/@'.$lat.','.$lon;
@@ -48,7 +33,7 @@ class Util
 	
 	static public function postcodeToCoords($postcode){
 		//Contact the google maps api to get the lat & `long` from the postcode
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . '&sensor=false';
+		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . ',UK&sensor=false';
 		$json = json_decode(file_get_contents($url));
 		
 		if (!empty($json->results)) {
@@ -64,6 +49,17 @@ class Util
 			);
 		}		
 		return $coord;
+	}
+	
+	
+	static public function getDistance($latOrig, $lonOrig, $latDest, $lonDest) {
+	
+		$distance = ((acos(sin($latOrig*pi()/180)*sin($latDest*pi()/180) + cos($latOrig*pi()/180)*cos($latDest*pi()/180) * cos(($lonOrig - $lonDest)*pi()/180)))*180/pi())*160*1.1515;
+		
+		
+		$distance = round($distance, 2);
+		 
+		return $distance;
 	}
 		
 }

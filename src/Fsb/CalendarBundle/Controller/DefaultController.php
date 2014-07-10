@@ -146,6 +146,11 @@ class DefaultController extends Controller
     	$postcode_lon = $postcode_coord['lng'];
     	$distance = $range_filter*1.1515;
     	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Form creation *************************************************************/
+    	/******************************************************************************************************************************/
+    	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
     	$searchForm   = $this->getFilterForm($filter);
@@ -297,6 +302,10 @@ class DefaultController extends Controller
     	$postcode_lon = $postcode_coord['lng'];
     	$distance = $range_filter*1.1515;
     	
+    	/******************************************************************************************************************************/
+    	/************************************************** Form creation *************************************************************/
+    	/******************************************************************************************************************************/
+    	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
     	$searchForm   = $this->getFilterForm($filter);
@@ -381,6 +390,10 @@ class DefaultController extends Controller
 	    		$aux["project"] = $appointment["project"];
 	    		$aux["recordRef"] = $appointment["recordRef"];
 	    		$aux["postcode"] = $appointment["postcode"];
+	    		if ($postcode_lat && $postcode_lon && $distance) {
+	    			$aux["distance"] = Util::getDistance($appointment["lat"], $appointment["lon"], $postcode_lat, $postcode_lon);
+	    			$aux["postcode_dest"] = $postcode_filter;
+	    		}
 	    		$aux["map"] = Util::getMapUrl($appointment["lat"], $appointment["lon"], $appointment["postcode"]);
 	    		
 	    		if ($aux["minute"] < 30) {
@@ -485,6 +498,10 @@ class DefaultController extends Controller
     	$postcode_lat = $postcode_coord['lat'];
     	$postcode_lon = $postcode_coord['lng'];
     	$distance = $range_filter*1.1515;
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Form creation *************************************************************/
+    	/******************************************************************************************************************************/
     	
     	$filter = new Filter();
     	$filter->setRecruiter($recruiter);
@@ -734,9 +751,12 @@ class DefaultController extends Controller
     	 //If the postcode exist as a filter
     	 if ($postcode_filter) {
     	 	$address = new Address();
-    	 	Util::setLatLonAddress($address, $postcode_filter);
-    	 	$lat = $address->getLat();
-    	 	$lon = $address->getLon();
+    	 	
+    	 	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	 	$lat = $postcode_coord["lat"];
+    	 	$lon = $postcode_coord["lng"];
+    	 	$address->setLat($lat);
+    	 	$address->setLon($lon);
     	 }
     	 else {
     	 	$lat = "53.4508777";
@@ -809,9 +829,12 @@ class DefaultController extends Controller
     	//If the postcode exist as a filter
     	if ($postcode_filter) {
     		$address = new Address();
-    		Util::setLatLonAddress($address, $postcode_filter);
-    		$lat = $address->getLat();
-    		$lon = $address->getLon();
+    		
+    		$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    		$lat = $postcode_coord["lat"];
+    		$lon = $postcode_coord["lng"];
+    		$address->setLat($lat);
+    		$address->setLon($lon);
     	}
     	else {
     		$lat = "53.4508777";

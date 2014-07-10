@@ -1,0 +1,63 @@
+{% if searchAppointmentForm is defined %}
+{% set submit_id = searchAppointmentForm.vars.id ~ "_submit" %}
+
+	<h3>{{ "Appointment Filter" }}</h3>
+	<form action="{{ path('appointment_filter', {'month': month, 'year': year}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(searchAppointmentForm) }}>
+		{{ form_errors(searchAppointmentForm) }}
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
+				{% if recruiter_url is defined %}
+					{{ recruiter }}
+					<br /><br />
+				{% endif %}
+				{% if (is_granted('ROLE_RECRUITER') or (recruiter_url is defined and recruiter_url is not null)) %}
+					<div data-role="collapsible" data-collapsed="false" style="display: none;">
+				{% else %}
+					<div data-role="collapsible" data-collapsed="false">
+				{% endif %}
+					<h3>{{ form_label(searchAppointmentForm.recruiters) }}</h3>
+					<p> {{ form_errors(searchAppointmentForm.recruiters) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Select the recruitersr" }}</li>
+						<li>{{ form_widget(searchAppointmentForm.recruiters) }}</li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchAppointmentForm.projects) }}</h3>
+					<p> {{ form_errors(searchAppointmentForm.projects) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Select the projects" }}</li>
+						<li>{{ form_widget(searchAppointmentForm.projects) }}</li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchAppointmentForm.outcomes) }}</h3>
+					<p> {{ form_errors(searchAppointmentForm.outcomes) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Select the outcomes" }}</li>
+						<li>{{ form_widget(searchAppointmentForm.outcomes) }}</li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchAppointmentForm.postcode) }}</h3>
+					<p> {{ form_errors(searchAppointmentForm.postcode) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Select the postcode" }}</li>
+						<li>
+							{{ form_widget(searchAppointmentForm.postcode) }}
+						</li>
+					</ul>
+					<p> {{ form_errors(searchAppointmentForm.range) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li data-role="list-divider"> {{ "Miles" }}</li>
+						<li>
+						{# <input id="fsb_calendarbundle_filter_range" name="fsb_calendarbundle_filter[range]" data-highlight="true" min="0" max="100" value="50" type="range"> #}
+							{{ form_widget(searchAppointmentForm.range, {'type' : 'range', 'attr' : {'min' : "0", 'maxlength' : "100", "data-highlight": "true" } }) }}
+{# 						{{ form_widget(searchAppointmentForm.range) }}#}
+						</li>
+					</ul>
+				</div>
+			</div>
+			{{ form_rest(searchAppointmentForm) }}
+			<a href="{{ path('appointment_clean_filter') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
+	</form>
+{% endif %}

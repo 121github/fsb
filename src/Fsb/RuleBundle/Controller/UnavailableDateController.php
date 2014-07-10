@@ -551,6 +551,10 @@ class UnavailableDateController extends Controller
     		$filter->setEndTime($endTime_filter);
     	}
     	 
+    	/******************************************************************************************************************************/
+    	/************************************************** Form creation *************************************************************/
+    	/******************************************************************************************************************************/
+    	
     	$form = $this->createSearchAvailabilityForm($filter, $month, $year);
     	 
     	 
@@ -572,6 +576,10 @@ class UnavailableDateController extends Controller
     				"startTime" => ($filter->getStartTime()) ? $filter->getStartTime() : null,
     				"endTime" => ($filter->getEndTime()) ? $filter->getEndTime() : null,
     		));
+    		
+    		
+    		$url = $this->getRequest()->headers->get("referer");
+    		return new RedirectResponse($url);
     	}
     	 
     	/******************************************************************************************************************************/

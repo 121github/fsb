@@ -39,7 +39,12 @@
 				{% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 				 	<a href="#left-panel" id="navmenu-btn" class="navmenu-btn">&#9776; </a>
 				 	
-				 	{% if ((searchForm is defined and searchFormSubmitted) or (searchAvailabilityForm is defined and searchAvailabilityFormSubmitted)) %}
+				 	{% if ( 
+				 			(searchForm is defined and searchFormSubmitted) or 
+				 			(searchAvailabilityForm is defined and searchAvailabilityFormSubmitted) or 
+				 			(searchAppointmentForm is defined and searchAppointmentFormSubmitted)
+				 		) 
+				 	%}
 				 		<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;">{{ "Filtered" }}</a>
 				 	{% else %}
 				 		<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="notext"></a>

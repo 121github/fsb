@@ -1,0 +1,129 @@
+{% extends '::calendar.html.twig' %}
+
+
+{% block title %}Search Appointment{% endblock %}
+
+{% block article -%}
+
+	{% set now = "now"|date("U") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+    
+    {% set currentMonth = month %}
+    {% set currentYear = year %}
+    {% set time = currentMonth ~ "/01/" ~ currentYear|date("U") %}
+    
+    {% set prevDate = time|date_modify("-1 month") %}
+    {% set prevDay = prevDate|date("d") %}
+    {% set prevMonth = prevDate|date("m") %}
+    {% set prevYear = prevDate|date("Y") %}
+    
+    {% set nextDate = time|date_modify("+1 month") %}
+    {% set nextDay = nextDate|date("d") %}
+    {% set nextMonth = nextDate|date("m") %}
+    {% set nextYear = nextDate|date("Y") %}
+    
+    {% set daysInMonth = time|date('t') %}
+	{% set startDow = time|date('F 7\\s\\t Y')|date('w') %}
+	
+    {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
+    {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+    
+    
+    
+    <div  data-theme="a" id="calendar-page" class="diary-page">
+    
+	    <div class="change_day">
+	    	<table>
+	    		<tr>
+			    	<td style="text-align: left;">
+			    		{% if (currentMonth == nowMonth and currentYear == nowYear) %}
+			    			<a href="{{ path('appointment_filter', {'month': nowMonth, 'year': nowYear}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    		{% else %}
+			    			<a href="{{ path('appointment_filter', {'month': nowMonth, 'year': nowYear}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    		{% endif %}
+			    	</td>
+			    	<td style="text-align: center;">
+					    <a href="{{ path('appointment_filter', {'month': prevMonth, 'year': prevYear}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					    <span>{{ time|date("F Y") }}</span>
+					    <a href="{{ path('appointment_filter', {'month': nextMonth, 'year': nextYear}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+					</td>
+				    <td style="text-align: right;">
+				    	<a href="{{ path('appointment_map_month', {'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Calendar" }}</a>
+			    	</td>
+			    </tr>
+		    </table>
+		</div>
+        
+	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
+	    	
+	    	<ul data-role="listview" data-inset="true">
+	        
+        		{########## Diary ###############}
+				{% for i in range(1,daysInMonth) %}
+					{% set day = currentMonth ~ "/" ~ i ~ "/" ~ currentYear|date("U") %}
+					{% set day = day|date("m/d/Y") %}
+					
+					<li>
+						<img src="" class="ui-li-thumb">
+						<div data-role="collapsible">
+							{% if appointmentList[day] is defined %}
+								{% if (appointmentList[day]|length > 0) %}
+									<h2><a href="#">
+						        		{{ appointmentList[day]|length ~ " appointment(s)" }}
+					                </a></h2>
+					                {% for key, appointment in appointmentList[day] %}
+				                		<p>
+				                			<a href="#popup{{ appointment["appointment"].id ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">
+				                				{{ appointment["appointment"].appointmentDetail }}
+				                			</a>
+				                			<div data-role="popup" id="popup{{ appointment["appointment"].id ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
+												<div data-role="header" data-theme="a" class="ui-corner-top">
+											        <h1>{{ appointment["appointment"].appointmentDetail.title }}</h1>
+											    </div>
+											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+											        <p style="float: right;">{{ appointment["appointment"].startDate|date("D d M") }}</p>
+											        <h2 class="ui-title">{{ appointment["appointment"].startDate|date("H:m") }}</h2>
+												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["appointment"].recruiter }}</p>
+												    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment["appointment"].appointmentDetail.recordRef }}</p>
+							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["appointment"].appointmentDetail.project }}</p>
+							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["appointment"].appointmentDetail.outcome }}</p>
+							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["appointment"].appointmentDetail.outcomeReason }}</p>
+							                		<p>
+							                			<strong>{{ "Postcode: " }}</strong>{{ appointment["appointment"].appointmentDetail.address.postcode }}
+							                			<a href="{{ path('appointment_show', {'id': appointment["appointment"].id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+							                			{% if appointment["distance"] is defined %}
+															{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
+														{% endif %}
+							                		</p>
+							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["appointment"].appointmentDetail.comment }}</p>
+							                		
+							                		<p style="padding-top: 10px; text-align: right;">
+							                		{% if (is_granted('ROLE_RECRUITER')) %}
+												        <a href="{{ path('appointment_outcome_edit', {'id': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    {% else %}
+												    	<a href="{{ path('appointment_edit', {'id': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    {% endif %}
+												        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
+												    </p>
+											    </div>
+											</div>
+				                		</p>
+									{% endfor %}
+								{% endif %}
+							{% endif %}	
+			            </div>
+			           	<p class="ui-li-aside">
+                			{{ day|date("D d M") }}
+                		</p>
+                	</li>
+		        {% endfor %}
+			         	
+	        </ul>
+		</div> <!-- content -->
+	</div>
+	
+{% endblock %}
+    

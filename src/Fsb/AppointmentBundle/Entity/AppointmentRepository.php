@@ -343,4 +343,72 @@ class AppointmentRepository extends EntityRepository
 		
 		return $appointment_ar;
 	}
+	
+	/**
+	 * Get The appointments by filter
+	 *
+	 * @param int $recruiter_id
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array Appointments
+	 */
+	public function findAppointmentsByFilter($month,$year, $recruiters = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select('a, ad, adr')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
+		->where('SUBSTRING(a.startDate, 6, 2) = :month')
+		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
+		->orderBy('a.startDate', 'ASC')
+	
+		->setParameter('month', (int)$month)
+		->setParameter('year', (int)$year)
+		;
+	
+		if (count($recruiters) > 0) {
+			$query
+			->andWhere('a.recruiter IN (:recruiters)')
+			->setParameter('recruiters', $recruiters);
+		}
+		
+		if (count($projects) > 0) {
+			$query
+			->andWhere('ad.project IN (:projects)')
+			->setParameter('projects', $projects);
+		}
+	
+		if (count($outcomes) > 0) {
+			$query
+			->andWhere('ad.outcome IN (:outcomes)')
+			->setParameter('outcomes', $outcomes);
+		}
+	
+		if ($postcode_lat && $postcode_lon && $distance) {
+				
+			$query
+			->andWhere($query->expr()->between(':lat', 'adr.lat - :distance', 'adr.lat + :distance'))
+			->andWhere($query->expr()->between(':lon', 'adr.lon - :distance', 'adr.lon + :distance'))
+			->andWhere('
+					((((
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+						->setParameter('lat', $postcode_lat)
+						->setParameter('lon', $postcode_lon)
+						->setParameter('lat', $postcode_lat)
+						->setParameter('distance', $distance)
+						;
+		}
+	
+		$appointment_ar = $query->getQuery()->getResult();
+	
+		return $appointment_ar;
+	}
 }
