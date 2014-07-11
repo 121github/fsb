@@ -68,7 +68,7 @@
 					
 					<li>
 						<img src="" class="ui-li-thumb">
-						<div data-role="collapsible">
+						<div data-role="collapsible" style="overflow: auto;">
 							{% if appointmentList[day] is defined %}
 								{% if (appointmentList[day]|length > 0) %}
 									<h2><a href="#">
@@ -76,8 +76,17 @@
 					                </a></h2>
 					                {% for key, appointment in appointmentList[day] %}
 				                		<p>
-				                			<a href="#popup{{ appointment["appointment"].id ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">
+				                			<a href="#popup{{ appointment["appointment"].id ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="text-shadow: none; background-color: {{ appointment["color"] }};">
 				                				{{ appointment["appointment"].appointmentDetail }}
+				                				<br /><br />
+				                					{{ appointment["appointment"].recruiter }}
+				                				<br /><br />
+				                					{{ appointment["appointment"].startDate|date("D d M - H:i") }}
+				                				<br /><br />
+					                			{% if appointment["distance"] is defined %}
+													{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
+												{% endif %}
+												
 				                			</a>
 				                			<div data-role="popup" id="popup{{ appointment["appointment"].id ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
 												<div data-role="header" data-theme="a" class="ui-corner-top">
@@ -85,7 +94,7 @@
 											    </div>
 											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 											        <p style="float: right;">{{ appointment["appointment"].startDate|date("D d M") }}</p>
-											        <h2 class="ui-title">{{ appointment["appointment"].startDate|date("H:m") }}</h2>
+											        <h2 class="ui-title">{{ appointment["appointment"].startDate|date("H:i") }}</h2>
 												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["appointment"].recruiter }}</p>
 												    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment["appointment"].appointmentDetail.recordRef }}</p>
 							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["appointment"].appointmentDetail.project }}</p>

@@ -86,10 +86,10 @@
 					{#############################}
 		    		{# Set Views Options Buttons #}
 		    		{#############################}
-		    		<a href="{{ path('calendar_map_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
 		    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
 		    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
 		    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+		    		<a href="{{ path('calendar_map_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
 				</div>
 			</div><!-- /grid-b -->
 		</div>
@@ -132,6 +132,9 @@
 									                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
 													{{ appointment["title"] }}
 								                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
+								                	{% if appointment["distance"] is defined %}
+														<p>{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}</p>
+													{% endif %}
 								                </a></h2>
 									                
 									              <!--  POPUP APPOINTMENT -->
@@ -176,6 +179,9 @@
 									        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
 								       				{{ appointment["title"] }}
 								                	<p>{{ appointment["comment"] }}</p>
+								                	{% if appointment["distance"] is defined %}
+														<p>{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}</p>
+													{% endif %}
 								                </a></h2>
 								                
 												<!--  POPUP APPOINTMENT -->

@@ -50,9 +50,7 @@
 					    <a href="{{ path('unavailableDate_search_availability', {'month': nextMonth, 'year': nextYear}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
 					</td>
 				    <td style="text-align: right;">
-			    		<a href="{{ path('calendar_day', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': firstMonthDay|date("d") , 'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			    		<a href="{{ path('calendar_month', {'month': month, 'year': year}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Calendar" }}</a>
 			    	</td>
 			    </tr>
 		    </table>
@@ -69,7 +67,7 @@
 					
 					<li>
 						<img src="" class="ui-li-thumb">
-						<div data-role="collapsible">
+						<div data-role="collapsible"  style="overflow: auto;">
 							{% if (unavailableCommonDateList[day] is defined) %}
 								{{ "BANK HOLIDAY" }}
 							{% elseif (day|date("D") == "Sun") %}
@@ -80,7 +78,7 @@
 				                </a></h2>
 				                {% for key, recruiter in recruiterList[day] %}
 			                		<p>
-			                			<a href="#popup{{ recruiter.id ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">
+			                			<a href="#popup{{ recruiter.id ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="color: black;">
 			                				{{ recruiter.userDetail }}
 			                			</a>
 			                			<div data-role="popup" id="popup{{ recruiter.id ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:400px;" class="ui-corner-all">

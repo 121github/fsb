@@ -2,32 +2,41 @@ calendar_homepage:
     pattern:  /
     defaults: { _controller: "CalendarBundle:Default:index" }
 
+# Views
+
 calendar_month:
     pattern:  /month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "CalendarBundle:Default:month", recruiter_id: null }
+    defaults: { _controller: "CalendarBundle:Month:month", recruiter_id: null }
 
 calendar_day:
     pattern:  /day/{day}/month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "CalendarBundle:Default:day", recruiter_id: null }
+    defaults: { _controller: "CalendarBundle:Day:day", recruiter_id: null }
     
 calendar_diary:
     pattern:  /diary/day/{day}/month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "CalendarBundle:Default:diary", recruiter_id: null }
+    defaults: { _controller: "CalendarBundle:Diary:diary", recruiter_id: null }
 
+# Search
     
 calendar_filter:
     pattern:  /filter
-    defaults: { _controller: "CalendarBundle:Default:search" }
+    defaults: { _controller: "CalendarBundle:Search:search" }
     requirements: { _method: post }
     
 calendar_clean_filter:
     pattern:  /clean_filter
-    defaults: { _controller: "CalendarBundle:Default:cleanSearch" }
+    defaults: { _controller: "CalendarBundle:Search:cleanSearch" }
+    
+# Map
     
 calendar_map_day:
     pattern:  /map/day/{day}/month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "CalendarBundle:Default:mapDay" }
+    defaults: { _controller: "CalendarBundle:Map:mapDay" }
 
 calendar_map_month:
     pattern:  /map/month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "CalendarBundle:Default:mapMonth" }
+    defaults: { _controller: "CalendarBundle:Map:mapMonth" }
+
+calendar_map_diary:
+    pattern:  /map/diary/day/{day}/month/{month}/year/{year}/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Map:mapDiary" }

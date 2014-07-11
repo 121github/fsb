@@ -162,7 +162,7 @@ class AppointmentRepository extends EntityRepository
 				'SUBSTRING(a.startDate, 15, 2) AS minute',
 				'a.id, ad.title', 
 				'ad.comment',
-				'ud.firstname as recruiter',
+				'CONCAT(ud.firstname, :space, ud.lastname) as recruiter',
 				'p.name as project',
 				'o.name as outcome',
 				'ad.outcomeReason',
@@ -188,6 +188,7 @@ class AppointmentRepository extends EntityRepository
 		->setParameter('day', (int)$day)
 		->setParameter('month', (int)$month)
 		->setParameter('year', (int)$year)
+		->setParameter('space', " ")
 		;
 		
 		if (count($projects) > 0) {

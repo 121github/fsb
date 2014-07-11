@@ -744,7 +744,6 @@ class AppointmentController extends Controller
     	
     	//Build the month array with the available recruiters
     	$auxList = array();
-    	
     	foreach ($appointmentList as $appointment) {
     		$offset = $appointment->getStartDate()->format('m/d/Y');
     		$appointment_ar = array();
@@ -753,6 +752,7 @@ class AppointmentController extends Controller
     			$appointment_ar["distance"] = Util::getDistance($appointment->getAppointmentDetail()->getAddress()->getLat(), $appointment->getAppointmentDetail()->getAddress()->getLon(), $postcode_lat, $postcode_lon);
     			$appointment_ar["postcode_dest"] = $postcode_filter;
     		}
+    		$appointment_ar["color"] = Util::getColorById($appointment->getRecruiter()->getId());
     		$auxList[$offset][$appointment->getId()] = $appointment_ar;
     	}
     	$appointmentList = $auxList;
@@ -856,7 +856,7 @@ class AppointmentController extends Controller
     	/************************************************** Render ***************************************************************/
     	/******************************************************************************************************************************/
     
-    	return $this->render('CalendarBundle:Default:map.html.twig', array(
+    	return $this->render('CalendarBundle:Map:map.html.twig', array(
     			'appointmentList' => $appointmentList,
     			"centerLat" => $lat,
     			"centerLon" => $lon,
