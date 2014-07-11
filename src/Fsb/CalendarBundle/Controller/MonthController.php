@@ -54,6 +54,15 @@ class MonthController extends DefaultController
 			throw $this->createNotFoundException('Unable to find this recruiter.');
 		}
 		 
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get the Rules ***********************************************************/
+		/******************************************************************************************************************************/
+		
+		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+				'recruiter' => $recruiter->getId()
+		));
+		
 		 
 		/******************************************************************************************************************************/
 		/************************************************** Postcode Filter ***********************************************************/
@@ -137,7 +146,6 @@ class MonthController extends DefaultController
 		}
 		$appointmentNextList = $auxList;
 		 
-		 
 		/******************************************************************************************************************************/
 		/************************************************** Get Appointments for the mini calendar ************************************/
 		/******************************************************************************************************************************/
@@ -161,6 +169,7 @@ class MonthController extends DefaultController
 				'searchForm' => $searchForm->createView(),
 				'searchFormSubmitted' => $searchFormSubmitted,
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
+				'ruleList' => $ruleList,
 		));
 	}
 }

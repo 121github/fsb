@@ -56,6 +56,14 @@ class DayController extends DefaultController
 		}
 	
 		/******************************************************************************************************************************/
+		/************************************************** Get the Rules ***********************************************************/
+		/******************************************************************************************************************************/
+		
+		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+			'recruiter' => $recruiter->getId()
+		));
+		
+		/******************************************************************************************************************************/
 		/************************************************** Postcode Filter ***********************************************************/
 		/******************************************************************************************************************************/
 		 
@@ -156,6 +164,7 @@ class DayController extends DefaultController
 				$aux["distance"] = Util::getDistance($appointment["lat"], $appointment["lon"], $postcode_lat, $postcode_lon);
 				$aux["postcode_dest"] = $postcode_filter;
 			}
+			$aux["color"] = Util::getColorById($appointment["outcome_id"]);
 			$aux["map"] = Util::getMapUrl($appointment["lat"], $appointment["lon"], $appointment["postcode"]);
 			 
 			if ($aux["minute"] < 30) {
@@ -202,6 +211,7 @@ class DayController extends DefaultController
 				'searchForm' => $searchForm->createView(),
 				'searchFormSubmitted' => $searchFormSubmitted,
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
+				'ruleList' => $ruleList,
 		));
 	}
 	

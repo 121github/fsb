@@ -50,9 +50,15 @@
 					<ul data-role="listview" data-theme="d" data-divider-theme="d">
 						<li data-role="list-divider"> {{ "Miles" }}</li>
 						<li>
-						{# <input id="fsb_calendarbundle_filter_range" name="fsb_calendarbundle_filter[range]" data-highlight="true" min="0" max="100" value="50" type="range"> #}
-							{{ form_widget(searchAppointmentForm.range, {'type' : 'range', 'attr' : {'min' : "0", 'maxlength' : "100", "data-highlight": "true" } }) }}
-{# 						{{ form_widget(searchAppointmentForm.range) }}#}
+						<input id="fsb_appointmentbundle_filter_range" name="fsb_appointmentbundle_filter[range]" data-highlight="true" min="0" max="100" value="50" type="range">
+						</li>
+						<script>
+							$(document).ready(function(){
+								$('.ui-slider-handle').on('mouseup',function(e){
+									$('input[name="fsb_appointmentbundle_filter[range]"]').val(Number($(this).attr('aria-valuetext')));
+								});	
+							})
+						</script>
 						</li>
 					</ul>
 				</div>

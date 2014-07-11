@@ -37,28 +37,65 @@
     <div  data-theme="a" id="calendar-page" class="diary-page">
     
 	    <div class="change_day">
-	    	<table>
-	    		<tr>
-			    	<td style="text-align: left;">
-			    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
-			    			<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
-			    		{% else %}
-			    			<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
-			    		{% endif %}
-			    	</td>
-			    	<td style="text-align: center;">
-					    <a href="{{ path('calendar_diary', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-					    <span>{{ time|date("d F Y") }}</span>
-					    <a href="{{ path('calendar_diary', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-					</td>
-				    <td style="text-align: right;">
-			    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
-			    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-			    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Diary" }}</a>
-			    		<a href="{{ path('calendar_map_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
-			    	</td>
-			    </tr>
-		    </table>
+	    	
+	    	<h1>{{ recruiter }}</h1>
+	    	
+		    <div class="ui-grid-b">
+				<div class="ui-block-a" style="text-align: left;">
+					{##########################}
+					{# Today Button #}
+					{##########################}
+					{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
+			    		<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+			    	{% else %}
+			    		<a href="{{ path('calendar_diary', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+			    	{% endif %}
+			    	{##########################}
+					{# Rule Button #}
+					{##########################}
+			    	<a href="#popupRules" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-theme="a">Rules</a>
+		    		<div data-role="popup" id="popupRules" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
+				    	<div data-role="header" data-theme="a" class="ui-corner-top">
+						       <h1>Rules</h1>
+						</div>
+						<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+							<h3 class="ui-title">{{ recruiter }}</h3>
+							
+							{% for rule in ruleList %}
+								<table class="record_properties">
+							        <tbody>
+							            <tr>
+							                <th>Rule</th>
+							                <th>Description</th>
+							            </th>
+							            <tr>
+							                <td>{{ rule.rule }}</td>
+							            	<td>{{ rule.description }}</td>
+							            </tr>
+							        </tbody>
+							    </table>
+							{% endfor %}
+						</div>
+				    </div>
+				</div>
+				<div class="ui-block-b" style="text-align: center;">
+					{############################}
+		    		{# Prev and Next Day Button #}
+		    		{############################}
+		    		 <a href="{{ path('calendar_diary', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+			 	     <span>{{ time|date("d F Y") }}</span>
+				     <a href="{{ path('calendar_diary', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+				</div>
+				<div class="ui-block-c" style="text-align: right;">
+					{#############################}
+		    		{# Set Views Options Buttons #}
+		    		{#############################}
+		    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Day" }}</a>
+		    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+		    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Diary" }}</a>
+		    		<a href="{{ path('calendar_map_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
+				</div>
+			</div><!-- /grid-b -->
 		</div>
         
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">

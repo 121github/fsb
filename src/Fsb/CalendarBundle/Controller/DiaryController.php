@@ -55,6 +55,15 @@ class DiaryController extends DefaultController
 	
 		 
 		/******************************************************************************************************************************/
+		/************************************************** Get the Rules ***********************************************************/
+		/******************************************************************************************************************************/
+		
+		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+				'recruiter' => $recruiter->getId()
+		));
+		
+		
+		/******************************************************************************************************************************/
 		/************************************************** Postcode Filter ***********************************************************/
 		/******************************************************************************************************************************/
 		 
@@ -105,7 +114,7 @@ class DiaryController extends DefaultController
 			$aux["recordRef"] = $appointment["recordRef"];
 			$aux["postcode"] = $appointment["postcode"];
 			$aux["map"] = Util::getMapUrl($appointment["lat"], $appointment["lon"], $appointment["postcode"]);
-			$aux["color"] = Util::getColorById(date_format($appointment["date"],"H"));
+			$aux["color"] = Util::getColorById($appointment["outcome_id"]);
 	
 			$auxList[$offset][$aux["id"]] = $aux;
 		}
@@ -141,6 +150,7 @@ class DiaryController extends DefaultController
 				'searchForm' => $searchForm->createView(),
 				'searchFormSubmitted' => $searchFormSubmitted,
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
+				'ruleList' => $ruleList,
 		));
 	}
 }

@@ -48,7 +48,7 @@ class FilterType extends AbstractType
             ->add('postcode', 'text', array(
             		'required'    => false,
             ))
-            ->add('range', 'number', array(
+            ->add('range', 'hidden', array(
             		'required'    => false,
             		'max_length' => 4,
             ))

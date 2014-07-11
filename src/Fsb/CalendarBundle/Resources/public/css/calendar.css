@@ -315,6 +315,7 @@
 .day-page .ui-listview li .ui-btn {
 	min-height: 0.625em;
 	margin-left: 22px;
+	text-shadow: none;
 }
 
 .day-page .ui-listview li .ui-btn .ui-li-aside {
@@ -435,8 +436,12 @@
 }
 
 .day-page .ui-listview .ui-li-has-thumb h2>:first-child{
-	padding-bottom: 30px;
 	max-width: 200px;
+	padding-bottom: 15px;
+	filter:alpha(opacity=80);
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+	color: black;
 }
 
 .day-page .ui-listview .ui-li-has-thumb {
@@ -470,6 +475,7 @@
 	min-height: 0.625em;
 	background: transparent;
 	border: 0px black solid;
+	text-shadow: none;
 }
 
 .diary-page .ui-listview li .ui-btn .ui-li-aside {
@@ -575,10 +581,12 @@
 }
 
 .diary-page .ui-listview .ui-btn-inline {
-	height: 130px;
-	width: 230px;
+	height: 100px;
+	width: 200px;
 	padding: 15px;
+	padding-bottom: 0px;
 	color: white;
+	font-size: 14px;
 	filter:alpha(opacity=80);
 	-moz-opacity: 0.8;
 	opacity: 0.8;
