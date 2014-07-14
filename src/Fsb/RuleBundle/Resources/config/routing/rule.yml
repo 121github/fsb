@@ -1,0 +1,34 @@
+rule:
+    pattern:  /all
+    defaults: { _controller: "RuleBundle:Rule:index" }
+
+rule_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "RuleBundle:Rule:show" }
+
+rule_new:
+    pattern:  /new
+    defaults: { _controller: "RuleBundle:Rule:new" }
+
+rule_new_by_id:
+    pattern:  /{id}/new
+    defaults: { _controller: "RuleBundle:Rule:newById" }
+
+rule_create:
+    pattern:  /create
+    defaults: { _controller: "RuleBundle:Rule:create" }
+    requirements: { _method: post }
+
+rule_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "RuleBundle:Rule:edit" }
+
+rule_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "RuleBundle:Rule:update" }
+    requirements: { _method: post|put }
+
+rule_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "RuleBundle:Rule:delete" }
+    requirements: { _method: post|delete }

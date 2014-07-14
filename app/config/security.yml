@@ -21,8 +21,11 @@ security:
         - { path: ^/calendar/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/diary/day/\d*/month/\d*/year/\d*/., roles: [ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/unavailabledate/searchAvailability/*, roles: [ROLE_ADMINISTRATOR, ROLE_APPOINTMENT_SETTER] }
+        - { path: ^/calendar/rule/all, roles: [ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR] }
+        - { path: ^/calendar/rule/new, roles: [ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR] }
+        - { path: ^/calendar/rule/\d*/*, roles: [ROLE_RECRUITER, ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR] }
         - { path: ^/calendar/*, roles: [ROLE_RECRUITER, ROLE_APPOINTMENT_SETTER, ROLE_ADMINISTRATOR, ROLE_SUPER_USER] }
-        - { path: ^/reporting/*, roles: [ROLE_SUPER_USER] }
+        - { path: ^/reporting/*, roles: [ROLE_SUPER_USER, ROLE_ADMINISTRATOR] }
         - { path: ^/backend/*, roles: [ROLE_ADMINISTRATOR] }
         # You can use a regular expression for the languges '[a-z]{2}'
     

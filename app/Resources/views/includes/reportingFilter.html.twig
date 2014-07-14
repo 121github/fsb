@@ -1,0 +1,19 @@
+{% if searchReportingForm is defined %}
+{% set submit_id = searchReportingForm.vars.id ~ "_submit" %}
+
+	<h3>{{ "Reporting Filter" }}</h3>
+	<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(searchReportingForm) }}>
+		{{ form_errors(searchReportingForm) }}
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
+				<div data-role="collapsible" data-collapsed="false">
+					<h3>{{ form_label(searchReportingForm.reports) }}</h3>
+					<p> {{ form_errors(searchReportingForm.reports) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li>{{ form_widget(searchReportingForm.reports) }}</li>
+					</ul>
+				</div>
+			</div>
+			{{ form_rest(searchReportingForm) }}
+			<a href="{{ path('reporting_clean_filter') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
+	</form>
+{% endif %}

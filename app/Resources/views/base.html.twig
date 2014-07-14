@@ -38,23 +38,27 @@
     		<header data-role="header" class="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
 				{% if (is_granted('IS_AUTHENTICATED_FULLY') or is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 				 	<a href="#left-panel" id="navmenu-btn" class="navmenu-btn">&#9776; </a>
-				 	
-				 	{% if ( 
-				 			(searchForm is defined and searchFormSubmitted) or 
-				 			(searchAvailabilityForm is defined and searchAvailabilityFormSubmitted) or 
-				 			(searchAppointmentForm is defined and searchAppointmentFormSubmitted)
-				 		) 
-				 	%}
-				 		<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;">{{ "Filtered" }}</a>
-				 	{% else %}
-				 		<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="notext"></a>
-				 	{%  endif %} 
+				 	<a href="#right-panel" data-role="button" data-icon="gear" data-iconpos="notext"></a>
+				 	 
 				{% endif %}
 				<h1><a href="{{ path('index') }}"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
 				{% if (is_granted('IS_AUTHENTICATED_FULLY')) %}
 					<div data-role="header">
 						<h1>{% block name %}{% endblock %}</h1>
+						{# Logo #}
 					    <a href="./" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-rel="back" data-ajax="false">Back</a>
+					    {# Filter #}
+					    {% if ( 
+				 			(searchForm is defined and searchFormSubmitted) or 
+				 			(searchAvailabilityForm is defined and searchAvailabilityFormSubmitted) or 
+				 			(searchAppointmentForm is defined and searchAppointmentFormSubmitted) or
+				 			(searchReportingForm is defined and searchReportingFilterFormSubmitted)
+				 		) 
+					 	%}
+					 		<a href="#filter-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;">{{ "Filtered" }}</a>
+					 	{% else %}
+					 		<a href="#filter-panel" data-role="button" data-icon="search" data-iconpos="notext"></a>
+					 	{%  endif %}
 					</div>
 				{% endif %}
 			</header><!-- /header -->

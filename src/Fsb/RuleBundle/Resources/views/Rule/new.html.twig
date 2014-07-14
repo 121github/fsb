@@ -1,0 +1,38 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}New Rule{% endblock %}
+
+{% block article -%}
+
+    
+    {% set submit_id = form.vars.id ~ "_submit" %}
+	<form action="{{ path('rule_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		{% if (is_granted('ROLE_RECRUITER')) %}
+			<h2> {{ entity.recruiter }} </h2>
+			<div style="display: none;">
+		{% else %}
+			<div>
+		{% endif %}
+			{{ form_label(form.recruiter) }}
+			{{ form_errors(form.recruiter) }}
+			{{ form_widget(form.recruiter) }}
+		</div>
+		<div>
+			{{ form_label(form.rule) }}
+			{{ form_errors(form.rule) }}
+			{{ form_widget(form.rule) }}
+		</div>
+		<div>
+			{{ form_label(form.description) }}
+			{{ form_errors(form.description) }}
+			{{ form_widget(form.description) }}
+		</div>
+		
+		<a href="{{ "#" }}" data-rel="back" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
+		
+		{{ form_rest(form) }}
+
+	</form>
+    
+{% endblock %}

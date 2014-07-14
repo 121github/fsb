@@ -1,13 +1,15 @@
 <?php
 
-namespace Fsb\BackendBundle\Controller;
+namespace Fsb\RuleBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Fsb\RuleBundle\Entity\Rule;
-use Fsb\BackendBundle\Form\Rule\RuleType;
+use Fsb\RuleBundle\Form\Rule\RuleType;
 use Fsb\UserBundle\Util\Util;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Rule controller.
@@ -26,7 +28,7 @@ class RuleController extends Controller
 
         $entities = $em->getRepository('RuleBundle:Rule')->findAll();
 
-        return $this->render('BackendBundle:Rule:index.html.twig', array(
+        return $this->render('RuleBundle:Rule:index.html.twig', array(
             'entities' => $entities,
         ));
     }
@@ -62,10 +64,10 @@ class RuleController extends Controller
             		)
             );
             
-            return $this->redirect($this->generateUrl('rule_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('calendar_homepage'));
         }
 
-        return $this->render('BackendBundle:Rule:new.html.twig', array(
+        return $this->render('RuleBundle:Rule:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
@@ -102,10 +104,46 @@ class RuleController extends Controller
         $entity = new Rule();
         $form   = $this->createCreateForm($entity);
 
-        return $this->render('BackendBundle:Rule:new.html.twig', array(
+        return $this->render('RuleBundle:Rule:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
+    }
+    
+    /**
+     * Displays a form to create a new Rule entity.
+     *
+     * @param $id recruiter Id
+     *
+     */
+    public function newByIdAction($id)
+    {
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	//Get the recruiter if exist
+    	$recruiter = $em->getRepository('UserBundle:User')->find($id);
+    	 
+    	if (!$recruiter) {
+    		throw $this->createNotFoundException('Unable to find Recruiter entity.');
+    	}
+    	
+    	//Check if the recruiter is trying to access to the rule of another user
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		if ($userLogged != $recruiter) {
+    			throw new AccessDeniedException();
+    		}
+    	}
+    	
+    	$entity = new Rule();
+    	$entity->setRecruiter($recruiter);
+    	$form   = $this->createCreateForm($entity);
+    
+    	return $this->render('RuleBundle:Rule:new.html.twig', array(
+    			'entity' => $entity,
+    			'form'   => $form->createView(),
+    	));
     }
 
     /**
@@ -124,7 +162,7 @@ class RuleController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('BackendBundle:Rule:show.html.twig', array(
+        return $this->render('RuleBundle:Rule:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),        ));
     }
@@ -135,19 +173,36 @@ class RuleController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+    	
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	 
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
+    	
+    	$em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('RuleBundle:Rule')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Rule entity.');
         }
+        
+        //Check if the recruiter is trying to access to the rule of another user
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	if ($userLogged != $entity->getRecruiter()) {
+        		throw new AccessDeniedException();
+        	}
+        }
 
         $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('BackendBundle:Rule:edit.html.twig', array(
+        return $this->render('RuleBundle:Rule:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
+        	'delete_form'   => $deleteForm->createView(),
         ));
     }
 
@@ -192,9 +247,20 @@ class RuleController extends Controller
             throw $this->createNotFoundException('Unable to find Rule entity.');
         }
 
+        //Check if the recruiter is trying to access to the rule of another user
+        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+        	if ($userLogged != $entity->getRecruiter()) {
+        		throw new AccessDeniedException();
+        	}
+        }
+        
         $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+        
         $editForm->handleRequest($request);
 
+        $editForm->submit($request);
+        
         if ($editForm->isValid()) {
         	
         	Util::setModifyAuditFields($entity, $userLogged->getId());
@@ -211,12 +277,14 @@ class RuleController extends Controller
             		)
             );
             
-            return $this->redirect($this->generateUrl('rule_edit', array('id' => $id)));
+            $url = $this->getRequest()->headers->get("referer");
+    		return new RedirectResponse($url);
         }
 
-        return $this->render('BackendBundle:Rule:edit.html.twig', array(
+        return $this->render('RuleBundle:Rule:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
+        	'delete_form'   => $deleteForm->createView(),
         ));
     }
     /**
@@ -225,16 +293,31 @@ class RuleController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+    	
+    	$userLogged = $this->get('security.context')->getToken()->getUser();
+    	 
+    	if (!$userLogged) {
+    		throw $this->createNotFoundException('Unable to find this user.');
+    	}
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	$entity = $em->getRepository('RuleBundle:Rule')->find($id);
+    	
+    	if (!$entity) {
+    		throw $this->createNotFoundException('Unable to find Rule entity.');
+    	}
+    	
+    	//Check if the recruiter is trying to access to the rule of another user
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		if ($userLogged != $entity->getRecruiter()) {
+    			throw new AccessDeniedException();
+    		}
+    	}
+    	
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('RuleBundle:Rule')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Rule entity.');
-            }
 
             $em->remove($entity);
             $em->flush();
@@ -249,7 +332,8 @@ class RuleController extends Controller
             );
         }
 
-        return $this->redirect($this->generateUrl('rule'));
+        $url = $this->getRequest()->headers->get("referer");
+        return new RedirectResponse($url);
     }
 
     /**

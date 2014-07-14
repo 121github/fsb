@@ -1,10 +1,6 @@
 BackendBundle_user:
      resource: "@BackendBundle/Resources/config/routing/user.yml"
      prefix:   /user
-
-UserBundle_rule:
-     resource: "@BackendBundle/Resources/config/routing/rule.yml"
-     prefix:   /rule
      
 backend_homepage:
     path: /

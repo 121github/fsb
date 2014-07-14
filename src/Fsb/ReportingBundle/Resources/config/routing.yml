@@ -1,3 +1,19 @@
 reporting_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: ReportingBundle:Default:index }
+    pattern:  /
+    defaults: { _controller: "ReportingBundle:Default:index" }
+
+reporting_filter:
+    pattern:  /filter
+    defaults: { _controller: "ReportingBundle:Default:index"}
+
+reporting_clean_filter:
+    pattern:  /clean_filter
+    defaults: { _controller: "ReportingBundle:Default:cleanSearchReporting" }
+    
+reporting_clean_filter_by_month:
+    pattern:  /clean_filter_by_month
+    defaults: { _controller: "ReportingBundle:Default:cleanSearchReportingByMonth" }
+    
+reporting_clean_filter_by_recruiter:
+    pattern:  /clean_filter_by_recruiter
+    defaults: { _controller: "ReportingBundle:Default:cleanSearchReportingByRecruiter" }

@@ -9,6 +9,10 @@
     {% set nowMonth = now|date("m") %}
     {% set nowYear = now|date("Y") %}
   
+	<div data-role="panel" id="filter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+		{% include '::includes/userFilter.html.twig' %}
+	</div>
+  
   <div id="sorter">
 		<ul data-role="listview">
 	    	<li><span>A</span></li>
