@@ -28,6 +28,12 @@ class Appointment
      * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
      */
     private $recruiter;
+    
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
+     */
+    private $appointment_setter;
 
     /**
      * @var \DateTime
@@ -118,6 +124,29 @@ class Appointment
     public function getRecruiter()
     {
     	return $this->recruiter;
+    }
+    
+    /**
+     * Set appointmentSetter
+     *
+     * @param \Fsb\UserBundle\Entity\User $appointment_setter
+     * @return Appointment
+     */
+    public function setAppointmentSetter(\Fsb\UserBundle\Entity\User $appointment_setter = null)
+    {
+    	$this->appointment_setter = $appointment_setter;
+    
+    	return $this;
+    }
+    
+    /**
+     * Get appointmentSetter
+     *
+     * @return \Fsb\UserBundle\Entity\User
+     */
+    public function getAppointmentSetter()
+    {
+    	return $this->appointment_setter;
     }
     
     /**

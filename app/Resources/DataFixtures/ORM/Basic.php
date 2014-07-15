@@ -244,6 +244,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         
         // Appointment
   	    $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+  	    $appointmentSetters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_APPOINTMENT_SETTER');
   	    $appointmentOutcomeList = $manager->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
   	    $appointmentProjectList = $manager->getRepository('AppointmentBundle:AppointmentProject')->findAll();
   	    
@@ -257,7 +258,8 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$appointment = new Appointment();
         		
         		$appointment->setRecruiter($recruiter);
-        		$days = rand(1, 180);
+        		$appointment->setAppointmentSetter($appointmentSetters[rand(0,count($appointmentSetters)-1)]);
+        		$days = rand(1, 365);
         		$hour = rand(8,19);
         		$minute = array(0,30);
         		$minute = $minute[rand(0, 1)];
@@ -274,9 +276,9 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$appointmentDetail->setTitle("Appointment ".+$numAppointment);
         		$appointmentDetail->setComment("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
         		$appointmentDetail->setAppointment($appointment);
-        		$appointmentDetail->setOutcome($appointmentOutcomeList[rand(1, count($appointmentOutcomeList)-1)]);
+        		$appointmentDetail->setOutcome($appointmentOutcomeList[rand(0, count($appointmentOutcomeList)-1)]);
         		$appointmentDetail->setOutcomeReason("Lorem ipsum dolor sit amet");
-        		$appointmentDetail->setProject($appointmentProjectList[rand(1, count($appointmentProjectList)-1)]);
+        		$appointmentDetail->setProject($appointmentProjectList[rand(0, count($appointmentProjectList)-1)]);
         		$appointmentDetail->setRecordRef(rand(0,100));
         		
         		Util::setCreateAuditFields($appointmentDetail, 1);
@@ -313,4 +315,5 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
         
     }
+    
 }

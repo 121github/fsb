@@ -6,6 +6,10 @@ reporting_filter:
     pattern:  /filter
     defaults: { _controller: "ReportingBundle:Default:index"}
 
+reporting_clean_all_filter:
+    pattern:  /clean_all_filter
+    defaults: { _controller: "ReportingBundle:Default:cleanAllSearchReporting" }
+
 reporting_clean_filter:
     pattern:  /clean_filter
     defaults: { _controller: "ReportingBundle:Default:cleanSearchReporting" }

@@ -148,6 +148,11 @@ class AppointmentController extends Controller
         	
         	Util::setCreateAuditFields($appointment, $userLogged->getId());
         	
+        	//Check if is the appointmentSetter the person that is creating the appointment
+        	if ($this->get('security.context')->isGranted('ROLE_APPOINTMENT_SETTER')) {
+        		$appointment->setAppointmentSetter($userLogged);
+        	}
+        	
         	//AppointmentDetails
         	$appointmentDetail = $appointment->getAppointmentDetail();
         	$appointmentDetail->setAppointment($appointment);
@@ -177,6 +182,7 @@ class AppointmentController extends Controller
             			'message' => 'The appointment has been created'
             	)
             );
+            
 
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,

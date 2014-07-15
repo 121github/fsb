@@ -36,14 +36,16 @@
 
 		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
 			
-			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power" data-ajax="false">{{ "Logout" }}</a></li>
-			
+			{# User Profile #}
 			<li>
 				<a href="{{ "#" }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user">
 					<h2>{{ "Hi " ~ app.security.getToken().getUser().getUserDetail() }}</h2>
 					<p>{{ "[" ~ app.security.getToken().getUser().getRole() ~ "]" }}</p>
 				</a>
 			</li>
+			
+			{# Logout #}
+			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power" data-ajax="false">{{ "Logout" }}</a></li>
 		</ul>
 		
     </div><!-- /panel -->

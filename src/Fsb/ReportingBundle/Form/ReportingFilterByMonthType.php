@@ -17,7 +17,18 @@ class ReportingFilterByMonthType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+    	$years = array();
+    	$today = new \DateTime('now');
+    	for ($i = $today->format('Y')+1; $i > 2000; $i--)
+    	{
+    		$years[$i] = $i;
+    	}
+    	
         $builder
+        	->add('year', 'choice',array(
+	        		'multiple' => false,
+	        		'choices' => $years,
+        	))
 	        ->add('recruiters', 'entity', array(
 	        		'class'         => 'Fsb\\UserBundle\\Entity\\User',
 	        		'query_builder' => function(EntityRepository $repository) {

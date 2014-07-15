@@ -1,0 +1,33 @@
+{% if searchReportingByMonthForm is defined %}
+	{% set submit_month_id = searchReportingByMonthForm.vars.id ~ "_submit" %}
+	<h3>{{ "Reporting Filter By Month" }}</h3>
+	<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_month_id }}');" data-ajax="false" {{ form_enctype(searchReportingByMonthForm) }}>
+		{{ form_errors(searchReportingByMonthForm) }}
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
+				<div data-role="collapsible" data-collapsed="false">
+					<h3>{{ form_label(searchReportingByMonthForm.year) }}</h3>
+					<p> {{ form_errors(searchReportingByMonthForm.year) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li>{{ form_widget(searchReportingByMonthForm.year) }}</li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchReportingByMonthForm.recruiters) }}</h3>
+					<p> {{ form_errors(searchReportingByMonthForm.recruiters) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li>{{ form_widget(searchReportingByMonthForm.recruiters) }}</li>
+					</ul>
+				</div>
+				
+				<div data-role="collapsible">
+					<h3>{{ form_label(searchReportingByMonthForm.appointmentSetters) }}</h3>
+					<p> {{ form_errors(searchReportingByMonthForm.appointmentSetters) }} </p>
+					<ul data-role="listview" data-theme="d" data-divider-theme="d">
+						<li>{{ form_widget(searchReportingByMonthForm.appointmentSetters) }}</li>
+					</ul>
+				</div>
+			</div>
+			{{ form_rest(searchReportingByMonthForm) }}
+			<a href="{{ path('reporting_clean_filter_by_month') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
+	</form>
+{% endif %}

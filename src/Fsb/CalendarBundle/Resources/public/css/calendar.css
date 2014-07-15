@@ -637,5 +637,20 @@
 	
 }
 
+/* ===========================================================================
+   REPORTS
+   ======================================================================== */
 
+.report_title {
+	width: 40%; 
+	text-align: center;  
+	margin: auto;
+	margin-bottom: 10px;
+}
 
+.report_total {
+	font-weight: bold; 
+	background-color: #8AB0CF;
+	text-shadow: none;
+	color: black;
+}

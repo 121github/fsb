@@ -1,0 +1,20 @@
+{% if searchReportingByRecruiterForm is defined %}
+	{% set submit_recruiter_id = searchReportingByRecruiterForm.vars.id ~ "_submit" %}
+	<h3>{{ "Reporting Filter By Recruiter" }}</h3>
+	<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_recruiter_id }}');" data-ajax="false" {{ form_enctype(searchReportingByRecruiterForm) }}>
+		{{ form_errors(searchReportingByRecruiterForm) }}
+			<h3>{{ form_label(searchReportingByRecruiterForm.startDate) }}</h3>
+			<p> {{ form_errors(searchReportingByRecruiterForm.startDate) }} </p>
+			<ul data-role="listview" data-theme="d" data-divider-theme="d">
+				<li>{{ form_widget(searchReportingByRecruiterForm.startDate) }}</li>
+			</ul>
+			
+			<h3>{{ form_label(searchReportingByRecruiterForm.endDate) }}</h3>
+			<p> {{ form_errors(searchReportingByRecruiterForm.endDate) }} </p>
+			<ul data-role="listview" data-theme="d" data-divider-theme="d">
+				<li>{{ form_widget(searchReportingByRecruiterForm.endDate) }}</li>
+			</ul>
+			{{ form_rest(searchReportingByRecruiterForm) }}
+			<a href="{{ path('reporting_clean_filter_by_recruiter') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
+	</form>
+{% endif %}

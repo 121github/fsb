@@ -1,6 +1,5 @@
 {% if searchReportingForm is defined %}
 {% set submit_id = searchReportingForm.vars.id ~ "_submit" %}
-
 	<h3>{{ "Reporting Filter" }}</h3>
 	<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(searchReportingForm) }}>
 		{{ form_errors(searchReportingForm) }}

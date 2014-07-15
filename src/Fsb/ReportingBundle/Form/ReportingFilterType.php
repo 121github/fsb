@@ -22,8 +22,8 @@ class ReportingFilterType extends AbstractType
 	        		'multiple' => true,
 	        		'expanded' => true,
 	        		'choices' => array(
-	        			'ByMonth',
-	        			'ByRecruiter'
+	        			'ByMonth' => 'ByMonth',
+	        			'ByRecruiter' => 'ByRecruiter'
 	        		),
 	        ))
         ;

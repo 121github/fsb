@@ -5,70 +5,125 @@
 
 {% block article -%}
 
+	{% set now = "now"|date("") %}
+    {% set nowDay = now|date("d") %}
+    {% set nowMonth = now|date("m") %}
+    {% set nowYear = now|date("Y") %}
+    {% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
+
+    
+    {% if (searchReportingFilterByMonthFormSubmitted or searchReportingFilterByRecruiterFormSubmitted or searchReportingFilterFormSubmitted) %}
+	    <div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: left;">
+	    		<a href="{{ path('reporting_clean_all_filter') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left" style="background-color: red; color: white; text-shadow: none;">{{ "Clean All Filters" }}</a>
+	    	</div>
+	    </div>
+	 {% endif %}
+    
+	{#  Filter for the Reports Type  #}
 	<div data-role="panel" id="filter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
 		<br />
 		{% include '::includes/reportingFilter.html.twig' %}
 	</div>
 
-	<a href="#month-panel" data-role="button" data-icon="search" data-iconpos="notext"></a>
 	
-	<div data-role="panel" id="month-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
-		<br />
-		{% set submit_month_id = searchReportingByMonthForm.vars.id ~ "_submit" %}
-		<h3>{{ "Reporting Filter By Month" }}</h3>
-		<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_month_id }}');" data-ajax="false" {{ form_enctype(searchReportingByMonthForm) }}>
-			{{ form_errors(searchReportingByMonthForm) }}
-			<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
-					<div data-role="collapsible" data-collapsed="false">
-						<h3>{{ form_label(searchReportingByMonthForm.recruiters) }}</h3>
-						<p> {{ form_errors(searchReportingByMonthForm.recruiters) }} </p>
-						<ul data-role="listview" data-theme="d" data-divider-theme="d">
-							<li>{{ form_widget(searchReportingByMonthForm.recruiters) }}</li>
-						</ul>
-					</div>
-					
-					<div data-role="collapsible" data-collapsed="false">
-						<h3>{{ form_label(searchReportingByMonthForm.appointmentSetters) }}</h3>
-						<p> {{ form_errors(searchReportingByMonthForm.appointmentSetters) }} </p>
-						<ul data-role="listview" data-theme="d" data-divider-theme="d">
-							<li>{{ form_widget(searchReportingByMonthForm.appointmentSetters) }}</li>
-						</ul>
-					</div>
-				</div>
-				{{ form_rest(searchReportingByMonthForm) }}
-				<a href="{{ path('reporting_clean_filter_by_month') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
-		</form>
-	</div>
+	{#  Report by month  #}
+	{% if (reports_filter is null or "ByMonth" in reports_filter) %}
+		<div class="report_title">
+			{% if (searchReportingFilterByMonthFormSubmitted) %}
+		 		<a href="#month-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
+		 	{% else %}
+		 		<a href="#month-panel" data-role="button" data-inline="true" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
+		 	{%  endif %}
+		 </div>
+		<div data-role="panel" id="month-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+			<br />
+			{% include '::includes/reportingFilterByMonth.html.twig' %}
+		</div>
+		
+		<table data-role="table" id="my-table" data-mode="">
+			<thead>
+	            <tr>
+			      <th>{{ "Month (" ~ reportingByMonthList["year"] ~ ")" }}</th>
+			      {% for outcome in outcomeList %}
+			      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
+			      {% endfor %}
+			    </tr>
+	        </thead>
+	        <tbody>
+				{% for i in range(1,12) %}
+					{% set monthDate = i ~ "/" ~ "01" ~ "/" ~ "2014"|date('U') %}
+					{% set month = monthDate|date("m") %}
+					<tr>
+				      <th><a href="foo.com" data-rel="external">{{ monthDate|date("M") }}</a></th>
+				      {% for outcome in outcomeList %}
+				      	<td>
+					      	{% if reportingByMonthList[month][outcome.name] is defined %}
+					      		{{ reportingByMonthList[month][outcome.name] }}
+					      	{% else %}
+					      		{{ 0 }}
+					      	{% endif %}
+				      	</td>
+				      {% endfor %}
+				    </tr>
+				{% endfor %}
+				<tr>
+					<th class="report_total">{{ "Total" }}</th>
+					{% for outcome in outcomeList %}
+						<td class="report_total">{{ reportingByMonthList['total'][outcome.name] }}</td>
+					{% endfor %}
+				</tr>
+	        </tbody>
+		</table>
+	{% endif %}
 	
 	
-	<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="notext"></a>
-	
-	<div data-role="panel" id="recruiter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
-		<br />
-		{% set submit_recruiter_id = searchReportingByRecruiterForm.vars.id ~ "_submit" %}
-		<h3>{{ "Reporting Filter By Recruiter" }}</h3>
-		<form action="{{ path('reporting_filter') }}" method="post" onsubmit="return checkSubmit('{{ submit_recruiter_id }}');" data-ajax="false" {{ form_enctype(searchReportingByRecruiterForm) }}>
-			{{ form_errors(searchReportingByRecruiterForm) }}
-			<div data-role="collapsible-set" data-theme="a" data-content-theme="a" data-inset="false" data-collapsed-icon="false" data-expanded-icon="false">
-					<div data-role="collapsible" data-collapsed="false">
-						<h3>{{ form_label(searchReportingByRecruiterForm.startDate) }}</h3>
-						<p> {{ form_errors(searchReportingByRecruiterForm.startDate) }} </p>
-						<ul data-role="listview" data-theme="d" data-divider-theme="d">
-							<li>{{ form_widget(searchReportingByRecruiterForm.startDate) }}</li>
-						</ul>
-					</div>
-					<div data-role="collapsible" data-collapsed="false">
-						<h3>{{ form_label(searchReportingByRecruiterForm.endDate) }}</h3>
-						<p> {{ form_errors(searchReportingByRecruiterForm.endDate) }} </p>
-						<ul data-role="listview" data-theme="d" data-divider-theme="d">
-							<li>{{ form_widget(searchReportingByRecruiterForm.endDate) }}</li>
-						</ul>
-					</div>
-				</div>
-				{{ form_rest(searchReportingByMonthForm) }}
-				<a href="{{ path('reporting_clean_filter_by_recruiter') }}" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-ajax="false" >{{ "Clean" }}</a>
-		</form>
-	</div>
-	
+	{#  Reports by recruiter  #}
+	{% if (reports_filter is null or "ByRecruiter" in reports_filter) %}
+		<div style="margin-top: 50px;" class="report_title">
+			{% if (searchReportingFilterByRecruiterFormSubmitted) %}
+		 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
+		 	{% else %}
+		 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
+		 	{%  endif %}
+		 </div>
+		<div data-role="panel" id="recruiter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+			<br />
+			{% include '::includes/reportingFilterByRecruiter.html.twig' %}
+		</div>
+		
+		<table data-role="table" id="my-table" data-mode="">
+			<thead>
+	            <tr>
+			      <th>{{ "Recruiter" }}</th>
+			      {% for outcome in outcomeList %}
+			      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
+			      {% endfor %}
+			    </tr>
+	        </thead>
+	        <tbody>
+				{% for recruiter in recruiterList %}
+					<tr>
+				      <th><a href="foo.com" data-rel="external">{{ recruiter }}</a></th>
+				      {% for outcome in outcomeList %}
+				      	<td>
+				      		{% if reportingByRecruiterList[recruiter.id][outcome.name] is defined %}
+					      		{{ reportingByRecruiterList[recruiter.id][outcome.name] }}
+					      	{% else %}
+					      		{{ 0 }}
+					      	{% endif %}
+				      	</td>
+				      {% endfor %}
+				    </tr>
+				{% endfor %}
+				<tr>
+					<th class="report_total">{{ "Total" }}</th>
+					{% for outcome in outcomeList %}
+						<td class="report_total">{{ reportingByRecruiterList['total'][outcome.name] }}</td>
+					{% endfor %}
+				</tr>
+	        </tbody>
+		</table>
+	{% endif %}
 
 {% endblock %}

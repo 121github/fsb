@@ -414,4 +414,91 @@ class AppointmentRepository extends EntityRepository
 	
 		return $appointment_ar;
 	}
+	
+	/**
+	 * Get appointmentOutcomes groupped by month
+	 * 
+	 * @param unknown $year
+	 * @param string $recruiters
+	 * @param string $appointmentSetters
+	 * @return multitype:
+	 */
+	public function findNumAppointmentOutcomesByMonth ($year, $recruiters = null,  $appointmentSetters = null) {
+		
+		$em = $this->getEntityManager();
+		
+		$query = $em->createQueryBuilder()
+		->select('SUBSTRING(a.startDate, 6, 2) as month, ao.name, count(a) as num_appointments')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.outcome', 'ao')
+		->where('SUBSTRING(a.startDate, 1, 4) = :year')
+		->groupBy('month, ao.id')
+		
+		->setParameter('year', (int)$year)
+		;
+		
+		if (count($recruiters) > 0) {
+			$query
+			->andWhere('a.recruiter IN (:recruiters)')
+			->setParameter('recruiters', $recruiters);
+		}
+		
+		if (count($appointmentSetters) > 0) {
+			$query
+			->andWhere('a.appointment_setter IN (:appointmentSetters)')
+			->setParameter('appointmentSetters', $appointmentSetters);
+		}
+		
+		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		
+		return $appointmentOutcomes_ar;
+	}
+	
+	
+	/**
+	 * Get appointmentOutcomes groupped by month
+	 *
+	 * @param unknown $year
+	 * @param string $recruiters
+	 * @param string $appointmentSetters
+	 * @return multitype:
+	 */
+	public function findNumAppointmentOutcomesByRecruiter ($startDate = null,  $endDate = null) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select('r.id as recruiter_id, ao.name, count(a) as num_appointments')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.outcome', 'ao')
+		->innerJoin('a.recruiter', 'r')
+		->groupBy('a.recruiter, ao.id')
+		;
+		
+		if ($startDate && $endDate) {
+			$query
+			->where('a.startDate >= :startDate')
+			->andWhere('a.endDate <= :endDate')
+			->setParameter('startDate', $startDate)
+			->setParameter('endDate', $endDate);
+		}
+		
+		if ($startDate && !$endDate) {
+			$query
+			->where('a.startDate >= :startDate')
+			->setParameter('startDate', $startDate);
+		}
+		
+		if (!$startDate && $endDate) {
+			$query
+			->where('a.endDate <= :endDate')
+			->setParameter('endDate', $endDate);
+		}
+	
+		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+	
+		return $appointmentOutcomes_ar;
+	}
 }

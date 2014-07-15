@@ -31,11 +31,15 @@
    Tables
    ======================================================================== */
 
-
 th {
 	border-bottom: 1px solid #d6d6d6;
-	background:#5C7CB4;
+	background:#38c;
 	color: white;
+	text-shadow: none;
+}
+
+tbody th {
+	background-color: transparent;
 }
 
 tr {
@@ -44,6 +48,15 @@ tr {
 
 tr:nth-child(even) {
 	background:#e9e9e9;
+}
+
+th a.ui-link, a:visited {
+	color: black;
+}
+
+th a.ui-link:hover {
+	color: black;
+	text-decoration: underline;
 }
 
 a{

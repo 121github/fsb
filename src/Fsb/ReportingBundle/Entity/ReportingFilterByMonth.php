@@ -11,6 +11,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ReportingFilterByMonth
 {
+	/**
+	 *
+	 */
+	private $year;
+	
     /**
      *
      */
@@ -24,6 +29,7 @@ class ReportingFilterByMonth
 	
 	public function __construct()
 	{
+		$this->year = array();
 		$this->recruiters = new ArrayCollection();
 		$this->appointmentSetters = new ArrayCollection();
 	}
@@ -36,7 +42,6 @@ class ReportingFilterByMonth
     {
     	return $this->recruiter;
     }
-    
     
     /**
      * Set recruiters
@@ -85,5 +90,23 @@ class ReportingFilterByMonth
     {
     	return $this->appointmentSetters;
     }
+    
+    /**
+     * 
+     */
+	public function getYear() {
+		return $this->year;
+	}
+	
+	/**
+	 * 
+	 * @param unknown $year
+	 * @return \Fsb\ReportingBundle\Entity\ReportingFilterByMonth
+	 */
+	public function setYear($year) {
+		$this->year = $year;
+		return $this;
+	}
+	
     
 }
