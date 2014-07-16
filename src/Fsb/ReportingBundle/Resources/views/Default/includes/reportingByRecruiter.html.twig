@@ -1,0 +1,109 @@
+{#  Reports by recruiter  #}
+{% if (reports_filter is null or "ByRecruiter" in reports_filter) %}
+	<div class="ui-grid-b">
+		<div class="ui-block-a" style="left: 0; text-align: left;">
+    		<div class="report_title">
+				{% if (searchReportingFilterByRecruiterFormSubmitted) %}
+			 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
+			 	{% else %}
+			 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
+			 	{%  endif %}
+			 </div>
+			<div data-role="panel" id="recruiter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+				<br />
+				{% include '::includes/reportingFilterByRecruiter.html.twig' %}
+			</div>
+    	</div>
+    	<div class="ui-block-b" style="text-align: left;"></div>
+    	<div class="ui-block-c" style="text-align: right;">
+    		<a href="#popupChartByRecruiter" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" > {{ "Graph" }}</a>
+    		 <!--  POPUP CHART -->
+	   		 <div data-role="popup" id="popupChartByRecruiter" data-overlay-theme="a" data-theme="a" class="ui-corner-all">
+	   		 	<div data-role="header" data-theme="a" class="ui-corner-top">
+			        <h1>{{ "Appointment Outcomes By Recruiter" }}</h1>
+			    </div>
+			    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content" style="margin-top: 100px;">
+			    	<br /><br />
+			        <div id="appointment_outcomes_by_recruiter" style="margin-top:20px; margin-left:20px; width:800px; height:500px;"></div>
+			    </div>
+	  		</div>
+    	</div>
+    </div>
+	
+	<table data-role="table" id="my-table" data-mode="">
+		<thead>
+            <tr>
+		      <th>{{ "Recruiter" }}</th>
+		      {% for outcome in outcomeList %}
+		      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
+		      {% endfor %}
+		    </tr>
+        </thead>
+        <tbody>
+			{% for recruiter in recruiterList %}
+				<tr>
+			      <th><a href="foo.com" data-rel="external">{{ recruiter }}</a></th>
+			      {% for outcome in outcomeList %}
+			      	<td>
+			      		{% if reportingByRecruiterList[recruiter.id][outcome.name] is defined %}
+				      		{{ reportingByRecruiterList[recruiter.id][outcome.name] }}
+				      	{% else %}
+				      		{{ 0 }}
+				      	{% endif %}
+			      	</td>
+			      {% endfor %}
+			    </tr>
+			{% endfor %}
+			<tr>
+				<th class="report_total">{{ "Total" }}</th>
+				{% for outcome in outcomeList %}
+					<td class="report_total">{{ reportingByRecruiterList['total'][outcome.name] }}</td>
+				{% endfor %}
+			</tr>
+        </tbody>
+	</table>
+
+{% endif %}
+
+
+
+<script class="code" type="text/javascript">
+$(document).ready(function(){
+    var outcomes = {{ recruiterChartValues|json_encode|raw }};
+    var ticks = {{ recruiterChartNames|json_encode|raw }};
+    var outcomeChartNames = {{ outcomeChartNames|json_encode|raw }};
+     
+    plot1 = $.jqplot('appointment_outcomes_by_recruiter', outcomes, {
+    	seriesDefaults: {
+            renderer:$.jqplot.BarRenderer,
+            pointLabels: { show: true }
+        },
+        legend: {
+            show: true,
+            location: 'n',
+            placement: 'outside'
+        },
+        series: [
+                 	{label: outcomeChartNames[0]},
+                 	{label: outcomeChartNames[1]},
+                 	{label: outcomeChartNames[2]},
+                 	{label: outcomeChartNames[3]},
+                 	{label: outcomeChartNames[4]},
+                ],
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: ticks,
+                label:'Recruiters'
+            },
+        	yaxis: {
+				label: 'Num Appointment outcomes',
+				labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+				min: 0,
+                max: {{ recruiterChartMax }},
+                tickOptions: {formatString: '%d'}
+            }
+        }
+    });
+});
+</script>

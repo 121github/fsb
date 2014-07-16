@@ -1,0 +1,117 @@
+{#  Report by month  #}
+{% if (reports_filter is null or "ByMonth" in reports_filter) %}
+	<div class="ui-grid-b">
+		<div class="ui-block-a" style="left: 0; text-align: left;">
+    		<div class="report_title">
+				{% if (searchReportingFilterByMonthFormSubmitted) %}
+			 		<a href="#month-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
+			 	{% else %}
+			 		<a href="#month-panel" data-role="button" data-inline="true" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
+			 	{%  endif %}
+			 </div>
+			<div data-role="panel" id="month-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+				<br />
+				{% include '::includes/reportingFilterByMonth.html.twig' %}
+			</div>
+    	</div>
+    	<div class="ui-block-b" style="text-align: left;"></div>
+    	<div class="ui-block-c" style="text-align: right;">
+    		<a href="#popupChartByMonth" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" > {{ "Graph" }}</a>
+    		 <!--  POPUP CHART -->
+	   		 <div data-role="popup" id="popupChartByMonth" data-overlay-theme="a" data-theme="a" style="max-width:600px;" class="ui-corner-all">
+	   		 	<div data-role="header" data-theme="a" class="ui-corner-top">
+			        <h1>{{ "Appointment Outcomes By Month" }}</h1>
+			    </div>
+			    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content" style="margin-top: 100px;">
+			        <div id="appointment_outcomes_by_month" style="height:300px; width:500px;"></div>
+			    </div>
+	  		</div>
+    	</div>
+    </div>
+	
+	<table data-role="table" id="my-table" data-mode="">
+		<thead>
+            <tr>
+		      <th>{{ "Month (" ~ reportingByMonthList["year"] ~ ")" }}</th>
+		      {% for outcome in outcomeList %}
+		      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
+		      {% endfor %}
+		    </tr>
+        </thead>
+        <tbody>
+			{% for i in range(1,12) %}
+				{% set monthDate = i ~ "/" ~ "01" ~ "/" ~ "2014"|date('U') %}
+				{% set month = monthDate|date("m") %}
+				<tr>
+			      <th><a href="foo.com" data-rel="external">{{ monthDate|date("M") }}</a></th>
+			      {% for outcome in outcomeList %}
+			      	<td>
+				      	{% if reportingByMonthList[month][outcome.name] is defined %}
+				      		{{ reportingByMonthList[month][outcome.name] }}
+				      	{% else %}
+				      		{{ 0 }}
+				      	{% endif %}
+			      	</td>
+			      {% endfor %}
+			    </tr>
+			{% endfor %}
+			<tr>
+				<th class="report_total">{{ "Total" }}</th>
+				{% for outcome in outcomeList %}
+					<td class="report_total">{{ reportingByMonthList['total'][outcome.name] }}</td>
+				{% endfor %}
+			</tr>
+        </tbody>
+	</table>
+{% endif %}
+	
+	
+
+<script class="code" type="text/javascript">
+$(document).ready(function(){
+	  
+	  var outcomeChartNames = {{ outcomeChartNames|json_encode|raw }};
+	  var year = {{ year|json_encode|raw }};
+	  var lines = {{ monthChartValues|json_encode|raw }};
+		  
+		  var plot2 = $.jqplot('appointment_outcomes_by_month', lines, {
+		      legend: {
+		          show: true,
+		          location: 'n',
+		          placement: 'outside'
+		      },
+		      series: [
+                 	{label: outcomeChartNames[0]},
+                 	{label: outcomeChartNames[1]},
+                 	{label: outcomeChartNames[2]},
+                 	{label: outcomeChartNames[3]},
+                 	{label: outcomeChartNames[4]},
+                ],
+		      axes:{
+		        xaxis:{
+		          renderer:$.jqplot.DateAxisRenderer,
+		          tickOptions:{
+		            formatString:'%b&nbsp;'
+		          },
+		          label: year
+		        },
+		        yaxis:{
+		          label: 'Num Appointment outcomes',
+		          labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+		       	  min: 0,
+	              max: {{ monthChartMax }},
+	          tickOptions:{
+	            formatString:'%d'
+	            }
+	        }
+	      },
+	      highlighter: {
+	        show: true,
+	        sizeAdjust: 7.5
+	      },
+	      cursor: {
+	        show: false
+	      }
+	  });
+	});
+</script>

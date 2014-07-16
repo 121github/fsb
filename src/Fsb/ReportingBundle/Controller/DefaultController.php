@@ -182,6 +182,70 @@ class DefaultController extends Controller
     	
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Chart by month data  ******************************************************/
+    	/******************************************************************************************************************************/
+    	//Outcome List Names
+    	$outcomeChartNames = array();
+    	foreach ($outcomeList as $outcome) {
+    		array_push($outcomeChartNames, $outcome->getName());
+    	}
+    	
+    	//Appointment Outcomes by month
+    	$monthChartMax = 0;
+    	$monthChartValues = array();
+    	
+    	foreach ($outcomeList as $outcome){
+    		$monthChartValues[$outcome->getName()] = array();
+    	}
+    	foreach ($outcomeList as $outcome){
+    		for ($i=1; $i<=12; $i++) {
+    			$date = new \DateTime('01-'.$i.'-2014');
+    			$num = array_key_exists($outcome->getName(), $reportingByMonthList[$date->format("m")])?$reportingByMonthList[$date->format("m")][$outcome->getName()] : 0;
+    			$value = array($date->format('d-M-Y'), $num);
+    			
+    			array_push($monthChartValues[$outcome->getName()], $value);
+    			if ($monthChartMax < $num) $monthChartMax = $num;
+    		}
+    	}
+    	$auxList = array();
+    	foreach ($monthChartValues as $values) {
+    		array_push($auxList, $values);
+    	}
+    	$monthChartValues = $auxList;
+    	
+    	
+    	/******************************************************************************************************************************/
+    	/************************************************** Chart by recruiter data  **************************************************/
+    	/******************************************************************************************************************************/
+    	//Recruiter List Names
+    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    	$recruiterChartNames = array();
+    	foreach ($recruiterList as $recruiter) {
+    		array_push($recruiterChartNames, $recruiter->getUserDetail()->getFirstname().' '.$recruiter->getUserDetail()->getLastname());
+    	}
+    	
+    	//Appointment Outcomes by recruiter
+    	$recruiterChartMax = 0;
+    	$recruiterChartValues = array();
+    	foreach ($outcomeList as $outcome){
+    		$recruiterChartValues[$outcome->getName()] = array();
+    	}
+    	foreach ($outcomeList as $outcome){
+    		foreach ($recruiterList as $recruiter) {
+    			$value = $reportingByRecruiterList[$recruiter->getId()][$outcome->getName()];
+    			array_push($recruiterChartValues[$outcome->getName()], $value);
+    			if ($recruiterChartMax < $value) $recruiterChartMax = $value;
+    		}	
+    	}
+    	
+    	$auxList = array();
+    	foreach ($recruiterChartValues as $values) {
+    		array_push($auxList, $values);
+    	}
+    	$recruiterChartValues = $auxList;
+    	
+    	
+    	/******************************************************************************************************************************/
     	/********************************************* RENDER *************************************************************************/
     	/******************************************************************************************************************************/
     	return $this->render('ReportingBundle:Default:index.html.twig', array(
@@ -193,9 +257,16 @@ class DefaultController extends Controller
     			'searchReportingFilterFormSubmitted' => $reportingFilterFormSubmitted,
     			'searchReportingFilterByMonthFormSubmitted' => $reportingFilterByMonthFormSubmitted,
     			'searchReportingFilterByRecruiterFormSubmitted' => $reportingFilterByRecruiterFormSubmitted,
-    			'outcomeList' => $em->getRepository('AppointmentBundle:AppointmentOutcome')->findAll(),
-    			'recruiterList' => $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER'),
+    			'outcomeList' => $outcomeList,
+    			'recruiterList' => $recruiterList,
     			'reports_filter' => $reports_filter,
+    			'outcomeChartNames' => $outcomeChartNames,
+    			'recruiterChartNames' => $recruiterChartNames,
+    			'recruiterChartValues' => $recruiterChartValues,
+    			'recruiterChartMax' => $recruiterChartMax+1,
+    			'monthChartValues' => $monthChartValues,
+    			'monthChartMax' => $monthChartMax+1,
+    			'year' => $reportingFilterByMonth->getYear(),
     	));
     }
     

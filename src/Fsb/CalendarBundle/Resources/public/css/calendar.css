@@ -642,9 +642,7 @@
    ======================================================================== */
 
 .report_title {
-	width: 40%; 
-	text-align: center;  
-	margin: auto;
+	text-align: center;
 	margin-bottom: 10px;
 }
 

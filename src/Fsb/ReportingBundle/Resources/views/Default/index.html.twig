@@ -26,104 +26,12 @@
 		{% include '::includes/reportingFilter.html.twig' %}
 	</div>
 
-	
 	{#  Report by month  #}
-	{% if (reports_filter is null or "ByMonth" in reports_filter) %}
-		<div class="report_title">
-			{% if (searchReportingFilterByMonthFormSubmitted) %}
-		 		<a href="#month-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
-		 	{% else %}
-		 		<a href="#month-panel" data-role="button" data-inline="true" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Month" }}</strong></a>
-		 	{%  endif %}
-		 </div>
-		<div data-role="panel" id="month-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
-			<br />
-			{% include '::includes/reportingFilterByMonth.html.twig' %}
-		</div>
-		
-		<table data-role="table" id="my-table" data-mode="">
-			<thead>
-	            <tr>
-			      <th>{{ "Month (" ~ reportingByMonthList["year"] ~ ")" }}</th>
-			      {% for outcome in outcomeList %}
-			      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
-			      {% endfor %}
-			    </tr>
-	        </thead>
-	        <tbody>
-				{% for i in range(1,12) %}
-					{% set monthDate = i ~ "/" ~ "01" ~ "/" ~ "2014"|date('U') %}
-					{% set month = monthDate|date("m") %}
-					<tr>
-				      <th><a href="foo.com" data-rel="external">{{ monthDate|date("M") }}</a></th>
-				      {% for outcome in outcomeList %}
-				      	<td>
-					      	{% if reportingByMonthList[month][outcome.name] is defined %}
-					      		{{ reportingByMonthList[month][outcome.name] }}
-					      	{% else %}
-					      		{{ 0 }}
-					      	{% endif %}
-				      	</td>
-				      {% endfor %}
-				    </tr>
-				{% endfor %}
-				<tr>
-					<th class="report_total">{{ "Total" }}</th>
-					{% for outcome in outcomeList %}
-						<td class="report_total">{{ reportingByMonthList['total'][outcome.name] }}</td>
-					{% endfor %}
-				</tr>
-	        </tbody>
-		</table>
-	{% endif %}
+	{% include 'ReportingBundle:Default:includes/reportingByMonth.html.twig' %}
 	
+	<br /><br />
 	
 	{#  Reports by recruiter  #}
-	{% if (reports_filter is null or "ByRecruiter" in reports_filter) %}
-		<div style="margin-top: 50px;" class="report_title">
-			{% if (searchReportingFilterByRecruiterFormSubmitted) %}
-		 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right" style="background-color: #38c; border-color: #38c; color: #fff; text-shadow: 0 1px 0 #059;"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
-		 	{% else %}
-		 		<a href="#recruiter-panel" data-role="button" data-icon="search" data-iconpos="right"><strong>{{ "Appointment Outcomes Report By Recruiter" }}</strong></a>
-		 	{%  endif %}
-		 </div>
-		<div data-role="panel" id="recruiter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
-			<br />
-			{% include '::includes/reportingFilterByRecruiter.html.twig' %}
-		</div>
-		
-		<table data-role="table" id="my-table" data-mode="">
-			<thead>
-	            <tr>
-			      <th>{{ "Recruiter" }}</th>
-			      {% for outcome in outcomeList %}
-			      	<th><abbr title="{{ outcome }}">{{ outcome }}</abbr></th>
-			      {% endfor %}
-			    </tr>
-	        </thead>
-	        <tbody>
-				{% for recruiter in recruiterList %}
-					<tr>
-				      <th><a href="foo.com" data-rel="external">{{ recruiter }}</a></th>
-				      {% for outcome in outcomeList %}
-				      	<td>
-				      		{% if reportingByRecruiterList[recruiter.id][outcome.name] is defined %}
-					      		{{ reportingByRecruiterList[recruiter.id][outcome.name] }}
-					      	{% else %}
-					      		{{ 0 }}
-					      	{% endif %}
-				      	</td>
-				      {% endfor %}
-				    </tr>
-				{% endfor %}
-				<tr>
-					<th class="report_total">{{ "Total" }}</th>
-					{% for outcome in outcomeList %}
-						<td class="report_total">{{ reportingByRecruiterList['total'][outcome.name] }}</td>
-					{% endfor %}
-				</tr>
-	        </tbody>
-		</table>
-	{% endif %}
+	{% include 'ReportingBundle:Default:includes/reportingByRecruiter.html.twig' %}
 
 {% endblock %}
