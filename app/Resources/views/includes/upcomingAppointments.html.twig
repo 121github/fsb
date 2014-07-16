@@ -1,0 +1,15 @@
+{% if upcomingAppointmentList is defined %}
+	<h4 style="text-align: center;">{{ "Upcoming Appointments" }}</h4>
+	<ul data-role="listview">
+		{% for appointment in upcomingAppointmentList %}
+			<li>
+				<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="clock" data-iconpos="right" data-mini="false" data-rel="dialog" data-transition="pop" data-ajax="false">
+					{% set startDate = appointment.startDate|date('Y-m-d H:i') %}
+					<p><strong>{{ startDate }}</strong>{{ " - " ~ appointment.appointmentDetail.address.postcode }}</p>
+					<h2>{{ appointment.appointmentDetail }}</h2>
+		  			<p>{{ appointment.appointmentDetail.comment }}</p>
+				</a>
+			</li> 
+		{% endfor %}
+	</ul>
+{% endif %}

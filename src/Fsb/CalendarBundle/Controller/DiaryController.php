@@ -93,7 +93,7 @@ class DiaryController extends DefaultController
 		$unavailableDateList = $auxList;
 		 
 		/******************************************************************************************************************************/
-		/************************************************** Get The Current (day) Appointments ***************************************************************/
+		/************************************************** Get the Appointments from the current day *********************************/
 		/******************************************************************************************************************************/
 		 
 		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);

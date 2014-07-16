@@ -154,6 +154,12 @@ class MonthController extends DefaultController
 		$appointmentMiniCalendarList = $appointmentList;
 		 
 		/******************************************************************************************************************************/
+		/************************************************** Get upcoming appointments *************************************************/
+		/******************************************************************************************************************************/
+		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointmentsByRecruiter($recruiter->getId(), new \DateTime('now'));
+		
+		
+		/******************************************************************************************************************************/
 		/************************************************** Render ***************************************************************/
 		/******************************************************************************************************************************/
 	
@@ -170,6 +176,7 @@ class MonthController extends DefaultController
 				'searchFormSubmitted' => $searchFormSubmitted,
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
 				'ruleList' => $ruleList,
+				'upcomingAppointmentList' => $upcomingAppointmentList,
 		));
 	}
 }

@@ -34,7 +34,7 @@
     <!-- RIGHT PANEL -->
     <div data-role="panel" id="right-panel" class="navmenu-panel" data-position="right" data-display="push" data-theme="a" data-position-fixed="false">
 
-		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a">
+		<ul data-role="listview" class="list" data-theme="a" data-divider-theme="a" style="margin-bottom: 30px;">
 			
 			{# User Profile #}
 			<li>
@@ -47,6 +47,10 @@
 			{# Logout #}
 			<li><a href="{{ path('logout') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-power" data-ajax="false">{{ "Logout" }}</a></li>
 		</ul>
+		
+		<div class="menu_item_left">
+			{% include '::includes/upcomingAppointments.html.twig' %}
+		</div>
 		
     </div><!-- /panel -->
 {% endif %}

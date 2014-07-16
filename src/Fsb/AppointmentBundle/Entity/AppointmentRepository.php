@@ -501,4 +501,49 @@ class AppointmentRepository extends EntityRepository
 	
 		return $appointmentOutcomes_ar;
 	}
+	
+	/**
+	 * Get The upcoming appointments of a recruiter
+	 *
+	 * @param int $recruiter_id
+	 * @param $day
+	 * @param int $month
+	 * @param int $year
+	 *
+	 * @return array Appointments
+	 */
+	public function findUpcomingAppointmentsByRecruiter($recruiter_id,$currentDate) {
+	
+		$em = $this->getEntityManager();
+		
+		$dateAfter = new \DateTime($currentDate->format('Y-m-d H:i:s').' + 3 days');
+	
+	
+		$query = $em->createQueryBuilder()
+		->select(array(
+				'a'
+		))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.project', 'p')
+		->innerJoin('ad.outcome', 'o')
+		->innerJoin('ad.address', 'adr')
+		->innerJoin('a.recruiter', 'u')
+		->innerJoin('u.userDetail', 'ud')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('a.recruiter = :recruiter_id')
+		->andWhere('a.startDate >= :currentDate')
+		->andWhere('a.startDate < :dateAfter')
+		->orderBy('a.startDate', 'ASC')
+	
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('currentDate', $currentDate)
+		->setParameter('dateAfter', $dateAfter)
+		->setMaxResults(5)
+		;
+	
+		$appointment_ar = $query->getQuery()->getResult();
+	
+		return $appointment_ar;
+	}
 }
