@@ -169,6 +169,11 @@ class DefaultController extends Controller
     	$outcomeList = $em->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
     	
     	/******************************************************************************************************************************/
+    	/************************************************** Get the recruiter list ******************************************************/
+    	/******************************************************************************************************************************/
+    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    	
+    	/******************************************************************************************************************************/
     	/************************************************** Get the appointmentOutcomes by month data  ********************************/
     	/******************************************************************************************************************************/
     	$reportingByMonthList = $this->getAppointmentOutcomesByMonthData($reportingFilterByMonth->getYear(), $recruiters_filter, $appointmentSetters_filter, $outcomeList);
@@ -178,7 +183,7 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	/************************************************** Get the appointmentOutcomes by recruiter data  ****************************/
     	/******************************************************************************************************************************/
-    	$reportingByRecruiterList = $this->getAppointmentOutcomesByRecruiterData($reportingFilterByRecruiter->getStartDate(), $reportingFilterByRecruiter->getEndDate(), $outcomeList);
+    	$reportingByRecruiterList = $this->getAppointmentOutcomesByRecruiterData($reportingFilterByRecruiter->getStartDate(), $reportingFilterByRecruiter->getEndDate(), $outcomeList, $recruiterList);
     	
     	
     	/******************************************************************************************************************************/
@@ -199,7 +204,7 @@ class DefaultController extends Controller
     	}
     	foreach ($outcomeList as $outcome){
     		for ($i=1; $i<=12; $i++) {
-    			$date = new \DateTime('01-'.$i.'-2014');
+    			$date = new \DateTime('01-'.$i.'-'.$reportingFilterByMonth->getYear());
     			$num = array_key_exists($outcome->getName(), $reportingByMonthList[$date->format("m")])?$reportingByMonthList[$date->format("m")][$outcome->getName()] : 0;
     			$value = array($date->format('d-M-Y'), $num);
     			
@@ -218,7 +223,6 @@ class DefaultController extends Controller
     	/************************************************** Chart by recruiter data  **************************************************/
     	/******************************************************************************************************************************/
     	//Recruiter List Names
-    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
     	$recruiterChartNames = array();
     	foreach ($recruiterList as $recruiter) {
     		array_push($recruiterChartNames, $recruiter->getUserDetail()->getFirstname().' '.$recruiter->getUserDetail()->getLastname());
@@ -232,7 +236,7 @@ class DefaultController extends Controller
     	}
     	foreach ($outcomeList as $outcome){
     		foreach ($recruiterList as $recruiter) {
-    			$value = $reportingByRecruiterList[$recruiter->getId()][$outcome->getName()];
+    			$value = array_key_exists($outcome->getName(), $reportingByRecruiterList[$recruiter->getId()])?$reportingByRecruiterList[$recruiter->getId()][$outcome->getName()] : 0;
     			array_push($recruiterChartValues[$outcome->getName()], $value);
     			if ($recruiterChartMax < $value) $recruiterChartMax = $value;
     		}	
@@ -263,9 +267,9 @@ class DefaultController extends Controller
     			'outcomeChartNames' => $outcomeChartNames,
     			'recruiterChartNames' => $recruiterChartNames,
     			'recruiterChartValues' => $recruiterChartValues,
-    			'recruiterChartMax' => $recruiterChartMax+1,
+    			'recruiterChartMax' => $recruiterChartMax*2,
     			'monthChartValues' => $monthChartValues,
-    			'monthChartMax' => $monthChartMax+1,
+    			'monthChartMax' => $monthChartMax*2,
     			'year' => $reportingFilterByMonth->getYear(),
     	));
     }
@@ -283,10 +287,16 @@ class DefaultController extends Controller
     	$reportingByMonthList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesByMonth($year, $recruiters, $appointmentSetters);
 
     	$auxList = array();
-    	//Inicializamos los totales
+    	//Initialize the totals
     	foreach ($outcomeList as $outcome) {
     		$auxList['total'][$outcome->getName()] = 0;
     	}
+    	//Initialize the array with the months as the keys
+    	for ($i = 1; $i<=12; $i++) {
+    		$date = new \DateTime('01-'.$i.'-'.$year);
+    		$auxList[$date->format("m")] = array();
+    	}
+    	
     	//Add the values to the array
     	foreach ($reportingByMonthList as $reportingByMonth) {
     		$auxList[$reportingByMonth["month"]][$reportingByMonth["name"]] = $reportingByMonth["num_appointments"];
@@ -305,17 +315,22 @@ class DefaultController extends Controller
      * @param ReportingFilterByRecruiter $reportingFilterByReruiter
      * @return multitype:
      */
-    private function getAppointmentOutcomesByRecruiterData($startDate, $endDate, $outcomeList) {
+    private function getAppointmentOutcomesByRecruiterData($startDate, $endDate, $outcomeList, $recruiterList) {
     	 
     	$em = $this->getDoctrine()->getManager();
     	
-    	$reportingByRecruiterList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesByRecruiter($startDate, $endDate);
+    	$reportingByRecruiterList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesGroupByRecruiter($startDate, $endDate);
 
     	$auxList = array();
-    	//Inicializamos los totales
+    	//Initialize the totals
     	foreach ($outcomeList as $outcome) {
     		$auxList['total'][$outcome->getName()] = 0;
     	}
+    	//Initilize the array with the recruiters_id as the keys
+    	foreach ($recruiterList as $recruiter) {
+    		$auxList[$recruiter->getId()] = array();
+    	}
+    	
     	//Add the values to the array
     	foreach ($reportingByRecruiterList as $reportingByRecruiter) {
     		$auxList[$reportingByRecruiter["recruiter_id"]][$reportingByRecruiter["name"]] = $reportingByRecruiter["num_appointments"];

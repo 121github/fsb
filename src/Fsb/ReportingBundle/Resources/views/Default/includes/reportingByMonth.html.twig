@@ -87,6 +87,11 @@ $(document).ready(function(){
                  	{label: outcomeChartNames[3]},
                  	{label: outcomeChartNames[4]},
                 ],
+              seriesDefaults: {
+                  rendererOptions: {
+                      smooth: true
+                  }
+              },
 		      axes:{
 		        xaxis:{
 		          renderer:$.jqplot.DateAxisRenderer,

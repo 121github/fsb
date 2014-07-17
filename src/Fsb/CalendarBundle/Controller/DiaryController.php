@@ -104,7 +104,7 @@ class DiaryController extends DefaultController
 			$aux = array();
 			$aux["id"] = $appointment["id"];
 			$aux["date"] = $appointment["date"];
-			$offset = date_format($appointment["date"],"D d M");
+			$offset = date_format($appointment["date"],"D d M Y");
 			$aux["title"] = $appointment["title"];
 			$aux["comment"] = $appointment["comment"];
 			$aux["recruiter"] = $appointment["recruiter"];
@@ -134,7 +134,27 @@ class DiaryController extends DefaultController
 			$auxList[(int)$appointment["day"]] = $appointment["numapp"];
 		}
 		$appointmentMiniCalendarList = $auxList;
-		 
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get upcoming appointments *************************************************/
+		/******************************************************************************************************************************/
+		$upcomingAppointmentList = $this->getUpcomingAppointments($recruiter);
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentOutcome chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentOutcomesChart = $this->getAppointmentOutcomeChart($recruiter);
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentsByMonth chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentsByMonthChart = $this->getAppointmentsByMonthChart($recruiter);
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentsByWeek chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentsByWeekChart = $this->getAppointmentsByWeekChart($recruiter);
+		
 		/******************************************************************************************************************************/
 		/************************************************** Render ********************************************************************/
 		/******************************************************************************************************************************/
@@ -151,6 +171,10 @@ class DiaryController extends DefaultController
 				'searchFormSubmitted' => $searchFormSubmitted,
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
 				'ruleList' => $ruleList,
+				'upcomingAppointmentList' => $upcomingAppointmentList,
+				'appointmentOutcomesChart' => $appointmentOutcomesChart,
+				'appointmentsByMonthChart' => $appointmentsByMonthChart,
+				'appointmentsByWeekChart' => $appointmentsByWeekChart,
 		));
 	}
 }

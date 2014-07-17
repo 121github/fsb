@@ -51,7 +51,15 @@
 		<div class="menu_item_left">
 			{% include '::includes/upcomingAppointments.html.twig' %}
 		</div>
-		
+		<div>
+			{% include 'CalendarBundle:Default:includes/charts/appointmentsByWeek.html.twig' %}
+		</div>
+		<div>
+			{% include 'CalendarBundle:Default:includes/charts/appointmentsByMonth.html.twig' %}
+		</div>
+		<div>
+			{% include 'CalendarBundle:Default:includes/charts/appointmentOutcomes.html.twig' %}
+		</div>
     </div><!-- /panel -->
 {% endif %}
 		    

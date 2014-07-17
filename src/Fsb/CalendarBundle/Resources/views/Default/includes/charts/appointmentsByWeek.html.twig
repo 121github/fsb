@@ -1,0 +1,46 @@
+{% if appointmentsByWeekChart is defined and appointmentsByWeekChart %}
+	{#  Reports by recruiter  #}
+	<div id="appointments_by_week" style="margin-top:20px; margin-left:20px; width:200px; height:300px;"></div>
+	
+	<script class="code" type="text/javascript">
+	$(document).ready(function(){
+
+
+		var appointments = {{ appointmentsByWeekChart["values"]|json_encode|raw }}
+	    var ticks = ["M", "T", "W", "T", "F", "S", "S"];
+	    
+	    plot1 = $.jqplot('appointments_by_week', [appointments], {
+	    	seriesDefaults: {
+	            pointLabels: { show: false },
+			    rendererOptions: {
+		            smooth: true
+		        }
+	        },
+	        title: "Appointments This Week",
+	        axes: {
+	            xaxis: {
+	                renderer: $.jqplot.CategoryAxisRenderer,
+	                ticks: ticks,
+	            },
+	        	yaxis: {
+					min: 0,
+	                max: {{ appointmentsByWeekChart["max"] }},
+	                tickOptions: {formatString: '%d'}
+	            }
+	      },
+	      highlighter: {
+	        show: true,
+	        sizeAdjust: 7.5,
+	        tooltipLocation: 'n',
+	        tooltipContentEditor:tooltipContentEditor
+	      },
+	      cursor: {
+	        show: false
+	      }
+	    });
+	});
+	function tooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+        return plot.data[seriesIndex][pointIndex];
+    }
+	</script>
+{% endif %}

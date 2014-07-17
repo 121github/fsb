@@ -464,7 +464,7 @@ class AppointmentRepository extends EntityRepository
 	 * @param string $appointmentSetters
 	 * @return multitype:
 	 */
-	public function findNumAppointmentOutcomesByRecruiter ($startDate = null,  $endDate = null) {
+	public function findNumAppointmentOutcomesGroupByRecruiter ($startDate = null,  $endDate = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -503,43 +503,171 @@ class AppointmentRepository extends EntityRepository
 	}
 	
 	/**
+	 * Get appointmentOutcomes 
+	 *
+	 * @param $recruiter_id if you want to get the num of appointment outcomes for one recruiter (could be null)
+	 *
+	 * @return multitype:
+	 */
+	public function findNumAppointmentOutcomes ($recruiter_id = null) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select('count(a)')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.outcome', 'ao')
+		->innerJoin('a.recruiter', 'r')
+		->groupBy('ao.id')
+		->orderBy('ao.id')
+		;
+		
+		if ($recruiter_id) {
+			$query
+			->where('r.id = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id)
+			;
+		}
+	
+		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+	
+		return $appointmentOutcomes_ar;
+	}
+
+	/**
+	 * Get appointments by week
+	 *
+	 * @param $date
+	 * @param $recruiter_id if you want to get the num of appointments for one recruiter (could be null)
+	 *
+	 * @return multitype:
+	 */
+	public function findNumAppointmentsThisWeek ($recruiter_id = null) {
+	
+		$em = $this->getEntityManager();
+		
+		$firstWeekDay = date('Y-m-d 00:00:00',strtotime('monday this week'));
+		$lastWeekDay = date('Y-m-d 23:59:59',strtotime('sunday this week'));
+	
+		$query = $em->createQueryBuilder()
+		->select('count(a) as num, SUBSTRING(a.startDate,9,2) as day')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('a.recruiter', 'r')
+		->where('a.startDate >= :firstWeekDay')
+		->andWhere('a.startDate <= :lastWeekDay')
+		->groupBy('a.startDate')
+		
+		->setParameter('firstWeekDay', $firstWeekDay)
+		->setParameter('lastWeekDay', $lastWeekDay)
+		;
+	
+		if ($recruiter_id) {
+			$query
+			->andWhere('r.id = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id)
+			;
+		}
+	
+		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+	
+		return $appointmentOutcomes_ar;
+	}
+	
+	/**
+	 * Get appointments by week
+	 *
+	 * @param $date
+	 * @param $recruiter_id if you want to get the num of appointments for one recruiter (could be null)
+	 *
+	 * @return multitype:
+	 */
+	public function findNumAppointmentsThisYear ($recruiter_id = null) {
+	
+		$em = $this->getEntityManager();
+	
+		$currentYear = date('Y',strtotime('now'));
+		$nextYear = date('Y',strtotime('next year'));
+		
+		$query = $em->createQueryBuilder()
+		->select('count(a) as num, SUBSTRING(a.startDate,6,2) as month')
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('a.recruiter', 'r')
+		->where('SUBSTRING(a.startDate,1,4) >= :currentYear')
+		->andWhere('SUBSTRING(a.startDate,1,4) < :nextYear')
+		->groupBy('month')
+	
+		->setParameter('currentYear', $currentYear)
+		->setParameter('nextYear', $nextYear)
+		;
+	
+		if ($recruiter_id) {
+			$query
+			->andWhere('r.id = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id)
+			;
+		}
+	
+		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+	
+		return $appointmentOutcomes_ar;
+	}
+	
+	
+	/**
 	 * Get The upcoming appointments of a recruiter
 	 *
 	 * @param int $recruiter_id
-	 * @param $day
-	 * @param int $month
-	 * @param int $year
+	 * @param $currentDate
 	 *
 	 * @return array Appointments
 	 */
 	public function findUpcomingAppointmentsByRecruiter($recruiter_id,$currentDate) {
 	
 		$em = $this->getEntityManager();
-		
-		$dateAfter = new \DateTime($currentDate->format('Y-m-d H:i:s').' + 3 days');
-	
 	
 		$query = $em->createQueryBuilder()
 		->select(array(
 				'a'
 		))
 		->from('AppointmentBundle:Appointment', 'a')
-		->innerJoin('a.appointmentDetail', 'ad')
-		->innerJoin('ad.project', 'p')
-		->innerJoin('ad.outcome', 'o')
-		->innerJoin('ad.address', 'adr')
-		->innerJoin('a.recruiter', 'u')
-		->innerJoin('u.userDetail', 'ud')
 		->where('a.recruiter = :recruiter_id')
-		->andWhere('a.recruiter = :recruiter_id')
 		->andWhere('a.startDate >= :currentDate')
-		->andWhere('a.startDate < :dateAfter')
 		->orderBy('a.startDate', 'ASC')
 	
 		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('currentDate', $currentDate)
-		->setParameter('dateAfter', $dateAfter)
-		->setMaxResults(5)
+		->setMaxResults(3)
+		;
+	
+		$appointment_ar = $query->getQuery()->getResult();
+	
+		return $appointment_ar;
+	}
+	
+	/**
+	 * Get The upcoming appointments
+	 *
+	 * @param $currentDate
+	 *
+	 * @return array Appointments
+	 */
+	public function findUpcomingAppointments($currentDate) {
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select(array(
+				'a'
+		))
+		->from('AppointmentBundle:Appointment', 'a')
+		->where('a.startDate >= :currentDate')
+		->orderBy('a.startDate', 'ASC')
+	
+		->setParameter('currentDate', $currentDate)
+		->setMaxResults(3)
 		;
 	
 		$appointment_ar = $query->getQuery()->getResult();

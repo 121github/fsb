@@ -1,0 +1,54 @@
+{% if appointmentOutcomesChart is defined and appointmentOutcomesChart %}
+	{#  Reports by recruiter  #}
+	<div id="appointment_outcomes" style="margin-top:20px; margin-left:20px; width:200px; height:300px;"></div>
+	
+	
+	<script class="code" type="text/javascript">
+	$(document).ready(function(){
+	    var outcomes = {{ appointmentOutcomesChart["values"]|json_encode|raw }};
+	    var ticks = {{ appointmentOutcomesChart["names"]|json_encode|raw }};
+	    var outcomeChartNames = {{ appointmentOutcomesChart["outcomes"]|json_encode|raw }};
+	    
+	    plot1 = $.jqplot('appointment_outcomes', outcomes, {
+	    	seriesDefaults: {
+	            renderer:$.jqplot.BarRenderer,
+	            pointLabels: { show: true }
+	        },
+	        title: "Appointment Outcomes",
+	        axes: {
+	            xaxis: {
+	                renderer: $.jqplot.CategoryAxisRenderer,
+	                ticks: ticks,
+	                //label:'Recruiters'
+	            },
+	        	yaxis: {
+					//label: 'Num Appointment outcomes',
+					labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+					min: 0,
+	                max: {{ appointmentOutcomesChart["max"] }},
+	                tickOptions: {formatString: '%d'}
+	            }
+	      },
+	      series: [
+               	{label: outcomeChartNames[0]},
+               	{label: outcomeChartNames[1]},
+               	{label: outcomeChartNames[2]},
+               	{label: outcomeChartNames[3]},
+               	{label: outcomeChartNames[4]},
+          ],
+	      highlighter: {
+	        show: true,
+	        sizeAdjust: 7.5,
+	        tooltipLocation: 'n',
+	        tooltipContentEditor:tooltipContentEditor
+	      },
+	      cursor: {
+	        show: false
+	      }
+	    });
+	});
+	function tooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+        return plot.series[seriesIndex]["label"];
+    }
+	</script>
+{% endif %}

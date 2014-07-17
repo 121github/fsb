@@ -4,6 +4,8 @@ namespace Fsb\CalendarBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Fsb\UserBundle\Util\Util;
 use Fsb\CalendarBundle\Entity\Filter;
+use Doctrine\Tests\Common\DataFixtures\TestEntity\User;
+use Fsb\UserBundle\Entity\UserDetail;
 
 class MonthController extends DefaultController
 {
@@ -156,8 +158,22 @@ class MonthController extends DefaultController
 		/******************************************************************************************************************************/
 		/************************************************** Get upcoming appointments *************************************************/
 		/******************************************************************************************************************************/
-		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointmentsByRecruiter($recruiter->getId(), new \DateTime('now'));
+		$upcomingAppointmentList = $this->getUpcomingAppointments($recruiter);
 		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentOutcome chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentOutcomesChart = $this->getAppointmentOutcomeChart($recruiter);
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentsByMonth chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentsByMonthChart = $this->getAppointmentsByMonthChart($recruiter);
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get appointmentsByWeek chart *************************************************/
+		/******************************************************************************************************************************/
+		$appointmentsByWeekChart = $this->getAppointmentsByWeekChart($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Render ***************************************************************/
@@ -177,6 +193,9 @@ class MonthController extends DefaultController
 				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
 				'ruleList' => $ruleList,
 				'upcomingAppointmentList' => $upcomingAppointmentList,
+				'appointmentOutcomesChart' => $appointmentOutcomesChart,
+				'appointmentsByMonthChart' => $appointmentsByMonthChart,
+				'appointmentsByWeekChart' => $appointmentsByWeekChart,
 		));
 	}
 }

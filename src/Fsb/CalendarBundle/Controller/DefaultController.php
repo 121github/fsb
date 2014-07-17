@@ -20,6 +20,7 @@ use Fsb\AppointmentBundle\Entity\Address;
 
 class DefaultController extends Controller
 {
+	
 	/**
 	 * 
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -40,6 +41,152 @@ class DefaultController extends Controller
     }
 
     
+    /**
+     * 
+     * Get upcoming appointments
+     * 
+     * @param unknown $recruiter
+     * @return unknown
+     */
+    protected function getUpcomingAppointments($recruiter) {
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	//If the user logged is a recruiter we get the upcoming appointments for this recruiter
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointmentsByRecruiter($recruiter->getId(), new \DateTime('now'));
+    	}
+    	//If the user logged is not a recruiter, we get the upcoming appoinments for all the recruiters
+    	else {
+    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'));
+    	}
+    	
+    	return $upcomingAppointmentList; 
+    }
+    
+    /**
+     * Get appointmentOutcome chart
+     * 
+     * @param int $recruiter
+     */
+    protected function getAppointmentOutcomeChart($recruiter) {
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$appointmentOutcomesChart = array();
+    	
+    	//Get the outcome names
+    	$outcomesList = $em->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
+    	$appointmentOutcomesChart["outcomes"] = array();
+    	foreach ($outcomesList as $outcome) {
+    		array_push($appointmentOutcomesChart["outcomes"], $outcome->__toString());
+    	}
+    	
+    	//Get the num appointment outcomes
+    	$appointmentOutcomesChart["values"] = array();
+    	//If the user logged is a recruiter
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes($recruiter->getId());
+    		$appointmentOutcomesChart["names"] = [$recruiter->getUserDetail()->__toString()];
+    	}
+    	else {
+    		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes();
+    		$appointmentOutcomesChart["names"] = ["Total"];
+    		
+    		
+    	}
+    	$max = 10;
+    	//Fix the array in order to start with the key 0 because of the jqplot lib
+    	foreach ($numAppointmentOutcomeList as $numAppointmentOutcome) {
+    		array_push($appointmentOutcomesChart["values"], array("0" => $numAppointmentOutcome[1]));
+    		$appointmentOutcomesChart["max"] = ($numAppointmentOutcome[1] > $max)?$numAppointmentOutcome[1] + $numAppointmentOutcome[1] : $max;
+    	}
+    	
+    	return $appointmentOutcomesChart;
+    }
+    
+    
+    /**
+     * Get appointmentsByMonth chart
+     *
+     * @param int $recruiter
+     */
+    protected function getAppointmentsByMonthChart($recruiter) {
+    	 
+    	$em = $this->getDoctrine()->getManager();
+    	 
+    	//Array initialization
+    	$appointmentsByMonthChart = array();
+    	$appointmentsByMonthChart["values"] = array();
+    	
+    	//Get the num appointment outcomes
+    	//If the user logged is a recruiter
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear($recruiter->getId());
+    	}
+    	else {
+    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear();
+    	}
+    	
+    	$max = 10;
+    	//Fix the array because of the jqplot lib
+    	$auxList = array();
+    	for ($i=1; $i<=12;$i++) {
+    		$auxList[($i<10)?"0".$i : $i] = 0;
+    	}
+    	foreach ($numAppointmentsList as $numAppointments) {
+    		$auxList[$numAppointments["month"]] = $numAppointments["num"];
+    		$appointmentsByMonthChart["max"] = ($numAppointments["num"] > $max)?$numAppointments["num"] + $numAppointments["num"] : $max;
+    	}
+    	
+    	foreach ($auxList as $aux) {
+    		array_push($appointmentsByMonthChart["values"], $aux);
+    	}
+    	 
+    	return $appointmentsByMonthChart;
+    }
+    
+    /**
+     * Get appointmentsByMonth chart
+     *
+     * @param int $recruiter
+     */
+    protected function getAppointmentsByWeekChart($recruiter) {
+    
+    	$em = $this->getDoctrine()->getManager();
+    
+    	//Array initialization
+    	$appointmentsByWeekChart = array();
+    	$appointmentsByWeekChart["values"] = array();
+    	$firstWeekDay = date('d',strtotime('monday this week'));
+    	$lastWeekDay = date('d',strtotime('sunday this week'));
+    	
+    	//Get the num appointment outcomes
+    	//If the user logged is a recruiter
+    	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek($recruiter->getId());
+    	}
+    	else {
+    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek();
+    	}
+    	
+    	$max = 10;
+    	//Fix the array because of the jqplot lib
+    	$auxList = array();
+    	for ($i=$firstWeekDay; $i<=$lastWeekDay;$i++) {
+    		$auxList[$i] = 0;
+    	}
+    	foreach ($numAppointmentsList as $numAppointments) {
+    		$auxList[$numAppointments["day"]] = $numAppointments["num"];
+    		$appointmentsByWeekChart["max"] = ($numAppointments["num"] > $max)?$numAppointments["num"] + $numAppointments["num"] : $max;
+    	}
+    	
+    	foreach ($auxList as $aux) {
+    		array_push($appointmentsByWeekChart["values"], $aux);
+    	}
+    
+    	return $appointmentsByWeekChart;
+    }
     
     /**
      * Creates a form to apply a calendar search filter.

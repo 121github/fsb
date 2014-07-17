@@ -494,7 +494,7 @@
 
 .diary-page .ui-listview .ui-li-aside{
 	text-align: center;
-    width: 7em;
+    width: 9em;
     padding-top: 1.6em;
     min-height: 100%;
     top: 0;
@@ -571,8 +571,12 @@
 	text-decoration: none;
 }
 
-.diary-page .ui-listview .ui-li-has-thumb {
-	padding-left: 93px;
+.diary-page .ui-listview .ui-li-has-thumb, .diary-page .ui-listview .ui-li-has-thumb .ui-bnt {
+	padding-left: 130px;
+}
+
+.diary-page .ui-listview>.ui-li-has-thumb>.ui-btn, .diary-page .ui-listview>.ui-li-static.ui-li-has-thumb {
+	padding-left: 130px;
 }
 
 .diary-page .ui-collapsible-themed-content .ui-collapsible-content {

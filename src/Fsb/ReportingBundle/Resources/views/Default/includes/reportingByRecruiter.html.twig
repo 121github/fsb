@@ -103,7 +103,19 @@ $(document).ready(function(){
                 max: {{ recruiterChartMax }},
                 tickOptions: {formatString: '%d'}
             }
-        }
+        },
+        highlighter: {
+	        show: true,
+	        sizeAdjust: 7.5,
+	        tooltipContentEditor:tooltipContentEditor
+	    },
+	    cursor: {
+	        show: false
+	    }
     });
 });
+function tooltipContentEditor(str, seriesIndex, pointIndex, plot) {
+    //return plot.series[seriesIndex]["label"] + ": " + plot.options.axes.xaxis.ticks[pointIndex] + ", " + plot.data[seriesIndex][pointIndex];
+    return plot.series[seriesIndex]["label"] + ": " + plot.data[seriesIndex][pointIndex];
+}
 </script>

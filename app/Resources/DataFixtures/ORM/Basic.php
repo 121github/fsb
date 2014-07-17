@@ -251,7 +251,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
-        	for ($i=1; $i<=50; $i++) {
+        	for ($i=1; $i<=100; $i++) {
         
         		$numAppointment++;
         		 
@@ -265,8 +265,9 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$minute = $minute[rand(0, 1)];
         		$symbol = array("+","-");
         		$symbol = $symbol[rand(0, 1)];
-        		$appointment->setStartDate(new \DateTime('now '.$hour.':'.$minute.':00'.$symbol.' '.$days.' days'));
-        		$appointment->setEndDate(new \DateTime('now '.$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
+        		$weekDays = array("monday this week ", "tuesday this week ", "wednesday this week ", "thursday this week ", "friday this week ", "saturday this week ");
+        		$appointment->setStartDate(new \DateTime($weekDays[rand(0, 5)].$hour.':'.$minute.':00'.$symbol.' '.$days.' days'));
+        		$appointment->setEndDate(new \DateTime($weekDays[rand(0, 5)].$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
         		
         		Util::setCreateAuditFields($appointment, 1);
         		
