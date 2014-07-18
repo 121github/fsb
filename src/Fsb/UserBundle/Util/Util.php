@@ -67,7 +67,7 @@ class Util
 	 * @param unknown $id
 	 */
 	static public function getColorById($id) {
-		$trueColors = array('#000000','#0000FF','#8A2BE2','#A52A2A','#5F9EA0','#D2691E','#FF7F50','#6495ED','#DC143C','#00008B','#008B8B','#B8860B','#006400','#556B2F','#FF8C00','#9932CC','#8B0000','#483D8B','#2F4F4F','#00CED1','#9400D4','#FF1493','#696969','#1E90FF','#B22222','#228B22');
+		$trueColors = array('#000000','#0000FF','#8A2BE2','#A52A2A','#5F9EA0','#D2691E','#FF7F50','#6495ED','#DC143C','#00008B','#008B8B','#B8860B','#006400','#556B2F','#FF8C00','#9932CC','#8B0000','#483D8B','#2F4F4F','#9400D4','#696969','#1E90FF','#B22222','#228B22');
 		
 		return $trueColors[$id % count($trueColors)];
 	}

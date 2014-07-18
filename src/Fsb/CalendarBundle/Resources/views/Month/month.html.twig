@@ -60,18 +60,22 @@
 						       <h1>Rules</h1>
 						</div>
 						<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-							<div style="float: right;">
+							<div style="text-align: right;">
 								<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
 							</div>
 							<h2 class="ui-title">{{ recruiter }}</h2>
 							<br />
 							<ul data-role="listview">
-								{% for rule in ruleList %} 
-								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
-								  		<h3>{{ rule.rule }}</h3>
-								  		<p>{{ rule.description }}</p>
-								  	</a></li>
-								{% endfor %}
+								{% if ruleList|length > 0 %}
+									{% for rule in ruleList %} 
+									  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+									  		<h3>{{ rule.rule }}</h3>
+									  		<p>{{ rule.description }}</p>
+									  	</a></li>
+									{% endfor %}
+								{% else %}
+									<div class="no-data-message_dialog">{{ "There are no rules for this user" }}</div>
+								{% endif %}
 							</ul>
 						</div>
 				    </div>

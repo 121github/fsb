@@ -1,0 +1,16 @@
+{{ "Appointment Information" }}
+
+{{ appointment.appointmentDetail }}
+{{ "Date: " }}{{ appointment.startDate|date("Y-m-d") ~ " - " ~ appointment.endDate|date("Y-m-d") }}
+{{ "Appointment Setter: " }}{{ appointment.appointmentSetter }}
+{{ "Recruiter: " }}{{ appointment.recruiter }}
+{{ "Record Reference: " }}{{ appointment.appointmentDetail.recordRef }}
+{{ "Project: " }}{{ appointment.appointmentDetail.project }}
+{{ "Outcome: " }}{{ appointment.appointmentDetail.outcome }}
+{{ "Outcome Reason: " }}{{ appointment.appointmentDetail.outcomeReason }}
+
+{{ "Postcode: " }}{{ appointment.appointmentDetail.address.postcode }}
+
+{{ "Comment: " }}{{ appointment.appointmentDetail.comment }}
+	
+&copy; {{ 'now' | date('Y') }} - Fsb

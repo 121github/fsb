@@ -43,6 +43,27 @@ class AppointmentController extends Controller
     
     
     /**
+     * Send appointment email
+     * 
+     * @param unknown $subject
+     * @param unknown $from
+     * @param unknown $to
+     * @param unknown $textBody
+     * @param unknown $htmlBody
+     */
+    private function sendAppointmentEmail ($subject, $from, $to, $textBody, $htmlBody) {
+    	 
+    	$email = \Swift_Message::newInstance()
+    	->setSubject($subject)
+    	->setFrom($from)
+    	->setTo($to)
+    	->setBody($textBody)
+    	->addPart($htmlBody, 'text/html')
+    	;
+    	$this->get('mailer')->send($email);
+    }
+    
+    /**
      * Check if is possible to create a new appointment
      *
      * @param Appointment $appointment
@@ -183,12 +204,22 @@ class AppointmentController extends Controller
             	)
             );
             
+            
+            //Send the email
+            $subject = 'Fsb - New Appointment Setted';
+            $from = ($appointment->getAppointmentSetter())?$appointment->getAppointmentSetter()->getUserDetail()->getEmail() : 'admin@fsb.co.uk'; 
+            $to = $appointment->getRecruiter()->getUserDetail()->getEmail();
+            $textBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.txt.twig', array('appointment' => $appointment));
+            $htmlBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.html.twig', array('appointment' => $appointment));
+            $this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+            
+            
 
             return $this->redirect($this->generateUrl('calendar_day', array(
             		'day' => $day,
             		'month' => $month,
             		'year' => $year,
-            		'recruiter_id' => $recruiter_id,
+//             		'recruiter_id' => $recruiter_id,
             	))
             );
         }
@@ -450,7 +481,7 @@ class AppointmentController extends Controller
             		'day' => $day,
             		'month' => $month,
             		'year' => $year,
-            		'recruiter_id' => $recruiter_id,
+//             		'recruiter_id' => $recruiter_id,
             ))
             );
         }

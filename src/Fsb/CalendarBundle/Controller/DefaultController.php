@@ -158,6 +158,8 @@ class DefaultController extends Controller
     	//Array initialization
     	$appointmentsByWeekChart = array();
     	$appointmentsByWeekChart["values"] = array();
+    	$max = 10;
+    	$appointmentsByWeekChart["max"] = $max;
     	$firstWeekDay = date('d',strtotime('monday this week'));
     	$lastWeekDay = date('d',strtotime('sunday this week'));
     	
@@ -170,7 +172,6 @@ class DefaultController extends Controller
     		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek();
     	}
     	
-    	$max = 10;
     	//Fix the array because of the jqplot lib
     	$auxList = array();
     	for ($i=$firstWeekDay; $i<=$lastWeekDay;$i++) {

@@ -251,7 +251,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
-        	for ($i=1; $i<=100; $i++) {
+        	for ($i=1; $i<=10; $i++) {
         
         		$numAppointment++;
         		 

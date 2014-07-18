@@ -198,3 +198,33 @@ a{
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
+
+
+/* ===========================================================================
+   Messages
+   ======================================================================== */
+
+.no-data-message {
+	margin: 100px auto;
+	text-align: center;
+	padding: 80px;
+	width: 30%;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background:#ddd;
+}
+
+.no-data-message_dialog {
+	margin: auto;
+	margin-bottom: 20px;
+	text-align: center;
+	padding: 40px;
+	width: 60%;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background:#ddd;
+}

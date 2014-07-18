@@ -33,4 +33,11 @@ assetic:
     use_controller: true
 
 #swiftmailer:
-#    delivery_address: me@example.com
+#    transport: gmail
+#    username: 
+#    password:  
+#    disable_delivery: false
+#    delivery_address: estebanc@121customerinsight.co.uk
+#    spool:
+#        type: file
+#        path: "%kernel.cache_dir%/swiftmailer/spool"

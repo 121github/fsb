@@ -62,18 +62,22 @@
 						       <h1>Rules</h1>
 						</div>
 						<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-							<div style="float: right;">
-								<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
+							<div style="text-align: right;">
+								<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-theme="b" data-transition="pop">{{ "New Rule" }}</a>
 							</div>
 							<h2 class="ui-title">{{ recruiter }}</h2>
 							<br />
 							<ul data-role="listview">
-								{% for rule in ruleList %} 
-								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
-								  		<h3>{{ rule.rule }}</h3>
-								  		<p>{{ rule.description }}</p>
-								  	</a></li>
-								{% endfor %}
+								{% if ruleList|length > 0 %}
+									{% for rule in ruleList %} 
+									  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+									  		<h3>{{ rule.rule }}</h3>
+									  		<p>{{ rule.description }}</p>
+									  	</a></li>
+									{% endfor %}
+								{% else %}
+									<div class="no-data-message_dialog">{{ "There are no rules for this user" }}</div>
+								{% endif %}
 							</ul>
 						</div>
 				    </div>
@@ -99,61 +103,63 @@
 		</div>
         
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
-	    	
-	    	<ul data-role="listview" data-inset="true">
+	    	{% if appointment_list|length <= 0 %}
+        		<div class="no-data-message"> {{ "There is no scheduled appointment for the future" }} </div>
+        	{% else %}
+	    		<ul data-role="listview" data-inset="true">
 	        
-        		{########## Diary ###############}
-				{% for key, appointmentDay in appointment_list %}
-					<li>
-						<img src="" class="ui-li-thumb">
-							<div style="overflow: auto;">
-							{% for appointment in appointmentDay %}
-									<h2 style="text-align: left; display: inline; text-shadow: none;">
-										<a href="#popup{{ appointment["id"] ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="background-color: {{ appointment["color"] }}; ">
-			                				{{ appointment["title"] }}
-			                				<br /><br />
-			                					{{ appointment["date"]|date("H:i") }}
-			                			</a>
-									</h2>
-									<p>
-			                			<div data-role="popup" id="popup{{ appointment["id"] ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
-											<div data-role="header" data-theme="a" class="ui-corner-top">
-										        <h1>{{ appointment["title"] }}</h1>
-										    </div>
-										    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-										        <p style="float: right;">{{ appointment["date"]|date("D d M Y") }}</p>
-										        <h2 class="ui-title">{{ appointment["date"]|date("H:i") }}</h2>
-											    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
-											    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment["recordRef"] }}</p>
-						                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
-						                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
-						                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
-						                		<p>
-						                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
-						                			<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
-						                		</p>
-						                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
-						                		
-						                		<p style="padding-top: 10px; text-align: right;">
-						                		{% if (is_granted('ROLE_RECRUITER')) %}
-											        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
-											    {% else %}
-											    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
-											    {% endif %}
-											        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
-											    </p>
-										    </div>
-										</div>
-			                		</p>
-			           		{% endfor %}
-			           		</div>
-			           	<p class="ui-li-aside">
-                			{{ key }}
-                		</p>
-                	</li>
-		        {% endfor %}
-			         	
-	        </ul>
+	        		{########## Diary ###############}
+					{% for key, appointmentDay in appointment_list %}
+						<li>
+							<img src="" class="ui-li-thumb">
+								<div style="overflow: auto;">
+								{% for appointment in appointmentDay %}
+										<h2 style="text-align: left; display: inline; text-shadow: none;">
+											<a href="#popup{{ appointment["id"] ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="background-color: {{ appointment["color"] }}; ">
+				                				{{ appointment["title"] }}
+				                				<br /><br />
+				                					{{ appointment["date"]|date("H:i") }}
+				                			</a>
+										</h2>
+										<p>
+				                			<div data-role="popup" id="popup{{ appointment["id"] ~ day}}" data-overlay-theme="a" data-theme="a" style="max-width:500px;" class="ui-corner-all">
+												<div data-role="header" data-theme="a" class="ui-corner-top">
+											        <h1>{{ appointment["title"] }}</h1>
+											    </div>
+											    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+											        <p style="float: right;">{{ appointment["date"]|date("D d M Y") }}</p>
+											        <h2 class="ui-title">{{ appointment["date"]|date("H:i") }}</h2>
+												    <p style="border-top: 1px solid gray; padding-top: 10px;"><strong>{{ "Recruiter: " }}</strong>{{ appointment["recruiter"] }}</p>
+												    <p><strong>{{ "Record Reference: " }}</strong>{{ appointment["recordRef"] }}</p>
+							                		<p><strong>{{ "Project: " }}</strong>{{ appointment["project"] }}</p>
+							                		<p><strong>{{ "Outcome: " }}</strong>{{ appointment["outcome"] }}</p>
+							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
+							                		<p>
+							                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
+							                			<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+							                		</p>
+							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
+							                		
+							                		<p style="padding-top: 10px; text-align: right;">
+							                		{% if (is_granted('ROLE_RECRUITER')) %}
+												        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    {% else %}
+												    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    {% endif %}
+												        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
+												    </p>
+											    </div>
+											</div>
+				                		</p>
+				           		{% endfor %}
+				           		</div>
+				           	<p class="ui-li-aside">
+	                			{{ key }}
+	                		</p>
+	                	</li>
+			        {% endfor %}
+	        	</ul>
+	        {% endif %}
 		</div> <!-- content -->
 	</div>
 	

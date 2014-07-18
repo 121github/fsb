@@ -89,7 +89,7 @@ class Appointment
      */
     public function __toString()
     {
-    	return $this->AppointmentDetail()->getTitle();
+    	return $this->appointmentDetail->getTitle();
     }
     
     /**

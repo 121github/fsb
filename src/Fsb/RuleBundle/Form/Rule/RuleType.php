@@ -5,6 +5,7 @@ namespace Fsb\RuleBundle\Form\Rule;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class RuleType extends AbstractType
 {
@@ -17,7 +18,13 @@ class RuleType extends AbstractType
         $builder
             ->add('rule')
             ->add('description')
-            ->add('recruiter')
+            ->add('recruiter', 'entity', array(
+            		'class'         => 'Fsb\\UserBundle\\Entity\\User',
+            		'empty_value'   => 'Select a recruiter',
+            		'query_builder' => function(EntityRepository $repository) {
+            			return $repository->findUsersByRoleQuery('ROLE_RECRUITER');
+            		},
+            ))
         ;
     }
     
