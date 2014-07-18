@@ -398,9 +398,6 @@ class UnavailableDateController extends Controller
             				'message' => 'The time is now available'
             		)
             );
-            
-            $url = $this->getRequest()->headers->get("referer");
-            return new RedirectResponse($url);
         }
         
         $url = $this->getRequest()->headers->get("referer");

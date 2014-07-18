@@ -1,0 +1,65 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Edit Rule{% endblock %}
+
+{% block article -%}
+
+	{% set submit_id = edit_form.vars.id ~ "_submit" %}
+	<form action="{{ path('note_update', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+		{{ form_errors(edit_form) }}
+		{% if (is_granted('ROLE_RECRUITER')) %}
+			<h2> {{ entity.recruiter }} </h2>
+			<div style="display: none;">
+		{% else %}
+			<div>
+		{% endif %}
+			{{ form_label(edit_form.recruiter) }}
+			{{ form_errors(edit_form.recruiter) }}
+			{{ form_widget(edit_form.recruiter) }}
+		</div>
+		<div>
+			{{ form_label(edit_form.title) }}
+			{{ form_errors(edit_form.title) }}
+			{{ form_widget(edit_form.title) }}
+		</div>
+		<div>
+			{{ form_label(edit_form.startDate) }}
+			{{ form_errors(edit_form.startDate) }}
+			{{ form_widget(edit_form.startDate) }}
+		</div>
+		<div>
+			{{ form_label(edit_form.endDate) }}
+			{{ form_errors(edit_form.endDate) }}
+			{{ form_widget(edit_form.endDate) }}
+		</div>
+		<div>
+			{{ form_label(edit_form.text) }}
+			{{ form_errors(edit_form.text) }}
+			{{ form_widget(edit_form.text) }}
+		</div>
+		
+		<a href="{{ "#" }}" data-rel="back" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
+		
+		{{ form_rest(edit_form) }}
+
+	</form>
+	
+	<a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>
+	<!--  POPUP DELETE CONFIRM -->
+    <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+    	{% set submit_delete_id = delete_form.vars.id ~ "_submit" %}
+    	<form action="{{ path('note_delete' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>Delete Note?</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+		        <h3 class="ui-title">Are you sure to delete this note?</h3>
+		        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+		        <input type="hidden" name="_method" value="DELETE">
+		        {{ form_rest(delete_form) }}
+		    </div>
+			
+    	</form>
+    </div>
+    
+{% endblock %}

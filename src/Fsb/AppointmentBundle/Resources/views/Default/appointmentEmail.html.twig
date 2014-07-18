@@ -12,7 +12,7 @@
 	<div style="">
 		<div style="width:60%; float:left; margin-right: 20px; padding: 20px;">
 			<h2>{{ appointment.appointmentDetail }}</h2>
-			<p><strong>{{ "Date: " }}</strong>{{ appointment.startDate|date("Y-m-d") ~ " - " ~ appointment.endDate|date("Y-m-d") }}</p>
+			<p><strong>{{ "Date: " }}</strong>{{ appointment.startDate|date("Y-m-d H:i") ~ " - " ~ appointment.endDate|date("Y-m-d H:i") }}</p>
 			<p><strong>{{ "Appointment Setter: " }}</strong>{{ appointment.appointmentSetter }}</p>
 			<p><strong>{{ "Recruiter: " }}</strong>{{ appointment.recruiter }}</p>
 			<p><strong>{{ "Record Reference: " }}</strong>{{ appointment.appointmentDetail.recordRef }}</p>

@@ -23,14 +23,3 @@ monolog:
             level: debug
         console:
             type:  console
-
-swiftmailer:
-    transport: smtp
-    host: mail.leadcontrol.co.uk
-    username: admin@leadcontrol.co.uk
-    password: IAfMV.M;mwX2  
-    disable_delivery: false
-    delivery_address: estebanc@121customerinsight.co.uk
-    spool:
-        type: file
-        path: "%kernel.cache_dir%/swiftmailer/spool"

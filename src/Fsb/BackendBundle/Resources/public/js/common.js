@@ -225,7 +225,7 @@ $(function(){
 /********************************************************************************************************/
 $(function(){
 	//StartDate
-    $("#fsb_reportingbyrecruiterbundle_filter_startDate_date input").each(function(){
+    $("#fsb_reportingbyrecruiterbundle_filter_startDate input").each(function(){
         $(this).attr("readonly","readonly");
     });
     $('#fsb_reportingbyrecruiterbundle_filter_startDate_date').datetimepicker({
@@ -249,7 +249,7 @@ $(function(){
     });
     
   //EndDate
-    $("#fsb_reportingbyrecruiterbundle_filter_endDate_date input").each(function(){
+    $("#fsb_reportingbyrecruiterbundle_filter_endDate input").each(function(){
         $(this).attr("readonly","readonly");
     });
     $('#fsb_reportingbyrecruiterbundle_filter_endDate_date').datetimepicker({
@@ -264,6 +264,59 @@ $(function(){
         },
     });
     $('#fsb_reportingbyrecruiterbundle_filter_endDate_time').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
+});
+
+/********************************************************************************************************/
+/******************** Datetime picker for note creation by Recruiter ***********************************************/
+/********************************************************************************************************/
+$(function(){
+	//StartDate
+    $("#fsb_notebundle_note_startDate input").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_notebundle_note_startDate_date').datetimepicker({
+    	format: "Y-m-d",
+        timepicker: false,
+        datepicker: true,
+        closeOnDateSelect:true,
+        dayOfWeekStart: 1,
+        onGenerate:function( ct ){
+            jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+            .addClass('xdsoft_disabled');
+        },
+    });
+    $('#fsb_notebundle_note_startDate_time').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
+    
+  //EndDate
+    $("#fsb_notebundle_note_endDate input").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_notebundle_note_endDate_date').datetimepicker({
+    	format: "Y-m-d",
+        timepicker: false,
+        datepicker: true,
+        closeOnDateSelect:true,
+        dayOfWeekStart: 1,
+        onGenerate:function( ct ){
+            jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+            .addClass('xdsoft_disabled');
+        },
+    });
+    $('#fsb_notebundle_note_endDate_time').datetimepicker({
         format: "H:i",
         timepicker: true,
         datepicker: false,

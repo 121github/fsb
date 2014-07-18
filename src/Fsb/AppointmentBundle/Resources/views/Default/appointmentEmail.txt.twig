@@ -1,7 +1,7 @@
 {{ "Appointment Information" }}
 
 {{ appointment.appointmentDetail }}
-{{ "Date: " }}{{ appointment.startDate|date("Y-m-d") ~ " - " ~ appointment.endDate|date("Y-m-d") }}
+{{ "Date: " }}{{ appointment.startDate|date("Y-m-d H:i") ~ " - " ~ appointment.endDate|date("Y-m-d H:i") }}
 {{ "Appointment Setter: " }}{{ appointment.appointmentSetter }}
 {{ "Recruiter: " }}{{ appointment.recruiter }}
 {{ "Record Reference: " }}{{ appointment.appointmentDetail.recordRef }}

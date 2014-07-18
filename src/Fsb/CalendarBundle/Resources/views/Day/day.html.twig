@@ -264,7 +264,7 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
-													<li><a href="#">Create Note</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 												</ul>
 											</div>
 								       </div>
@@ -284,8 +284,8 @@
 											<div data-role="popup" id="action{{ time }}" data-theme="a">
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
-													<li><a href="#" class="ui-btn ui-disabled">Create Appointment</a></li>
-													<li><a href="#">Create Note</a></li>
+													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" class="ui-btn ui-disabled" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 													<li><a href="{{ path('unavailableDate_edit', {'id': unavailableTimeList[time], 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Change Availability</a></li>
 												</ul>
 											</div>
@@ -296,7 +296,7 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
-													<li><a href="#">Create Note</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 													<li><a href="{{ path('unavailableDate_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
 												</ul>
 											</div>
@@ -306,6 +306,9 @@
 				                {% endif %}
 				                <p class="ui-li-aside">
 				                	{{ pref ~ i ~ ":00" }}
+				                	<br /><br />
+									{# Has a Note #}
+				                	{{ "Note exist" }}
 				                </p>
 				         	</li>
 				    	
