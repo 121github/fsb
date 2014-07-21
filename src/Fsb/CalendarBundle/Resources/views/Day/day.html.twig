@@ -296,7 +296,7 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
-													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': j*00, 'day': day, 'month': month, 'year': year, 'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 													<li><a href="{{ path('unavailableDate_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
 												</ul>
 											</div>
@@ -308,7 +308,29 @@
 				                	{{ pref ~ i ~ ":00" }}
 				                	<br /><br />
 									{# Has a Note #}
-				                	{{ "Note exist" }}
+									{% set hour = pref ~ i %}
+									{% if noteList[hour] is defined %}
+				                		<a href="#popupNotes{{ hour }}" data-rel="popup" data-position-to="window" data-role="button" data-icon="tag" data-iconpos="notext" data-mini="true" data-inline="true" style="margin-left: 8px; background-color: transparent;"></a>
+							    		<div data-role="popup" id="popupNotes{{ hour }}" data-overlay-theme="a" data-theme="a" style="min-width:400px;  max-width:600px;" class="ui-corner-all">
+									    	<div data-role="header" data-theme="a" class="ui-corner-top">
+											       <h1>Notes</h1>
+											</div>
+											<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+												<div style="text-align: right;">
+													<a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Note" }}</a>
+												</div>
+												<br />
+												<ul data-role="listview">
+													{% for note in noteList[hour]  %} 
+													  	<li><a href="{{ path('note_edit', {'id': note.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+													  		<h3>{{ note.title }}</h3>
+													  		<p>{{ note.text }}</p>
+													  	</a></li>
+													{% endfor %}
+												</ul>
+											</div>
+									    </div>
+				                	{% endif %}
 				                </p>
 				         	</li>
 				    	

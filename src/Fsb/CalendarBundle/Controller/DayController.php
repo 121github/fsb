@@ -177,7 +177,19 @@ class DayController extends DefaultController
 		 
 		$appointmentList = $auxList;
 		 
-		 
+		/******************************************************************************************************************************/
+		/************************************************** Get the Notes *************************************************************/
+		/******************************************************************************************************************************/
+		$noteList = $em->getRepository('NoteBundle:Note')->findNotesByRecruiter($recruiter->getId(), new \DateTime($day.'-'.$month.'-'.$year));
+		
+		$auxList = array();
+		foreach ($noteList as $note) {
+			$startDate = $note["startDate"]->format("H");
+			$auxList[$startDate][$note["note"]->getId()] = $note["note"];
+		}
+		$noteList = $auxList;
+		
+		
 		 
 		/******************************************************************************************************************************/
 		/************************************************** Get Appointments for the mini calendar ************************************/
@@ -236,6 +248,7 @@ class DayController extends DefaultController
 				'appointmentOutcomesChart' => $appointmentOutcomesChart,
 				'appointmentsByMonthChart' => $appointmentsByMonthChart,
 				'appointmentsByWeekChart' => $appointmentsByWeekChart,
+				'noteList' => $noteList,
 		));
 	}
 	

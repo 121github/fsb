@@ -12,4 +12,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class NoteRepository extends EntityRepository
 {
+	
+	
+	/**
+	 * Return the notes in a day for a recruiter
+	 *
+	 * @return boolean
+	 *
+	 */
+	public function findNotesByRecruiter($recruiter_id, \DateTime $day){
+	
+		$em = $this->getEntityManager();
+	
+		$query = $em->createQueryBuilder()
+		->select(array('n.startDate', 'n.endDate', 'n as note'))
+		->from('NoteBundle:Note', 'n')
+		->where('n.recruiter = :recruiter_id')
+		->andWhere('SUBSTRING(n.startDate,1,10) = :day')
+		->orderBy('n.startDate', 'ASC')
+	
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('day', $day->format('Y-m-d'))
+		;
+	
+		$NoteList = $query->getQuery()->getResult();
+	
+		return $NoteList;
+	}
 }

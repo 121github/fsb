@@ -8,13 +8,22 @@
     {% set submit_id = form.vars.id ~ "_submit" %}
 	<form action="{{ path('note_create') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
 		{{ form_errors(form) }}
+		<div style="float: left;">
+			<strong>{{ "Start Date - " }}</strong> {{ entity.startDate|date('Y-m-d H:i') }}
+			{{ form_errors(form.startDate) }}
+			{{ form_widget(form.startDate, { 'attr':{'hidden':'true'} }) }}
+		</div>
+		<div style="text-align: right;">
+			<strong>{{ "End Date - " }}</strong> {{ entity.endDate|date('Y-m-d H:i') }}
+			{{ form_errors(form.endDate) }}
+			{{ form_widget(form.endDate, { 'attr':{'hidden':'true'} }) }}
+		</div>
 		{% if (is_granted('ROLE_RECRUITER')) %}
 			<h2> {{ entity.recruiter }} </h2>
 			<div style="display: none;">
 		{% else %}
 			<div>
 		{% endif %}
-			{{ form_label(form.recruiter) }}
 			{{ form_errors(form.recruiter) }}
 			{{ form_widget(form.recruiter) }}
 		</div>
@@ -22,16 +31,6 @@
 			{{ form_label(form.title) }}
 			{{ form_errors(form.title) }}
 			{{ form_widget(form.title) }}
-		</div>
-		<div>
-			{{ form_label(form.startDate) }}
-			{{ form_errors(form.startDate) }}
-			{{ form_widget(form.startDate) }}
-		</div>
-		<div>
-			{{ form_label(form.endDate) }}
-			{{ form_errors(form.endDate) }}
-			{{ form_widget(form.endDate) }}
 		</div>
 		<div>
 			{{ form_label(form.text) }}
