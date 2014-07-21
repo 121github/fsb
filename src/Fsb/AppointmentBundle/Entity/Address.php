@@ -3,6 +3,7 @@
 namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Address
@@ -25,6 +26,8 @@ class Address
      * @var string
      *
      * @ORM\Column(name="add1", type="string", length=255)
+     * @Assert\NotBlank()
+     * 
      */
     private $add1;
 
@@ -46,6 +49,8 @@ class Address
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=100)
+     * @Assert\NotBlank()
+     * 
      */
     private $postcode;
 
@@ -67,6 +72,8 @@ class Address
      * @var string
      *
      * @ORM\Column(name="town", type="string", length=100)
+     * @Assert\NotBlank()
+     * 
      */
     private $town;
 
@@ -74,6 +81,8 @@ class Address
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=100)
+     * @Assert\NotBlank()
+     * 
      */
     private $country;
 

@@ -11,7 +11,7 @@ class AppointmentDetailType extends AbstractType{
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
 			->add('title', 'text')
-			->add('comment', 'textarea')
+			->add('comment', 'textarea', array('required' => false))
 			->add('project', 'entity', array(
 					'class'         => 'Fsb\\AppointmentBundle\\Entity\\AppointmentProject',
 					'empty_value'   => 'Select a project',
@@ -28,9 +28,9 @@ class AppointmentDetailType extends AbstractType{
 						->orderBy('ap.name', 'ASC');
 					},
 			))
-			->add('outcomeReason', 'text')
+			->add('outcomeReason', 'text', array('required' => false))
 			->add('address', new AddressType())
-			->add('recordRef', 'text')
+			->add('recordRef', 'text', array('required' => false))
 		;
 	}
 	

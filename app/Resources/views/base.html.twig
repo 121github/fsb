@@ -59,7 +59,7 @@
 					<div data-role="header">
 						<h1>{% block name %}{% endblock %}</h1>
 						{# Back #}
-					    <a href="./" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-rel="back" data-ajax="false">Back</a>
+					    <a href="{{ app.request.headers.get('referer') }}" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-ajax="false">Back</a>
 					    {# Filter #}
 					    {% if ( 
 				 			(searchForm is defined and searchFormSubmitted) or 

@@ -53,7 +53,7 @@
 						{{ form_rest(form) }}	
 					</td>
 					<td>
-						<a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
+						<a href="{{ app.request.headers.get('referer') }}" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Cancel</a>				
 					</td>
 				</tr>
 		</table>

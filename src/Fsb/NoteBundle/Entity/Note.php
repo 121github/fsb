@@ -3,6 +3,7 @@
 namespace Fsb\NoteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Note
@@ -25,6 +26,8 @@ class Note
      * @var string
      *
      * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
+     * @Assert\NotBlank()
+     * 
      */
     private $recruiter;
 
@@ -32,6 +35,7 @@ class Note
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $title;
 
@@ -39,6 +43,8 @@ class Note
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     * @Assert\NotBlank()
+     * 
      */
     private $text;
 
@@ -46,6 +52,8 @@ class Note
      * @var \DateTime
      *
      * @ORM\Column(name="start_date", type="datetime")
+     * @Assert\NotBlank()
+     * 
      */
     private $startDate;
 
@@ -53,6 +61,7 @@ class Note
      * @var \DateTime
      *
      * @ORM\Column(name="end_date", type="datetime")
+     * @Assert\NotBlank()
      */
     private $endDate;
 

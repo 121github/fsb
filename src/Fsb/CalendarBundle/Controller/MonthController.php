@@ -108,12 +108,19 @@ class MonthController extends DefaultController
 		$prevMonth = $prevDate->format('m');
 		$prevYear = $prevDate->format('Y');
 		 
-		//Appointments in the prev month
-		$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $prevMonth, $prevYear, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
 		foreach ($appointmentPrevList as $appointment) {
-			$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+			$auxList[$appointment["day"]] = $appointment["numapp"];
 		}
 		$appointmentPrevList = $auxList;
 		 
@@ -123,7 +130,14 @@ class MonthController extends DefaultController
 		/******************************************************************************************************************************/
 	
 		//Appointments in the current month
-		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter 
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
 		foreach ($appointmentList as $appointment) {
@@ -139,15 +153,23 @@ class MonthController extends DefaultController
 		$nextMonth = $nextDate->format('m');
 		$nextYear = $nextDate->format('Y');
 		 
-		//Appointments in the next month
-		$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $nextMonth, $nextYear, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
 		foreach ($appointmentNextList as $appointment) {
-			$auxList[(int)$appointment["day"]] = $appointment["numapp"];
+			$auxList[$appointment["day"]] = $appointment["numapp"];
 		}
 		$appointmentNextList = $auxList;
-		 
+
+		
 		/******************************************************************************************************************************/
 		/************************************************** Get Appointments for the mini calendar ************************************/
 		/******************************************************************************************************************************/

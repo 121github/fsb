@@ -19,7 +19,7 @@
 		{{ form_widget(edit_form.recruiter) }}
        </div>
        {{ form_rest(edit_form) }}	
-       <a href="{{ path('calendar_day', {'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter_id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
+       <a href="{{ app.request.headers.get('referer') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
     </form>
     
     <a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>

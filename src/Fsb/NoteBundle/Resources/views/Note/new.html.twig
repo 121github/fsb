@@ -38,7 +38,7 @@
 			{{ form_widget(form.text) }}
 		</div>
 		
-		<a href="{{ "#" }}" data-rel="back" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
+		<a href="{{ app.request.headers.get('referer') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>
 		
 		{{ form_rest(form) }}
 

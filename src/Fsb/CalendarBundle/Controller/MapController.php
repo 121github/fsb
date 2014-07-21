@@ -38,13 +38,30 @@ class MapController extends DefaultController
 		$postcode_lon = $postcode_coord['lng'];
 		$distance = $range_filter*1.1515;
 		 
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get the recruiter *********************************************************/
+		/******************************************************************************************************************************/
+		//Recruiter
+		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+			
+		if (!$recruiter) {
+			throw $this->createNotFoundException('Unable to find this recruiter.');
+		}
 		 
 		/******************************************************************************************************************************/
 		/************************************************** Get The Current (month) Appointments ***************************************************************/
 		/******************************************************************************************************************************/
 		 
 		//Appointments in the current month
-		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter_id, $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 		 
 		$auxList = array();
 		$i = 0;
@@ -115,6 +132,17 @@ class MapController extends DefaultController
 		$postcode_lat = $postcode_coord['lat'];
 		$postcode_lon = $postcode_coord['lng'];
 		$distance = $range_filter*1.1515;
+		
+		
+		/******************************************************************************************************************************/
+		/************************************************** Get the recruiter *********************************************************/
+		/******************************************************************************************************************************/
+		//Recruiter
+		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+			
+		if (!$recruiter) {
+			throw $this->createNotFoundException('Unable to find this recruiter.');
+		}
 	
 	
 		/******************************************************************************************************************************/
@@ -122,7 +150,14 @@ class MapController extends DefaultController
 		/******************************************************************************************************************************/
 	
 		//Appointments in the current month
-		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByMonth($recruiter_id, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 	
 		$auxList = array();
 		$i = 0;
@@ -196,11 +231,28 @@ class MapController extends DefaultController
 	
 	
 		/******************************************************************************************************************************/
+		/************************************************** Get the recruiter *********************************************************/
+		/******************************************************************************************************************************/
+		//Recruiter
+		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+			
+		if (!$recruiter) {
+			throw $this->createNotFoundException('Unable to find this recruiter.');
+		}
+		
+		/******************************************************************************************************************************/
 		/************************************************** Get The Current (month) Appointments ***************************************************************/
 		/******************************************************************************************************************************/
 	
 		//Appointments in the current month
-		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterFromDay($recruiter_id, $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
 	
 		$auxList = array();
 		$i = 0;

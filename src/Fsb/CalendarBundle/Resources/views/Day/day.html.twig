@@ -165,10 +165,10 @@
 										{% if appointment_list[i][0] is defined %}
 											{% for appointment in appointment_list[i][0] %}
 												<h2>
-													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style="background-color: {{ appointment["color"] }}; ">
-									                <p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>
-													{{ appointment["title"] }}
-								                	<p>{{ appointment["comment"]| truncate(30,true) }}</p>
+													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
+									                {{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}
+													<p style="color: white; font-weight: bold;">{{ appointment["outcome"] }}</p>
+													<p style="color: white; font-weight: bold;">{{ appointment["recruiter"] }}</p>
 								                	{% if appointment["distance"] is defined %}
 														<p>{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}</p>
 													{% endif %}
@@ -212,10 +212,10 @@
 								       {% if appointment_list[i][30] is defined %}
 								       		{% for appointment in appointment_list[i][30] %}
 												<h2>
-													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style="background-color: {{ appointment["color"] }}; ">
-									        		<p>{{ appointment["hour"] ~ ":" ~ appointment["minute"] }}</p>        
-								       				{{ appointment["title"] }}
-								                	<p>{{ appointment["comment"] }}</p>
+													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
+									                {{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}
+													<p style="color: white; font-weight: bold;">{{ appointment["outcome"] }}</p>
+													<p style="color: white; font-weight: bold;">{{ appointment["recruiter"] }}</p>
 								                	{% if appointment["distance"] is defined %}
 														<p>{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}</p>
 													{% endif %}
@@ -307,7 +307,7 @@
 				                <p class="ui-li-aside">
 				                	{{ pref ~ i ~ ":00" }}
 				                	<br /><br />
-									{# Has a Note #}
+									{# NOTES #}
 									{% set hour = pref ~ i %}
 									{% if noteList[hour] is defined %}
 				                		<a href="#popupNotes{{ hour }}" data-rel="popup" data-position-to="window" data-role="button" data-icon="tag" data-iconpos="notext" data-mini="true" data-inline="true" style="margin-left: 8px; background-color: transparent;"></a>
@@ -323,6 +323,7 @@
 												<ul data-role="listview">
 													{% for note in noteList[hour]  %} 
 													  	<li><a href="{{ path('note_edit', {'id': note.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+													  		<p>{{ "[" ~ note.recruiter ~ "]" }}</p>
 													  		<h3>{{ note.title }}</h3>
 													  		<p>{{ note.text }}</p>
 													  	</a></li>

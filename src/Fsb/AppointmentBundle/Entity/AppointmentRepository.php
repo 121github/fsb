@@ -22,7 +22,7 @@ class AppointmentRepository extends EntityRepository
 	 * 
 	 * @return array Appointments
 	 */
-	public function findNumAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	public function findNumAppointmentsByMonth($month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 		
@@ -31,16 +31,20 @@ class AppointmentRepository extends EntityRepository
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.address', 'adr')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->where('SUBSTRING(a.startDate, 6, 2) = :month')
 		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
 		->groupBy('day')
 		->orderBy('a.startDate', 'ASC')
 		
-		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('month', (int)$month)
 		->setParameter('year', (int)$year)
 		;
+		
+		if ($recruiter_id) {
+			$query
+			->andWhere('a.recruiter = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id);
+		}
 		
 		if (count($projects) > 0) {
 			$query
@@ -87,7 +91,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterAndByMonth($recruiter_id,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	public function findAppointmentsByMonth($month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -96,16 +100,20 @@ class AppointmentRepository extends EntityRepository
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
 		->innerJoin('ad.address', 'adr')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
+		->where('SUBSTRING(a.startDate, 6, 2) = :month')
 		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
 		->orderBy('a.startDate', 'ASC')
 	
-		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('month', (int)$month)
 		->setParameter('year', (int)$year)
 		;
 	
+		if ($recruiter_id) {
+			$query
+			->andWhere('a.recruiter = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id);
+		}
+		
 		if (count($projects) > 0) {
 			$query
 			->andWhere('ad.project IN (:projects)')
@@ -152,7 +160,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterAndByDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	public function findAppointmentsByDay($day,$month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -179,18 +187,22 @@ class AppointmentRepository extends EntityRepository
 		->innerJoin('ad.address', 'adr')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('SUBSTRING(a.startDate, 9, 2) = :day')
+		->where('SUBSTRING(a.startDate, 9, 2) = :day')
 		->andWhere('SUBSTRING(a.startDate, 6, 2) = :month')
 		->andWhere('SUBSTRING(a.startDate, 1, 4) = :year')
 		->orderBy('a.startDate', 'ASC')
 		
-		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('day', (int)$day)
 		->setParameter('month', (int)$month)
 		->setParameter('year', (int)$year)
 		->setParameter('space', " ")
 		;
+		
+		if ($recruiter_id) {
+			$query
+			->andWhere('a.recruiter = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id);
+		}
 		
 		if (count($projects) > 0) {
 			$query
@@ -238,7 +250,7 @@ class AppointmentRepository extends EntityRepository
 	 *
 	 * @return array Appointments
 	 */
-	public function findAppointmentsByRecruiterFromDay($recruiter_id,$day,$month,$year, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
+	public function findAppointmentsFromDay($day,$month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -246,7 +258,7 @@ class AppointmentRepository extends EntityRepository
 		$query = $em->createQueryBuilder()
 		->select(array(
 				'a.startDate as date, a.id, ad.title, ad.comment',
-				'ud.firstname as recruiter',
+				'CONCAT(ud.firstname, :space, ud.lastname) as recruiter',
 				'p.name as project',
 				'o.name as outcome',
 				'o.id as outcome_id',
@@ -263,14 +275,18 @@ class AppointmentRepository extends EntityRepository
 		->innerJoin('ad.address', 'adr')
 		->innerJoin('a.recruiter', 'u')
 		->innerJoin('u.userDetail', 'ud')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('a.recruiter = :recruiter_id')
-		->andWhere('a.startDate > :date')
+		->where('a.startDate > :date')
 		->orderBy('a.startDate', 'ASC')
 		
-		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('date', new \DateTime($year.'-'.$month.'-'.$day.' 00:00:00'))
+		->setParameter('space', " ")
 		;
+		
+		if ($recruiter_id) {
+			$query
+			->andWhere('a.recruiter = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id);
+		}
 		
 		if (count($projects) > 0) {
 			$query

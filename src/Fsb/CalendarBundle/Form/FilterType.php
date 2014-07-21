@@ -30,6 +30,7 @@ class FilterType extends AbstractType
             ))
             ->add('recruiter', 'entity', array(
             		'class'         => 'Fsb\\UserBundle\\Entity\\User',
+            		'required'    => false,
             		'query_builder' => function(EntityRepository $repository) {
             			return $repository->findUsersByRoleQuery('ROLE_RECRUITER');
             		},

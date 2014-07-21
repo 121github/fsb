@@ -4,6 +4,7 @@ namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Appointment
@@ -26,6 +27,8 @@ class Appointment
     /**
      *
      * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
+     * @Assert\NotBlank()
+     * 
      */
     private $recruiter;
     
@@ -39,6 +42,7 @@ class Appointment
      * @var \DateTime
      *
      * @ORM\Column(name="start_date", type="datetime")
+     * @Assert\NotBlank()
      */
     private $startDate;
 
@@ -46,11 +50,14 @@ class Appointment
      * @var \DateTime
      *
      * @ORM\Column(name="end_date", type="datetime")
+     * @Assert\NotBlank()
+     * 
      */
     private $endDate;
     
     /**
      * @ORM\OneToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentDetail", mappedBy="appointment")
+     * 
      */
     private $appointmentDetail;
     

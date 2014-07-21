@@ -116,9 +116,11 @@
 								{% for appointment in appointmentDay %}
 										<h2 style="text-align: left; display: inline; text-shadow: none;">
 											<a href="#popup{{ appointment["id"] ~ day }}" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="background-color: {{ appointment["color"] }}; ">
-				                				{{ appointment["title"] }}
+				                				{{ appointment["date"]|date("H:i") ~ " - " ~ appointment["title"] }}
 				                				<br /><br />
-				                					{{ appointment["date"]|date("H:i") }}
+				                				{{ appointment["outcome"] }}
+				                				<br /><br />
+				                				{{ appointment["recruiter"] }}
 				                			</a>
 										</h2>
 										<p>

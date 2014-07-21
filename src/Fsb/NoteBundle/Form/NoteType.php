@@ -26,7 +26,7 @@ class NoteType extends AbstractType
             ->add('title')
             ->add('startDate', 'datetime', array('date_widget' => "single_text", 'time_widget' => "single_text"))
             ->add('endDate', 'datetime', array('date_widget' => "single_text", 'time_widget' => "single_text"))
-            ->add('text')
+            ->add('text', 'textarea')
         ;
     }
     

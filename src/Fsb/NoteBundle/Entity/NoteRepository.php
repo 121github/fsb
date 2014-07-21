@@ -20,20 +20,24 @@ class NoteRepository extends EntityRepository
 	 * @return boolean
 	 *
 	 */
-	public function findNotesByRecruiter($recruiter_id, \DateTime $day){
+	public function findNotesByDay(\DateTime $day, $recruiter_id = null){
 	
 		$em = $this->getEntityManager();
 	
 		$query = $em->createQueryBuilder()
 		->select(array('n.startDate', 'n.endDate', 'n as note'))
 		->from('NoteBundle:Note', 'n')
-		->where('n.recruiter = :recruiter_id')
-		->andWhere('SUBSTRING(n.startDate,1,10) = :day')
+		->where('SUBSTRING(n.startDate,1,10) = :day')
 		->orderBy('n.startDate', 'ASC')
 	
-		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('day', $day->format('Y-m-d'))
 		;
+		
+		if ($recruiter_id) {
+			$query
+			->andWhere('n.recruiter = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id);
+		}
 	
 		$NoteList = $query->getQuery()->getResult();
 	

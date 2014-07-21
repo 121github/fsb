@@ -17,6 +17,7 @@ use Fsb\AppointmentBundle\Entity\AppointmentProject;
 use Fsb\RuleBundle\Entity\UnavailableDateReason;
 use Fsb\RuleBundle\Entity\UnavailableDate;
 use Fsb\AppointmentBundle\Entity\Address;
+use Fsb\NoteBundle\Entity\Note;
 
 
 /**
@@ -126,6 +127,35 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         }
         
         $manager->flush();
+        
+        /********************************************************************/
+        /******************* NOTES ******************************************/
+        /********************************************************************/
+        
+        // Notes
+        $recruiters = $manager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+        foreach ($recruiters as $recruiter) {
+        
+        	for ($i=1; $i<=3; $i++) {
+        		 
+        		$note = new Note();
+        
+        		$days = rand(1, 30);
+        		$hour = rand(8,19);
+        		$symbol = array("+","-");
+        		$symbol = $symbol[rand(0, 1)];
+        		$note->setStartDate(new \DateTime('now '.$hour.':00:00 '.$symbol.' '.$days.' days'));
+        		$note->setEndDate(new \DateTime('now '.$hour.':00:00 '.$symbol.' '.$days.' days + 1 hours'));
+        		$note->setTitle("Note Test");
+        		$note->setText("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        		$note->setRecruiter($recruiter);
+        
+        		Util::setCreateAuditFields($note, 1);
+        		 
+        		$manager->persist($note);
+        	}
+        	
+        }
         
         /*********************************************************************/
         /******************* UNAVAILABLE DATES  ************************************/
@@ -251,7 +281,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $numAppointment = 0;
         foreach ($recruiters as $recruiter) {
         	 
-        	for ($i=1; $i<=10; $i++) {
+        	for ($i=1; $i<=80; $i++) {
         
         		$numAppointment++;
         		 
@@ -259,7 +289,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		
         		$appointment->setRecruiter($recruiter);
         		$appointment->setAppointmentSetter($appointmentSetters[rand(0,count($appointmentSetters)-1)]);
-        		$days = rand(1, 365);
+        		$days = rand(1, 60);
         		$hour = rand(8,19);
         		$minute = array(0,30);
         		$minute = $minute[rand(0, 1)];

@@ -143,7 +143,16 @@ class DayController extends DefaultController
 		/************************************************** Get The Current (day) Appointments ***************************************************************/
 		/******************************************************************************************************************************/
 	
-		$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByRecruiterAndByDay($recruiter->getId(), $day, $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+
 		 
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
@@ -180,7 +189,14 @@ class DayController extends DefaultController
 		/******************************************************************************************************************************/
 		/************************************************** Get the Notes *************************************************************/
 		/******************************************************************************************************************************/
-		$noteList = $em->getRepository('NoteBundle:Note')->findNotesByRecruiter($recruiter->getId(), new \DateTime($day.'-'.$month.'-'.$year));
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$noteList = $em->getRepository('NoteBundle:Note')->findNotesByDay(new \DateTime($day.'-'.$month.'-'.$year), $recruiter->getId());
+		}
+		//In any other case, we search all the appointments
+		else {
+			$noteList = $em->getRepository('NoteBundle:Note')->findNotesByDay(new \DateTime($day.'-'.$month.'-'.$year));
+		}
 		
 		$auxList = array();
 		foreach ($noteList as $note) {
@@ -196,7 +212,7 @@ class DayController extends DefaultController
 		/******************************************************************************************************************************/
 		 
 		//Appointments in the current month
-		$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByRecruiterAndByMonth($recruiter->getId(), $month, $year, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
 		foreach ($appointmentMiniCalendarList as $appointment) {

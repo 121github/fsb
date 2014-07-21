@@ -3,6 +3,7 @@
 namespace Fsb\AppointmentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * AppointmentDetail
@@ -31,19 +32,23 @@ class AppointmentDetail
     /**
      *
      * @ORM\ManyToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentProject")
+     * @Assert\NotBlank()
+     * 
      */
     private $project;
 
     /**
      *
      * @ORM\ManyToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentOutcome")
+     * @Assert\NotBlank()
+     * 
      */
     private $outcome;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="outcome_reason", type="text")
+     * @ORM\Column(name="outcome_reason", type="text", nullable=true)
      */
     private $outcomeReason;
     
@@ -72,13 +77,17 @@ class AppointmentDetail
      * @var string
      *
      * @ORM\Column(name="title", type="text")
+     * @Assert\NotBlank()
+     * 
      */
     private $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="comment", type="text")
+     * @ORM\Column(name="comment", type="text", nullable=true)
+     * 
+     * 
      */
     private $comment;
     

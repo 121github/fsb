@@ -52,7 +52,7 @@
 }
 
 .month-page .ui-listview .ui-li-has-thumb .ui-li-aside {
-   	background: red;
+   	/* background: red; */
 }
 
 
@@ -356,7 +356,7 @@
 }
 
 .day-page .ui-listview .ui-li-has-thumb .ui-li-aside {
-   	background: red;
+   	/* background: red; */
 }
 
 
@@ -437,6 +437,7 @@
 
 .day-page .ui-listview .ui-li-has-thumb h2>:first-child{
 	max-width: 200px;
+	min-height: 90px;
 	padding-bottom: 15px;
 	filter:alpha(opacity=80);
 	-moz-opacity: 0.8;
