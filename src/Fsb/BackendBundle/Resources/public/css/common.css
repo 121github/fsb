@@ -10,7 +10,7 @@
 */
 
 .ui-content {
-	margin-top: 60px;
+	margin-top: 30px;
 }
 
 /* ===========================================================================
@@ -227,4 +227,15 @@ a{
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	background:#ddd;
+}
+
+section#login {
+	width: 40%;
+	margin: auto;
+}
+
+.form-error {
+	font-weight: bold;
+	text-decoration: underline;
+	margin-bottom: 20px;
 }

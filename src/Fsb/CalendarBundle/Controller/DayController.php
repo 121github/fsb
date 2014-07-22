@@ -59,9 +59,16 @@ class DayController extends DefaultController
 		/************************************************** Get the Rules ***********************************************************/
 		/******************************************************************************************************************************/
 		
-		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
-			'recruiter' => $recruiter->getId()
-		));
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+				'recruiter' => $recruiter->getId()
+			));
+		}
+		//In any other case, we search all the appointments
+		else {
+			$ruleList = $em->getRepository('RuleBundle:Rule')->findAll();
+		}
 		
 		/******************************************************************************************************************************/
 		/************************************************** Postcode Filter ***********************************************************/
@@ -212,7 +219,15 @@ class DayController extends DefaultController
 		/******************************************************************************************************************************/
 		 
 		//Appointments in the current month
-		$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+			$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		//In any other case, we search all the appointments
+		else {
+			$appointmentMiniCalendarList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+		}
+		
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
 		foreach ($appointmentMiniCalendarList as $appointment) {
@@ -239,6 +254,7 @@ class DayController extends DefaultController
 		/************************************************** Get appointmentsByWeek chart *************************************************/
 		/******************************************************************************************************************************/
 		$appointmentsByWeekChart = $this->getAppointmentsByWeekChart($recruiter);
+		
 		
 		/******************************************************************************************************************************/
 		/************************************************** Render ********************************************************************/

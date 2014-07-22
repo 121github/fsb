@@ -17,7 +17,7 @@
     
     <div id="map-canvas"></div>
     
-    <a href="docs-dialogs.html" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-a" data-ajax="false">Close</a>
+    <a href="{{ app.request.headers.get('referer') }}" class="ui-btn ui-shadow ui-corner-all ui-btn-a" data-ajax="false">Close</a>
 
   <script type="text/javascript">
   function initialize() {

@@ -109,12 +109,6 @@ class UnavailableDateController extends Controller
         $month = $currentDate->format('m');
         $year = $currentDate->format('Y');
         
-        $recruiter_id = $unavailableDate->getRecruiter()->getId();
-        if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-        	$recruiter_id = null;
-        }
-        
-
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             
@@ -142,13 +136,12 @@ class UnavailableDateController extends Controller
             		)
             );
             
-            return $this->redirect($this->generateUrl('calendar_day', array('day' => $day, 'month' => $month, 'year' => $year, 'recruiter_id' => $recruiter_id)));
+            return $this->redirect($this->generateUrl('calendar_day', array('day' => $day, 'month' => $month, 'year' => $year)));
         }
 
         return $this->render('RuleBundle:UnavailableDate:new.html.twig', array(
             'entity' => $unavailableDate,
             'form'   => $form->createView(),
-        	'recruiter_id' => $recruiter_id,
         	'day' => $day,
         	'month' => $month,
         	'year' => $year,

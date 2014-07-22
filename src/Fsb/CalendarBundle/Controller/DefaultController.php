@@ -54,7 +54,7 @@ class DefaultController extends Controller
     	
     	//If the user logged is a recruiter we get the upcoming appointments for this recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointmentsByRecruiter($recruiter->getId(), new \DateTime('now'));
+    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointment(new \DateTime('now'), $recruiter->getId());
     	}
     	//If the user logged is not a recruiter, we get the upcoming appoinments for all the recruiters
     	else {

@@ -64,7 +64,7 @@
     {% else %}
     	<a href="{{ path('appointment_edit', {'id': appointment.appointmentDetail.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
     {% endif %}
-        <a href="{{ app.request.headers.get('referer') }}" data-role="button" data-inline="true" data-icon="delete">Close</a>
+        <a href="{{ app.request.headers.get('referer') }}" data-role="button" data-inline="true" data-icon="delete" data-ajax="false">Close</a>
     </p>
     
 {% endblock %}

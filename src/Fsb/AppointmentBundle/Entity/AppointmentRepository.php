@@ -573,7 +573,7 @@ class AppointmentRepository extends EntityRepository
 		->innerJoin('a.recruiter', 'r')
 		->where('a.startDate >= :firstWeekDay')
 		->andWhere('a.startDate <= :lastWeekDay')
-		->groupBy('a.startDate')
+		->groupBy('day')
 		
 		->setParameter('firstWeekDay', $firstWeekDay)
 		->setParameter('lastWeekDay', $lastWeekDay)
@@ -633,44 +633,14 @@ class AppointmentRepository extends EntityRepository
 	
 	
 	/**
-	 * Get The upcoming appointments of a recruiter
+	 * Get The upcoming appointments
 	 *
 	 * @param int $recruiter_id
 	 * @param $currentDate
 	 *
 	 * @return array Appointments
 	 */
-	public function findUpcomingAppointmentsByRecruiter($recruiter_id,$currentDate) {
-	
-		$em = $this->getEntityManager();
-	
-		$query = $em->createQueryBuilder()
-		->select(array(
-				'a'
-		))
-		->from('AppointmentBundle:Appointment', 'a')
-		->where('a.recruiter = :recruiter_id')
-		->andWhere('a.startDate >= :currentDate')
-		->orderBy('a.startDate', 'ASC')
-	
-		->setParameter('recruiter_id', $recruiter_id)
-		->setParameter('currentDate', $currentDate)
-		->setMaxResults(3)
-		;
-	
-		$appointment_ar = $query->getQuery()->getResult();
-	
-		return $appointment_ar;
-	}
-	
-	/**
-	 * Get The upcoming appointments
-	 *
-	 * @param $currentDate
-	 *
-	 * @return array Appointments
-	 */
-	public function findUpcomingAppointments($currentDate) {
+	public function findUpcomingAppointments($currentDate, $recruiter_id = null) {
 	
 		$em = $this->getEntityManager();
 	
@@ -686,6 +656,13 @@ class AppointmentRepository extends EntityRepository
 		->setMaxResults(3)
 		;
 	
+		if ($recruiter_id) {
+			$query
+			->andWhere('r.id = :recruiter_id')
+			->setParameter('recruiter_id', $recruiter_id)
+			;
+		}
+		
 		$appointment_ar = $query->getQuery()->getResult();
 	
 		return $appointment_ar;

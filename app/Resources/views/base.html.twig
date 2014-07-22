@@ -54,9 +54,9 @@
 				 	 
 				{% endif %}
 				{# Logo #}
-				<h1><a href="{{ path('index') }}"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
+				<h1><a href="{{ path('index') }}" data-ajax="false"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
 				{% if (is_granted('IS_AUTHENTICATED_FULLY')) %}
-					<div data-role="header">
+					<div data-role="header" style="border: 0px solid black; padding-bottom: 5px;">
 						<h1>{% block name %}{% endblock %}</h1>
 						{# Back #}
 					    <a href="{{ app.request.headers.get('referer') }}" data-shadow="false" data-iconshadow="false" data-icon="carat-l" data-iconpos="notext" data-ajax="false">Back</a>
@@ -72,6 +72,7 @@
 					 	{% else %}
 					 		<a href="#filter-panel" data-role="button" data-icon="search" data-iconpos="notext"></a>
 					 	{%  endif %}
+						{% block menu %}{% endblock %}
 					</div>
 				{% endif %}
 			</header><!-- /header -->

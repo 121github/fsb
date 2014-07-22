@@ -3,37 +3,130 @@
 
 {% block title %}Calendar{% endblock %}
 
-{% block article -%}
-
-
-	{% set now = "now"|date("U") %}
-    {% set nowDay = now|date("d") %}
-    {% set nowMonth = now|date("m") %}
-    {% set nowYear = now|date("Y") %}
-    {% set nowHour = now|date("H") %}
-    {% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
+{% set now = "now"|date("U") %}
+{% set nowDay = now|date("d") %}
+{% set nowMonth = now|date("m") %}
+{% set nowYear = now|date("Y") %}
+{% set nowHour = now|date("H") %}
+{% set nowDate = nowMonth ~ "/" ~ nowDay ~ "/" ~ nowYear|date('U') %}
     
-    {% set currentDay = day %}
-    {% set currentMonth = month %}
-    {% set currentYear = year %}
-    {% set currentDate = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
+{% set currentDay = day %}
+{% set currentMonth = month %}
+{% set currentYear = year %}
+{% set currentDate = currentMonth ~ "/" ~ currentDay ~ "/" ~ currentYear|date("U") %}
     
-    {% set prevDate = currentDate|date_modify("-1 day") %}
-    {% set prevDay = prevDate|date("d") %}
-    {% set prevMonth = prevDate|date("m") %}
-    {% set prevYear = prevDate|date("Y") %}
+{% set prevDate = currentDate|date_modify("-1 day") %}
+{% set prevDay = prevDate|date("d") %}
+{% set prevMonth = prevDate|date("m") %}
+{% set prevYear = prevDate|date("Y") %}
     
-    {% set nextDate = currentDate|date_modify("+1 day") %}
-    {% set nextDay = nextDate|date("d") %}
-    {% set nextMonth = nextDate|date("m") %}
-    {% set nextYear = nextDate|date("Y") %}
+{% set nextDate = currentDate|date_modify("+1 day") %}
+{% set nextDay = nextDate|date("d") %}
+{% set nextMonth = nextDate|date("m") %}
+{% set nextYear = nextDate|date("Y") %}
     
     
-    {% set daysInMonth = currentDate|date('t') %}
-	{% set startDow = currentDate|date('F 7\\s\\t Y')|date('w') %}
+{% set daysInMonth = currentDate|date('t') %}
+{% set startDow = currentDate|date('F 7\\s\\t Y')|date('w') %}
 	
-    {% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
-    {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+{% set firstMonthDay = currentMonth ~ "/01/" ~ currentYear %}
+{% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
+
+{% block menu %}
+	{# CHANGE MONTH AND VIEW OPTIONS #}
+	<div class="change_day">
+    	
+    	<div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: left;">
+				{##########################}
+				{# Today Button #}
+				{##########################}
+	    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
+	    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
+	    		{% else %}
+	    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
+	    		{% endif %}
+	    		
+	    		{##########################}
+				{# Rule Button #}
+				{##########################}
+		    	<a href="#popupRules" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-theme="a">Rules</a>
+	    		<div data-role="popup" id="popupRules" data-overlay-theme="a" data-theme="a" style="max-width:600px;" class="ui-corner-all">
+			    	<div data-role="header" data-theme="a" class="ui-corner-top">
+					       <h1>Rules</h1>
+					</div>
+					<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+						<div style="text-align: right;">
+							<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
+						</div>
+						<h2 class="ui-title">{{ recruiter }}</h2>
+						<br />
+						<ul data-role="listview">
+							{% if ruleList|length > 0 %}
+								{% for rule in ruleList %} 
+								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+								  		<h3>{{ rule.rule }}</h3>
+								  		<p><strong>{{ "[" ~ rule.recruiter ~ "]" }}</strong></p>
+								  		<p>{{ rule.description }}</p>
+								  	</a></li>
+								{% endfor %}
+							{% else %}
+								<div class="no-data-message_dialog">{{ "There are no rules for this user" }}</div>
+							{% endif %}
+						</ul>
+					</div>
+			    </div>
+			    
+			    {############################}
+	    		{# Map #}
+	    		{############################}
+	    		<a href="{{ path('calendar_map_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
+			    
+	    		{##########################}
+	    		{# Set Unavailable Button #}
+	    		{##########################}
+	    		{% if (currentDate|date("D") != "Sun") %}
+		    		{% if (unavailableDateList[currentDate] is defined) %}
+			    		
+					 	<a href="#popupSetAvailable" class="unavailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Unavailable</a>
+			    		<div data-role="popup" id="popupSetAvailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
+					    	<div data-role="header" data-theme="a" class="ui-corner-top">
+							       <h1>Set Unavailable?</h1>
+							</div>
+							<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+								<h3 class="ui-title">Are you sure you want to set Available this day?</h3>
+							    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+							    {% set submit_id = setAvailableForm.vars.id ~ "_submit" %}
+							    <form action="{{ path('unavailableDate_delete', { 'id': unavailableDateId }) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
+							    	<input type="hidden" name="_method" value="DELETE">
+							   		{{ form_rest(setAvailableForm) }}
+							   	</form>
+							</div>
+					    </div>
+					 {% endif %}
+				{% endif %}	
+			</div>
+			<div class="ui-block-b" style="text-align: center;">
+				{############################}
+	    		{# Prev and Next Day Button #}
+	    		{############################}
+	    		<a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+			    <span>{{ currentDate|date("D d F Y") }}</span>
+			    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
+			</div>
+			<div class="ui-block-c" style="text-align: right;">
+				{#############################}
+	    		{# Set Views Options Buttons #}
+	    		{#############################}
+	    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
+	    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
+	    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
+			</div>
+		</div><!-- /grid-b -->
+	</div>
+{% endblock %}
+
+{% block article -%}
     
     
     <div data-role="panel" id="filter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
@@ -42,95 +135,6 @@
     
     <div  data-theme="a" id="calendar-page" class="day-page" >
     
-    	
-	    <div class="change_day">
-	    
-	    	<h1>{{ recruiter }}</h1>
-	    	
-	    	<div class="ui-grid-b">
-				<div class="ui-block-a" style="text-align: left;">
-					{##########################}
-					{# Today Button #}
-					{##########################}
-		    		{% if (currentDay == nowDay and currentMonth == nowMonth and currentYear == nowYear) %}
-		    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Today" }}</a>
-		    		{% else %}
-		    			<a href="{{ path('calendar_day', {'day': nowDay, 'month': nowMonth, 'year': nowYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Today" }}</a>
-		    		{% endif %}
-		    		
-		    		{##########################}
-					{# Rule Button #}
-					{##########################}
-			    	<a href="#popupRules" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-theme="a">Rules</a>
-		    		<div data-role="popup" id="popupRules" data-overlay-theme="a" data-theme="a" style="max-width:600px;" class="ui-corner-all">
-				    	<div data-role="header" data-theme="a" class="ui-corner-top">
-						       <h1>Rules</h1>
-						</div>
-						<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-							<div style="text-align: right;">
-								<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
-							</div>
-							<h2 class="ui-title">{{ recruiter }}</h2>
-							<br />
-							<ul data-role="listview">
-								{% if ruleList|length > 0 %}
-									{% for rule in ruleList %} 
-									  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
-									  		<h3>{{ rule.rule }}</h3>
-									  		<p>{{ rule.description }}</p>
-									  	</a></li>
-									{% endfor %}
-								{% else %}
-									<div class="no-data-message_dialog">{{ "There are no rules for this user" }}</div>
-								{% endif %}
-							</ul>
-						</div>
-				    </div>
-				    
-		    		{##########################}
-		    		{# Set Unavailable Button #}
-		    		{##########################}
-		    		{% if (currentDate|date("D") != "Sun") %}
-			    		{% if (unavailableDateList[currentDate] is defined) %}
-				    		
-						 	<a href="#popupSetAvailable" class="unavailable" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-icon="clock" data-theme="a">Unavailable</a>
-				    		<div data-role="popup" id="popupSetAvailable" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-						    	<div data-role="header" data-theme="a" class="ui-corner-top">
-								       <h1>Set Unavailable?</h1>
-								</div>
-								<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-									<h3 class="ui-title">Are you sure you want to set Available this day?</h3>
-								    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
-								    {% set submit_id = setAvailableForm.vars.id ~ "_submit" %}
-								    <form action="{{ path('unavailableDate_delete', { 'id': unavailableDateId }) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
-								    	<input type="hidden" name="_method" value="DELETE">
-								   		{{ form_rest(setAvailableForm) }}
-								   	</form>
-								</div>
-						    </div>
-						 {% endif %}
-					{% endif %}	
-				</div>
-				<div class="ui-block-b" style="text-align: center;">
-					{############################}
-		    		{# Prev and Next Day Button #}
-		    		{############################}
-		    		<a href="{{ path('calendar_day', {'day': prevDay, 'month': prevMonth, 'year': prevYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-				    <span>{{ currentDate|date("D d F Y") }}</span>
-				    <a href="{{ path('calendar_day', {'day': nextDay, 'month': nextMonth, 'year': nextYear, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-mini="true" data-inline="true"></a>
-				</div>
-				<div class="ui-block-c" style="text-align: right;">
-					{#############################}
-		    		{# Set Views Options Buttons #}
-		    		{#############################}
-		    		<a href="{{ path('calendar_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn-active ui-state-persist">{{ "Day" }}</a>
-		    		<a href="{{ path('calendar_month', {'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Month" }}</a>
-		    		<a href="{{ path('calendar_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter_url}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Diary" }}</a>
-		    		<a href="{{ path('calendar_map_day', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
-				</div>
-			</div><!-- /grid-b -->
-		</div>
-        
 	    <div role="main" class="ui-content" style="margin: 0 auto; max-width: 92.5em;">
 	    	
 			{% if ((currentDate|date("D") == "Sun") or (unavailableDateList[currentDate] is defined)) %}

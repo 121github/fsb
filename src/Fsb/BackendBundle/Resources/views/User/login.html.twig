@@ -7,7 +7,7 @@
 {% block article %}
 	<section id="login">
 		{% if error %}
-			<div>{{ error.message }}</div>
+			<div class="form-error">{{ error.message }}</div>
 		{% endif %}
 		<form action="{{ path('login_check') }}" method="post" data-ajax="false">
 			<label for="username">Login:</label>
@@ -20,7 +20,9 @@
 			<input type="checkbox" id="not_close" name="_remember_me" checked />
 			<label for="not_close">Remember me</label>
 			
-			<input type="submit" name="login" value="Sign In" />
+			<div style="width: 130px; float: right;">
+				<input type="submit" name="login" value="Sign In" data-theme="b" data-icon="check" data-iconpos="right" />
+			</div>
 		</form>
 	</section>
 
