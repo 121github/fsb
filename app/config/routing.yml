@@ -1,6 +1,6 @@
 backend:
     resource: "@BackendBundle/Resources/config/routing.yml"
-    prefix:   /backend
+    prefix:   /admin
 
 reporting:
     resource: "@ReportingBundle/Resources/config/routing.yml"

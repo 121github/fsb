@@ -27,6 +27,14 @@ class AppointmentType extends AbstractType
             			return $repository->findUsersByRoleQuery('ROLE_RECRUITER');
             		},
             ))
+            ->add('appointmentSetter', 'entity', array(
+            		'class'         => 'Fsb\\UserBundle\\Entity\\User',
+            		'empty_value'   => 'Select an appointment Setter',
+            		'required' => false,
+            		'query_builder' => function(EntityRepository $repository) {
+            			return $repository->findUsersByRoleQuery('ROLE_APPOINTMENT_SETTER');
+            		},
+            ))
             ->add('appointmentDetail', new AppointmentDetailType())
         ;
     }

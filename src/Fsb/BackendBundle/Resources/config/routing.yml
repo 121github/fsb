@@ -1,7 +1,12 @@
+backend_homepage:
+    path: /
+    defaults: { _controller: "BackendBundle:Default:index" }
+
 BackendBundle_user:
      resource: "@BackendBundle/Resources/config/routing/user.yml"
      prefix:   /user
+
      
-backend_homepage:
-    path: /
-    defaults: { _controller: "BackendBundle:User:index" }
+backend_automated_control:
+    path: /automated
+    defaults: { _controller: "BackendBundle:Default:automatedControl" }

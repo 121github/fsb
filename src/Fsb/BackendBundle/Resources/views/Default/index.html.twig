@@ -1,1 +1,30 @@
-Hello {{ name }}!
+{% extends '::backend.html.twig' %}
+   
+{% block title %} Backend {% endblock %}
+   
+{% block article -%}
+  
+  	<div class="admin-page">
+	  	<div class="ui-grid-b">
+			<div class="ui-block-a">
+				<a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user" data-ajax="false">{{ "Users" }}</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Rules" }}</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="{{ path('backend_automated_control') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Automated Control" }}</a>
+			</div>
+			<div class="ui-block-a">
+				<a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "-" }}</a>
+			</div>
+			<div class="ui-block-b">
+				<a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "-" }}</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "-" }}</a>
+			</div>
+		</div>
+	</div>
+	    
+{% endblock %}

@@ -23,6 +23,7 @@ class AppointmentDetailType extends AbstractType{
 			->add('outcome', 'entity', array(
 					'class'         => 'Fsb\\AppointmentBundle\\Entity\\AppointmentOutcome',
 					'empty_value'   => 'Select an outcome',
+					'required' => false,
 					'query_builder' => function(EntityRepository $repository) {
 						return $repository->createQueryBuilder('ap')
 						->orderBy('ap.name', 'ASC');

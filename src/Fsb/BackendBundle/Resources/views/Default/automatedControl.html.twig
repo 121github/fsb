@@ -1,0 +1,81 @@
+{% extends '::backend.html.twig' %}
+   
+{% block title %} Automated Control {% endblock %}
+   
+{% block article -%}
+  
+  	<div class="admin-page">
+	  	<div class="ui-grid-b">
+			<div class="ui-block-a" id="get_url">
+				<a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Get the URI" }}</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="#popup" data-rel="popup" data-position-to="window" data-role="button" data-icon="cloud" data-iconpos="right">{{ "Data Example" }}</a>
+			</div>
+			<div class="ui-block-c">
+				<a href="#" class="hreflink ui-btn ui-btn-icon-right ui-icon-lock" data-ajax="false">{{ "Change the company code" }}</a>
+			</div>
+		</div>
+		
+		{# URI INFO #}
+		<div id="appointment_info" style="display: none">
+			<p>
+				<div><strong>{{ "URI: " }}</strong>{{ appointment['uri'] | truncate(150) }}</div>
+				<a href="#" data-role="button" data-icon="gear" data-theme="b" data-iconpos="right" data-mini="true" data-inline="true" data-ajax="false">{{ "Copy to Clipboard " }}</a>
+				<a href="#" id="viewUri" data-role="button" data-icon="eye" data-iconpos="right" data-mini="true" data-inline="true" data-ajax="false">{{ "View Data" }}</a>
+			</p>
+			
+			{# Appointment INFO #}
+			<div id="uriInfo" style="display: none">
+				<p style="float: right; font-size: 11px;">
+					<strong>{{ "All the fields with * are required " }}</strong>
+					{% if isSubmitted %}
+						<a href="{{ path('backend_automated_control') }}" id="viewUri" data-role="button" data-icon="delete" data-iconpos="right" data-mini="true" data-ajax="false" style="background-color: red; color: white; text-shadow: none;">{{ "Clean Data" }}</a>
+					{% endif %}
+				</p>
+				
+				<p><strong>{{ "Company Name (coname): * " }}</strong>{{ companyProfile.coname }}</p>
+				<p><strong>{{ "Code: * " }}</strong>{{ companyProfile.code }}</p>
+				<p><strong>{{ "Recruiter: * " }}</strong>{{ appointment['recruiter'] }}</p>
+				<p><strong>{{ "Appointment Setter: " }}</strong>{{ appointment['appointmentSetter'] }}</p>
+				<p><strong>{{ "Title: * " }}</strong>{{ appointment['title'] }}</p>
+				<p><strong>{{ "StartDate: * " }}</strong>{{ appointment['startDate'] }}</p>
+				<p><strong>{{ "EndDate: * " }}</strong>{{ appointment['endDate'] }}</p>
+				<p><strong>{{ "Project: * " }}</strong>{{ appointment['project'] }}</p>
+				<p><strong>{{ "Record Reference: " }}</strong>{{ appointment['recordRef'] }}</p>
+				<p><strong>{{ "Add1: * " }}</strong>{{ appointment['add1'] }}</p>
+				<p><strong>{{ "Add2: " }}</strong>{{ appointment['add2'] }}</p>
+				<p><strong>{{ "Add3: " }}</strong>{{ appointment['add3'] }}</p>
+				<p><strong>{{ "Postcode: * " }}</strong>{{ appointment['postcode'] }}</p>
+				<p><strong>{{ "Town: * " }}</strong>{{ appointment['town'] }}</p>
+				<p><strong>{{ "Country: * " }}</strong>{{ appointment['country'] }}</p>
+				<p><strong>{{ "Comment: " }}</strong>{{ appointment['comment'] }}</p>
+			</div>
+		</div>
+		
+		
+		{# POPUP DATA #}
+		<div data-role="popup" id="popup" data-overlay-theme="a" data-theme="a" style="max-width:600px;" class="ui-corner-all">
+    		<div data-role="header" data-theme="a" class="ui-corner-top">
+		        <h1>{{ "Appointment Data" }}</h1>
+		    </div>
+		    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+				{% include 'BackendBundle:Default:includes/appointmentData.html.twig' %}
+		    </div>
+  		</div>
+		
+		
+		
+	</div>
+	    
+	<script>
+	    $("#get_url").click(function () {
+	    	$("#appointment_info").toggle( "slow");
+	    });
+
+	    $("#viewUri").click(function () {
+	    	$("#uriInfo").toggle( "slow");
+	    });
+    </script>    
+	
+{% endblock %}

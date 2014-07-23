@@ -35,4 +35,5 @@ security:
     
     encoders:
         Fsb\UserBundle\Entity\User: { algorithm: sha512, iterations: 10 }
+        Fsb\BackendBundle\Entity\CompanyProfile: { algorithm: sha512, iterations: 10 }
     

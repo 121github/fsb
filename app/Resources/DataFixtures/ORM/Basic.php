@@ -18,6 +18,7 @@ use Fsb\RuleBundle\Entity\UnavailableDateReason;
 use Fsb\RuleBundle\Entity\UnavailableDate;
 use Fsb\AppointmentBundle\Entity\Address;
 use Fsb\NoteBundle\Entity\Note;
+use Fsb\BackendBundle\Entity\CompanyProfile;
 
 
 /**
@@ -40,8 +41,30 @@ class Basico implements FixtureInterface, ContainerAwareInterface
     
     public function load(ObjectManager $manager)
     {
+    	
     	/*********************************************************************/
-    	/******************* USERS ************************************/
+    	/******************* COMPANY PROFILE *********************************/
+    	/*********************************************************************/
+    	
+    	$companyProfile = new CompanyProfile();
+    	 
+    	$companyProfile->setConame('Fsb');
+    	$companyProfile->setSalt(base_convert(sha1(uniqid(mt_rand(), true)), 16, 36));
+    	 
+    	$codeDecoded = 'Fsb123';
+    	$encoder = $this->container->get('security.encoder_factory')->getEncoder($companyProfile);
+    	$codeCoded = $encoder->encodePassword($codeDecoded, $companyProfile->getSalt());
+    	$companyProfile->setCode($codeCoded);
+    	 
+    	Util::setCreateAuditFields($companyProfile, 1);
+    	 
+    	$manager->persist($companyProfile);
+    	
+    	$manager->flush();
+    	
+    	
+    	/*********************************************************************/
+    	/******************* USERS *******************************************/
     	/*********************************************************************/
     	
         // Roles

@@ -29,3 +29,54 @@
 #sortedList{
     padding-right: 35px;
 }
+
+.admin-page {
+	margin-top: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+.admin-page .ui-grid-c {
+	text-align: center;
+}
+
+.admin-page .ui-grid-b .ui-btn {
+	padding: 50px; 
+	-webkit-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 0px 0px 9px #111;
+    -webkit-box-shadow: 0px 0px 9px #111;
+    box-shadow: 0px 0px 9px #111;
+}
+
+.admin-page .ui-grid-b .ui-btn:hover {
+	background: #38c;
+	color: white;
+	text-shadow: none;
+}
+
+.admin-page .ui-block-a {
+	padding: 30px;
+}
+
+.admin-page .ui-block-b {
+	padding: 30px;
+}
+
+.admin-page .ui-block-c {
+	padding: 30px;
+}
+
+.admin-page .ui-block-d {
+	padding: 30px;
+}
+.admin-page .ui-block-e {
+	padding: 30px;
+}
+
+.admin-page #uriInfo {
+	border: 1px solid black;
+	-webkit-border-radius: 15px;
+    border-radius: 15px;
+    padding: 15px;
+}

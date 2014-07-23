@@ -1,0 +1,106 @@
+{% set submit_id = form.vars.id ~ "_submit" %}
+<form action="{{ path('backend_automated_control') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(form) }}>
+	{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>
+					{% if (is_granted('ROLE_RECRUITER')) %}
+						<h2> {{ appointment.recruiter }} </h2>
+			       		<div style="display: none;">
+			       	{% else %}
+			       		<div>
+			       	{% endif %}
+			       		{{ form_label(form.recruiter) }}
+						{{ form_errors(form.recruiter) }}
+						{{ form_widget(form.recruiter) }}
+			  		</div>
+				</td>
+			</tr><tr>
+				<td colspan="3">
+					{{ form_label(form.appointmentSetter) }}
+					{{ form_errors(form.appointmentSetter) }}
+					{{ form_widget(form.appointmentSetter) }}
+				</td>
+			</tr><tr>
+				<td colspan="3">
+					{{ form_label(form.appointmentDetail.title) }}
+					{{ form_errors(form.appointmentDetail.title) }}
+					{{ form_widget(form.appointmentDetail.title) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.startDate) }}
+					{{ form_errors(form.startDate) }}
+					{{ form_widget(form.startDate) }}
+					
+				</td><td>
+					{{ form_label(form.endDate) }}
+					{{ form_errors(form.endDate) }}
+					{{ form_widget(form.endDate) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.appointmentDetail.project) }}
+					{{ form_errors(form.appointmentDetail.project) }}
+					{{ form_widget(form.appointmentDetail.project) }}
+				</td>
+				<td>
+					{{ form_label(form.appointmentDetail.recordRef) }}
+					{{ form_errors(form.appointmentDetail.recordRef) }}
+					{{ form_widget(form.appointmentDetail.recordRef) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.appointmentDetail.outcome) }}
+					{{ form_errors(form.appointmentDetail.outcome) }}
+					{{ form_widget(form.appointmentDetail.outcome) }}
+				</td><td colspan="2">
+					{{ form_label(form.appointmentDetail.outcomeReason) }}
+					{{ form_errors(form.appointmentDetail.outcomeReason) }}
+					{{ form_widget(form.appointmentDetail.outcomeReason) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.appointmentDetail.address.add1) }}
+					{{ form_errors(form.appointmentDetail.address.add1) }}
+					{{ form_widget(form.appointmentDetail.address.add1) }}
+				</td><td colspan="2">
+					{{ form_label(form.appointmentDetail.address.postcode) }}
+					{{ form_errors(form.appointmentDetail.address.postcode) }}
+					{{ form_widget(form.appointmentDetail.address.postcode) }}
+					{{ form_widget(form.appointmentDetail.address.lat) }}
+					{{ form_widget(form.appointmentDetail.address.lon) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.appointmentDetail.address.add2) }}
+					{{ form_errors(form.appointmentDetail.address.add2) }}
+					{{ form_widget(form.appointmentDetail.address.add2) }}
+				</td><td colspan="2">
+					{{ form_label(form.appointmentDetail.address.town) }}
+					{{ form_errors(form.appointmentDetail.address.town) }}
+					{{ form_widget(form.appointmentDetail.address.town) }}
+				</td>
+			</tr><tr>
+				<td>
+					{{ form_label(form.appointmentDetail.address.add3) }}
+					{{ form_errors(form.appointmentDetail.address.add3) }}
+					{{ form_widget(form.appointmentDetail.address.add3) }}
+				</td><td colspan="2">
+					{{ form_label(form.appointmentDetail.address.country) }}
+					{{ form_errors(form.appointmentDetail.address.country) }}
+					{{ form_widget(form.appointmentDetail.address.country) }}
+				</td>
+			</tr><tr>
+				<td colspan="3">
+					{{ form_label(form.appointmentDetail.comment) }}
+					{{ form_errors(form.appointmentDetail.comment) }}
+					{{ form_widget(form.appointmentDetail.comment) }}
+				</td>
+			</tr><tr>
+				<td colspan="2">
+					{{ form_rest(form) }}	
+				</td>
+			</tr>
+		</table>
+</form>
