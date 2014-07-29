@@ -39,3 +39,16 @@ login_check:
     
 logout:
     path: /logout
+    
+#########
+#REST API    
+#########
+
+NelmioApiDocBundle:
+  resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+  prefix:   /api/doc
+  
+AppointmentBundle_api:
+    resource: "@AppointmentBundle/Controller/AppointmentRestController.php"
+    type:     rest
+    prefix:   /api

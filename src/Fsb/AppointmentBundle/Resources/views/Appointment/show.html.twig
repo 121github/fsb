@@ -60,9 +60,9 @@
     
     <p style="padding-top: 10px; text-align: right;">
     {% if (is_granted('ROLE_RECRUITER')) %}
-        <a href="{{ path('appointment_outcome_edit', {'id': appointment.appointmentDetail.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+        <a href="{{ path('appointment_outcome_edit', {'id': appointment.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
     {% else %}
-    	<a href="{{ path('appointment_edit', {'id': appointment.appointmentDetail.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+    	<a href="{{ path('appointment_edit', {'id': appointment.id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
     {% endif %}
         <a href="{{ app.request.headers.get('referer') }}" data-role="button" data-inline="true" data-icon="delete" data-ajax="false">Close</a>
     </p>

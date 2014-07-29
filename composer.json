@@ -21,8 +21,10 @@
 		"sensio/framework-extra-bundle" : "~3.0",
 		"sensio/generator-bundle" : "~2.3",
 		"incenteev/composer-parameter-handler" : "~2.0",
-		"doctrine/doctrine-fixtures-bundle": "dev-master",
-		"doctrine/data-fixtures": "dev-master"
+		"doctrine/doctrine-fixtures-bundle" : "dev-master",
+		"jms/serializer-bundle" : "dev-master",
+		"friendsofsymfony/rest-bundle" : "1.2.*@dev",
+		"nelmio/api-doc-bundle" : "~2.4"
 	},
 	"scripts" : {
 		"post-install-cmd" : [

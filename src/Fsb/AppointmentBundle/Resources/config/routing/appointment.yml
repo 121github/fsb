@@ -15,15 +15,11 @@ appointment_show:
     defaults: { _controller: "AppointmentBundle:Appointment:show" }
 
 appointment_new:
-    pattern:  /new/title/{title}/
+    pattern:  /new
     defaults: { _controller: "AppointmentBundle:Appointment:new" }
 
 appointment_new_date:
     pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{recruiter_id}
-    defaults: { _controller: "AppointmentBundle:Appointment:newDate", recruiter_id: null }
-
-appointment_new_automated:
-    pattern:  /new/
     defaults: { _controller: "AppointmentBundle:Appointment:newDate", recruiter_id: null }
 
 appointment_create:

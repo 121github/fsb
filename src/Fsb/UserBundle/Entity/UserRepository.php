@@ -51,6 +51,7 @@ class UserRepository extends EntityRepository
 		return $query;
 	}
 	
+	
 	/**
 	 * Get All Users ordered by firstname
 	 *
@@ -78,5 +79,36 @@ class UserRepository extends EntityRepository
 		$user_ar = $query->getQuery()->getResult();
 	
 		return $user_ar;
+	}
+	
+	
+	/**
+	 * Get an user by name and role
+	 * 
+	 * @param $name
+	 * @param $role
+	 *
+	 * @return User
+	 */
+	public function findUserByNameAndRole($name, $role){
+	
+		$em = $this->getEntityManager();
+	
+		
+		$query = $em->createQueryBuilder()
+		->select('u')
+		->from('UserBundle:User', 'u')
+		->innerJoin('u.userDetail', 'ud')
+		->innerJoin('u.role', 'r')
+		->where('CONCAT(ud.firstname,\' \',ud.lastname) = :name')
+		->andWhere('r.name = :role')
+		
+		->setParameter('name', $name)
+		->setParameter('role', $role)
+		;
+	
+		$user = $query->getQuery()->getResult();
+	
+		return $user;
 	}
 }

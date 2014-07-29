@@ -42,7 +42,7 @@ class DefaultController extends Controller
     	$appointment = array();
     	$appointment['title'] = "Appointment Title";
     	$appointment['recruiter'] = "Recruiter User Name";
-    	$appointment['appointmentSetter'] = "Appointment Setter User Name";
+    	$appointment['appointmentSetter'] = "[Appointment Setter User Name]";
     	$appointment['startDate'] = "Appointment StartDate";
     	$appointment['endDate'] = "Appointment EndDate";
     	$appointment['project'] = "Appointment Project";
@@ -62,22 +62,22 @@ class DefaultController extends Controller
     	$form->handleRequest($request);
     	if ($form->isValid()) {
     		
-    		$appointment['title'] = ($appointmentData->getAppointmentDetail()->getTitle())?$appointmentData->getAppointmentDetail()->getTitle() : null;
-    		$appointment['recruiter'] = ($appointmentData->getRecruiter())?$appointmentData->getRecruiter()->getLogin() : null;
-    		$appointment['appointmentSetter'] = ($appointmentData->getAppointmentSetter())?$appointmentData->getAppointmentSetter()->getLogin() : null;
-    		$appointment['startDate'] = ($appointmentData->getStartDate())?$appointmentData->getStartDate()->format("Y-m-d H:i") : null;
-    		$appointment['endDate'] = ($appointmentData->getEndDate())?$appointmentData->getEndDate()->format("Y-m-d H:i") : null;
-    		$appointment['project'] = ($appointmentData->getAppointmentDetail()->getProject())?$appointmentData->getAppointmentDetail()->getProject() : null;
-    		$appointment['recordRef'] = ($appointmentData->getAppointmentDetail()->getRecordRef())?$appointmentData->getAppointmentDetail()->getRecordRef() : null;
-    		$appointment['outcome'] = ($appointmentData->getAppointmentDetail()->getOutcome())?$appointmentData->getAppointmentDetail()->getOutcome() : null;
-    		$appointment['outcomeReason'] = ($appointmentData->getAppointmentDetail()->getOutcomeReason())?$appointmentData->getAppointmentDetail()->getOutcomeReason() : null;
-    		$appointment['add1'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd1())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd1() : null;
-    		$appointment['add2'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd2())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd2() : null;
-    		$appointment['add3'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd3())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd3() : null;
-    		$appointment['postcode'] = ($appointmentData->getAppointmentDetail()->getAddress()->getPostcode())?$appointmentData->getAppointmentDetail()->getAddress()->getPostcode() : null;
-    		$appointment['town'] = ($appointmentData->getAppointmentDetail()->getAddress()->getTown())?$appointmentData->getAppointmentDetail()->getAddress()->getTown() : null;
-    		$appointment['country'] = ($appointmentData->getAppointmentDetail()->getAddress()->getCountry())?$appointmentData->getAppointmentDetail()->getAddress()->getCountry() : null;
-    		$appointment['comment'] = ($appointmentData->getAppointmentDetail()->getComment())?$appointmentData->getAppointmentDetail()->getComment() : null;
+    		$appointment['title'] = ($appointmentData->getAppointmentDetail()->getTitle())?$appointmentData->getAppointmentDetail()->getTitle() : "none";
+    		$appointment['recruiter'] = ($appointmentData->getRecruiter())?$appointmentData->getRecruiter()->getLogin() : "none";
+    		$appointment['appointmentSetter'] = ($appointmentData->getAppointmentSetter())?$appointmentData->getAppointmentSetter()->getLogin() : "none";
+    		$appointment['startDate'] = ($appointmentData->getStartDate())?$appointmentData->getStartDate()->format("Y-m-d H:i") : "none";
+    		$appointment['endDate'] = ($appointmentData->getEndDate())?$appointmentData->getEndDate()->format("Y-m-d H:i") : "none";
+    		$appointment['project'] = ($appointmentData->getAppointmentDetail()->getProject())?$appointmentData->getAppointmentDetail()->getProject() : "none";
+    		$appointment['recordRef'] = ($appointmentData->getAppointmentDetail()->getRecordRef())?$appointmentData->getAppointmentDetail()->getRecordRef() : "none";
+    		$appointment['outcome'] = ($appointmentData->getAppointmentDetail()->getOutcome())?$appointmentData->getAppointmentDetail()->getOutcome() : "none";
+    		$appointment['outcomeReason'] = ($appointmentData->getAppointmentDetail()->getOutcomeReason())?$appointmentData->getAppointmentDetail()->getOutcomeReason() : "none";
+    		$appointment['add1'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd1())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd1() : "none";
+    		$appointment['add2'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd2())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd2() : "none";
+    		$appointment['add3'] = ($appointmentData->getAppointmentDetail()->getAddress()->getAdd3())?$appointmentData->getAppointmentDetail()->getAddress()->getAdd3() : "none";
+    		$appointment['postcode'] = ($appointmentData->getAppointmentDetail()->getAddress()->getPostcode())?$appointmentData->getAppointmentDetail()->getAddress()->getPostcode() : "none";
+    		$appointment['town'] = ($appointmentData->getAppointmentDetail()->getAddress()->getTown())?$appointmentData->getAppointmentDetail()->getAddress()->getTown() : "none";
+    		$appointment['country'] = ($appointmentData->getAppointmentDetail()->getAddress()->getCountry())?$appointmentData->getAppointmentDetail()->getAddress()->getCountry() : "none";
+    		$appointment['comment'] = ($appointmentData->getAppointmentDetail()->getComment())?$appointmentData->getAppointmentDetail()->getComment() : "none";
     		
     		$isSubmitted = true;
     		
@@ -106,10 +106,13 @@ class DefaultController extends Controller
     			'code' => $companyProfile->getCode(),
     	));
     	
+    	$uri = str_replace('?', '', $uri);
+    	$uri = str_replace('&', '/', $uri);
+    	$uri = str_replace('=', '/', $uri);
+    	
     	$appointment["uri"] = $uri;
     	
     	var_dump($uri);
-    	
     	
     	return $this->render('BackendBundle:Default:automatedControl.html.twig', array(
     		'companyProfile' => $companyProfile,

@@ -11,13 +11,16 @@ use Fsb\UserBundle\Util\Util;
 use Fsb\AppointmentBundle\Form\AppointmentEditType;
 use Fsb\AppointmentBundle\Form\AppointmentOutcomeEditType;
 use Fsb\AppointmentBundle\Entity\AppointmentDetail;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Fsb\AppointmentBundle\Entity\AppointmentFilter;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Fsb\AppointmentBundle\Form\AppointmentFilterType;
 use Fsb\AppointmentBundle\Entity\Address;
+
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Appointment controller.
@@ -900,4 +903,7 @@ class AppointmentController extends Controller
     	));
     
     }
+    
+    
+   
 }
