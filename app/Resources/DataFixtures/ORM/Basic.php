@@ -310,6 +310,8 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		 
         		$appointment = new Appointment();
         		
+        		$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.system'));
+        		
         		$appointment->setRecruiter($recruiter);
         		$appointment->setAppointmentSetter($appointmentSetters[rand(0,count($appointmentSetters)-1)]);
         		$days = rand(1, 60);

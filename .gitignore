@@ -12,6 +12,7 @@
 /web/bundles/*
 /web/css/*
 /web/js/*
+/web/uploads/importFiles/*
 /docs/*
 
 # Files created by IDEs like Eclipse, Zend Studio, Netbeans, PHPStorm and TextMate2

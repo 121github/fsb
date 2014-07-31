@@ -1,0 +1,18 @@
+{{ "Appointment List Information" }}
+
+{% for appointment in appointmentList %}
+	{{ appointment.appointmentDetail }}
+	{{ "Date: " }}{{ appointment.startDate|date("Y-m-d H:i") ~ " - " ~ appointment.endDate|date("Y-m-d H:i") }}
+	{{ "Appointment Setter: " }}{{ appointment.appointmentSetter }}
+	{{ "Recruiter: " }}{{ appointment.recruiter }}
+	{{ "Record Reference: " }}{{ appointment.appointmentDetail.recordRef }}
+	{{ "Project: " }}{{ appointment.appointmentDetail.project }}
+	{{ "Outcome: " }}{{ appointment.appointmentDetail.outcome }}
+	{{ "Outcome Reason: " }}{{ appointment.appointmentDetail.outcomeReason }}
+	
+	{{ "Postcode: " }}{{ appointment.appointmentDetail.address.postcode }}
+	
+	{{ "Comment: " }}{{ appointment.appointmentDetail.comment }}
+{% endfor %}
+	
+&copy; {{ 'now' | date('Y') }} - Fsb

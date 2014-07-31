@@ -78,6 +78,29 @@
 	    		{# Map #}
 	    		{############################}
 			    <a href="{{ path('calendar_map_diary', {'day': day , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true">{{ "Map" }}</a>
+			    {############################}
+	    		{# Import/Export #}
+	    		{############################}
+	    		<a href="#popupImportExport" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" data-theme="a">ImportExport</a>
+	    		<div data-role="popup" id="popupImportExport" data-overlay-theme="a" data-theme="a" style="max-width:600px; min-width: 300px;" class="ui-corner-all">
+			    	<div data-role="header" data-theme="a" class="ui-corner-top">
+					       <h1>Import/Export</h1>
+					</div>
+					<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+						<h2 class="ui-title">{{ recruiter }}</h2>
+						<br />
+						<ul data-role="listview">
+							<li><a href="{{ path('calendar_import', {'recruiter_id': recruiter.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+									<h3>{{ "Import" }}</h3>
+									<p><strong>{{ "Import appointments" }}</strong></p>
+							</a></li>
+							<li><a href="{{ "#" }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+									<h3>{{ "Export" }}</h3>
+									<p><strong>{{ "Export appointments" }}</strong></p>
+							</a></li>
+						</ul>
+					</div>
+			    </div>
 			</div>
 			<div class="ui-block-b" style="text-align: center;">
 				{############################}

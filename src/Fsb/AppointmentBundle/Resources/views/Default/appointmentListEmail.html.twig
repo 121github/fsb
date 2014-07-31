@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Fsb Appointment</title>
+
+</head>
+<body>
+	<div style="border-bottom: 1px solid black; padding: 20px; ">
+		<h1>{{ "Appointment List Information" }}</h1>
+	</div>
+	{% for appointment in appointmentList %}
+		<div style="">
+			<div style="width:60%; float:left; margin-right: 20px; padding: 20px;">
+				<h2>{{ appointment.appointmentDetail }}</h2>
+				<p><strong>{{ "Date: " }}</strong>{{ appointment.startDate|date("Y-m-d H:i") ~ " - " ~ appointment.endDate|date("Y-m-d H:i") }}</p>
+				<p><strong>{{ "Appointment Setter: " }}</strong>{{ appointment.appointmentSetter }}</p>
+				<p><strong>{{ "Recruiter: " }}</strong>{{ appointment.recruiter }}</p>
+				<p><strong>{{ "Record Reference: " }}</strong>{{ appointment.appointmentDetail.recordRef }}</p>
+			    <p><strong>{{ "Project: " }}</strong>{{ appointment.appointmentDetail.project }}</p>
+			    <p><strong>{{ "Outcome: " }}</strong>{{ appointment.appointmentDetail.outcome }}</p>
+			    <p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment.appointmentDetail.outcomeReason }}</p>
+				<p>
+			        <strong>{{ "Postcode: " }}</strong>{{ appointment.appointmentDetail.address.postcode }}
+			    </p>
+			    <p style="padding-top: 10px;"><strong>{{ "Comment: " }}</strong>{{ appointment.appointmentDetail.comment }}</p>
+			</div>
+			<div style="padding: 20px;">
+				
+			</div>
+		</div>
+	{% endfor %}
+	
+	<div style="border-top: 1px solid black; padding: 20px; clear: both;">
+		&copy; {{ 'now' | date('Y') }} - Fsb
+	</div>
+</body>
+</html>

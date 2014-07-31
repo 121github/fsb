@@ -1,0 +1,34 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Import Appointments{% endblock %}
+
+
+{% block article -%}
+
+	{% set submit_id = importForm.vars.id ~ "_submit" %}
+	<form action="{{ path('calendar_import') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(importForm) }}>
+		{{ form_errors(importForm) }}
+		
+		<div>
+			{{ form_label(importForm.recruiter) }}
+			{{ form_errors(importForm.recruiter) }}
+			{{ form_widget(importForm.recruiter) }}
+		</div>
+		<div>
+			{{ form_label(importForm.project) }}
+			{{ form_errors(importForm.project) }}
+			{{ form_widget(importForm.project) }}
+		</div>
+		<div>
+			{{ form_label(importForm.file, 'Import File') }}
+			{{ form_errors(importForm.file) }}
+			{{ form_widget(importForm.file) }}
+			<p style="text-align: right;">Maximum size: 500 KB.</p>
+			<p style="text-align: right;">Extensions accepted: *.ics, *.csv</p>
+		</div>
+			
+		<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>				
+		{{ form_rest(importForm) }}	
+		
+	</form>
+{% endblock %}

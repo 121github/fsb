@@ -1,0 +1,76 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Export Appointments{% endblock %}
+
+
+{% block article -%}
+
+	{% set submit_id = exportForm.vars.id ~ "_submit" %}
+	<form action="{{ path('calendar_export') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(exportForm) }}>
+		{{ form_errors(exportForm) }}
+		
+		<div class="ui-grid-a" style="margin-bottom: 30px; border: 2px solid #ddd; padding: 15px; -webkit-border-radius: 10px; border-radius: 10px;">
+				{{ form_label(exportForm.exportType) }}
+				{{ form_errors(exportForm.exportType) }}
+				{{ form_widget(exportForm.exportType) }}
+			<div class="ui-block-a" style="padding-right: 80px;">
+				{{ form_label(exportForm.dateRangeType) }}
+				{{ form_errors(exportForm.dateRangeType) }}
+				{{ form_widget(exportForm.dateRangeType) }}
+			</div>
+			<div class="ui-block-b" style="padding-left: 0px;">
+				<br /><br />
+				<div id="startDateLabel">{{ form_label(exportForm.startDate) }}</div>
+				{{ form_errors(exportForm.startDate) }}
+				{{ form_widget(exportForm.startDate) }}
+				<br /><br />
+				<div id="endDateLabel">{{ form_label(exportForm.endDate) }}</div>
+				{{ form_errors(exportForm.endDate) }}
+				{{ form_widget(exportForm.endDate) }}
+			</div>
+		</div><!-- /grid-a -->
+			
+		<div class="ui-grid-b" style="margin-bottom: 30px; border: 2px solid #ddd; padding: 15px; -webkit-border-radius: 10px; border-radius: 10px;">
+			<div class="ui-block-a" style="padding-right: 10px;">
+				{{ form_label(exportForm.filter.projects) }}
+				{{ form_errors(exportForm.filter.projects) }}
+				{{ form_widget(exportForm.filter.projects) }}
+			</div>
+			<div class="ui-block-b" style="padding-left: 10px; padding-right: 10px;">
+				{{ form_label(exportForm.filter.recruiters) }}
+				{{ form_errors(exportForm.filter.recruiters) }}
+				{{ form_widget(exportForm.filter.recruiters) }}
+			</div>
+			<div class="ui-block-c" style="padding-left: 10px;">
+				{{ form_label(exportForm.filter.outcomes) }}
+				{{ form_errors(exportForm.filter.outcomes) }}
+				{{ form_widget(exportForm.filter.outcomes) }}
+			</div>
+		</div><!-- /grid-b -->
+		
+		<div class="ui-grid-a" style="margin-bottom: 30px; border: 2px solid #ddd; padding: 15px; -webkit-border-radius: 10px; border-radius: 10px;">
+			<div class="ui-block-a" style="padding-right: 15px;">
+				{{ form_label(exportForm.filter.postcode) }}
+				{{ form_errors(exportForm.filter.postcode) }}
+				{{ form_widget(exportForm.filter.postcode) }}
+			</div>
+			<div class="ui-block-b" style="padding-left: 15px;">
+				{{ form_label(exportForm.filter.range) }}
+				{{ form_errors(exportForm.filter.range) }}
+				{{ form_widget(exportForm.filter.range) }}
+				<input id="fsb_appointmentbundle_filter_range" name="fsb_appointmentbundle_filter[range]" data-highlight="true" min="0" max="500" value="0" type="range">
+				<script>
+					$(document).ready(function(){
+						$('.ui-slider-handle').on('mouseup',function(e){
+							$('input[name="fsb_appointmentbundle_filter[range]"]').val(Number($(this).attr('aria-valuetext')));
+						});	
+					})
+				</script>
+			</div>
+		</div><!-- /grid-a -->
+		
+		<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>				
+		{{ form_rest(exportForm) }}	
+		
+	</form>
+{% endblock %}

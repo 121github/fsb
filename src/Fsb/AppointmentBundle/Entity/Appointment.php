@@ -56,6 +56,23 @@ class Appointment
     private $endDate;
     
     /**
+     * 
+     * @var String
+     * 
+     * @ORM\Column(name="origin", type="string", length=100)
+     * 
+     */
+    private $origin;
+    
+    /**
+    * @var String
+    *
+    * @ORM\Column(name="fileName", type="string", length=100, nullable=true)
+    *
+    */
+    private $fileName;
+    
+    /**
      * @ORM\OneToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentDetail", mappedBy="appointment")
      * 
      */
@@ -227,6 +244,42 @@ class Appointment
     }
 
     /**
+     * 
+     * @return string
+     */
+    public function getOrigin() {
+    	return $this->origin;
+    }
+    
+    /**
+     * 
+     * @param String $origin
+     * @return \Fsb\AppointmentBundle\Entity\Appointment
+     */
+    public function setOrigin($origin) {
+    	$this->origin = $origin;
+    	return $this;
+    }
+    
+    /**
+     * 
+     */
+    public function getFileName() {
+    	return $this->fileName;
+    }
+    
+    /**
+     * 
+     * @param String $fileName
+     * @return \Fsb\AppointmentBundle\Entity\Appointment
+     */
+    public function setFileName($fileName) {
+    	$this->fileName = $fileName;
+    	return $this;
+    }
+    
+    
+    /**
      * Set createdBy
      *
      * @param integer $createdBy
@@ -317,6 +370,4 @@ class Appointment
     {
         return $this->modifiedDate;
     }
-    
-
 }

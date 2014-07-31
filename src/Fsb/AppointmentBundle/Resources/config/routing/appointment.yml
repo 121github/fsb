@@ -48,3 +48,10 @@ appointment_outcome_edit:
 appointment_map_month:
     pattern:  /map/month/{month}/year/{year}
     defaults: { _controller: "AppointmentBundle:Appointment:map" }
+    
+appointment_import:
+    pattern:  /import/filePath/{filePath}/mimeType/{mimeType}/recruiter_id/{recruiter_id}/project_id/{project_id}
+    defaults: { _controller: "AppointmentBundle:AppointmentImport:appointmentImport", project_id: null }
+    requirements:
+        filePath: .+
+        mimeType: .+

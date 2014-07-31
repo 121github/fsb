@@ -159,7 +159,6 @@ class DayController extends DefaultController
 		else {
 			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
-
 		 
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();

@@ -32,7 +32,6 @@ class AppointmentDetail
     /**
      *
      * @ORM\ManyToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentProject")
-     * @Assert\NotBlank()
      * 
      */
     private $project;
@@ -40,7 +39,6 @@ class AppointmentDetail
     /**
      *
      * @ORM\ManyToOne(targetEntity="Fsb\AppointmentBundle\Entity\AppointmentOutcome")
-     * @Assert\NotBlank()
      * 
      */
     private $outcome;

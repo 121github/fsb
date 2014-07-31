@@ -2,8 +2,6 @@
 
 namespace Fsb\AppointmentBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -12,8 +10,10 @@ use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\View\View;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
+
 use Fsb\AppointmentBundle\Form\AppointmentType;
 use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\AppointmentBundle\Entity\AppointmentRest;
@@ -95,6 +95,7 @@ class AppointmentRestController extends FOSRestController
 			
 			if ($form->isValid()) {
 				$newAppointment = new Appointment();
+				$newAppointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.rest'));
 				$newAppointment->setAppointmentDetail(new AppointmentDetail());
 				$newAppointment->getAppointmentDetail()->setAddress(new Address());
 				
@@ -141,7 +142,6 @@ class AppointmentRestController extends FOSRestController
 				Util::setCreateAuditFields($address, 1);
 				
 				
-				
 				$em->persist($newAppointment);
 				$em->persist($appointmentDetail);
 				$em->persist($address);
@@ -151,6 +151,14 @@ class AppointmentRestController extends FOSRestController
 						'id' => $newAppointment->getId(),
 						'_format' => $request->get('_format')
 				);
+				
+				//Send the email
+				$subject = 'Fsb - New Appointment Setted';
+				$from = ($newAppointment->getAppointmentSetter())?$newAppointment->getAppointmentSetter()->getUserDetail()->getEmail() : 'admin@fsb.co.uk';
+				$to = $newAppointment->getRecruiter()->getUserDetail()->getEmail();
+				$textBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.txt.twig', array('appointment' => $newAppointment));
+				$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.html.twig', array('appointment' => $newAppointment));
+				$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
 	
 				return $this->routeRedirectView('get_appointment', $routeOptions, Codes::HTTP_CREATED);
 			}
@@ -159,5 +167,26 @@ class AppointmentRestController extends FOSRestController
 	
 			return $exception->getForm();
 		}
+	}
+	
+	/**
+	 * Send appointment email
+	 *
+	 * @param unknown $subject
+	 * @param unknown $from
+	 * @param unknown $to
+	 * @param unknown $textBody
+	 * @param unknown $htmlBody
+	 */
+	private function sendAppointmentEmail ($subject, $from, $to, $textBody, $htmlBody) {
+	
+		$email = \Swift_Message::newInstance()
+		->setSubject($subject)
+		->setFrom($from)
+		->setTo($to)
+		->setBody($textBody)
+		->addPart($htmlBody, 'text/html')
+		;
+		$this->get('mailer')->send($email);
 	}
 }

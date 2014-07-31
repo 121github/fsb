@@ -338,3 +338,95 @@ $(function(){
         maxTime:'21:00',
     });
 });
+
+/********************************************************************************************************/
+/******************** Datetime picker for export appointment ***********************************************/
+/********************************************************************************************************/
+$(function(){
+	//StartDate
+    $("#fsb_calendarbundle_export_startDate input").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_calendarbundle_export_startDate_date').datetimepicker({
+        format: "Y-m-d",
+        timepicker: false,
+        datepicker: true,
+        closeOnDateSelect:true,
+        dayOfWeekStart: 1,
+        onGenerate:function( ct ){
+            jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+            .addClass('xdsoft_disabled');
+        },
+        
+    });
+    $('#fsb_calendarbundle_export_startDate_time').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
+    
+  //EndDate
+    $("#fsb_calendarbundle_export_endDate input").each(function(){
+        $(this).attr("readonly","readonly");
+    });
+    $('#fsb_calendarbundle_export_endDate_date').datetimepicker({
+    	format: "Y-m-d",
+        timepicker: false,
+        datepicker: true,
+        closeOnDateSelect:true,
+        dayOfWeekStart: 1,
+        onGenerate:function( ct ){
+            jQuery(this).find('.xdsoft_date.xdsoft_weekend')
+            .addClass('xdsoft_disabled');
+        },
+    });
+    $('#fsb_calendarbundle_export_endDate_time').datetimepicker({
+        format: "H:i",
+        timepicker: true,
+        datepicker: false,
+        step:30,
+        minTime:'08:00',
+        maxTime:'21:00',
+    });
+});
+
+/********************************************************************************************************/
+/******************** Checkbox export type to show or hidden the date of the export form ************/
+/********************************************************************************************************/
+$(function(){
+	$('#fsb_calendarbundle_export_dateRangeType_0').change(function(){
+		  if($(this).val() == "today") {
+			$('#startDateLabel').hide();
+			$('#endDateLabel').hide();
+			$('#fsb_calendarbundle_export_startDate').hide();
+		    $('#fsb_calendarbundle_export_endDate').hide();
+		  } 
+		});
+	$('#fsb_calendarbundle_export_dateRangeType_1').change(function(){
+		  if($(this).val() == "this_week") {
+			$('#startDateLabel').hide();
+			$('#endDateLabel').hide();
+			$('#fsb_calendarbundle_export_startDate').hide();
+		    $('#fsb_calendarbundle_export_endDate').hide();
+		  } 
+		});
+	$('#fsb_calendarbundle_export_dateRangeType_2').change(function(){
+		  if($(this).val() == "this_month") {
+			$('#startDateLabel').hide();
+			$('#endDateLabel').hide();
+			$('#fsb_calendarbundle_export_startDate').hide();
+		    $('#fsb_calendarbundle_export_endDate').hide();
+		  } 
+		});
+	$('#fsb_calendarbundle_export_dateRangeType_3').change(function(){
+	  if($(this).val() == "date_range") {
+		$('#startDateLabel').show();
+		$('#endDateLabel').show();
+		$('#fsb_calendarbundle_export_startDate').show();
+	    $('#fsb_calendarbundle_export_endDate').show();
+	  } 
+	});
+});

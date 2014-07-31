@@ -40,3 +40,13 @@ calendar_map_month:
 calendar_map_diary:
     pattern:  /map/diary/day/{day}/month/{month}/year/{year}/{recruiter_id}
     defaults: { _controller: "CalendarBundle:Map:mapDiary" }
+    
+# Import
+calendar_import:
+    pattern:  /import/{recruiter_id}
+    defaults: { _controller: "CalendarBundle:Import:import", recruiter_id: null }
+
+# Export
+calendar_export:
+    pattern:  /export
+    defaults: { _controller: "CalendarBundle:Export:export"}
