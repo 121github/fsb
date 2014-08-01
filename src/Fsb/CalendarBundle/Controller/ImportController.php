@@ -76,7 +76,7 @@ class ImportController extends DefaultController
 	 *
 	 * @return \Symfony\Component\Form\Form The form
 	 */
-	protected function createImportForm(Import $import)
+	private function createImportForm(Import $import)
 	{
 	
 		$form = $this->createForm(new ImportType(), $import, array(

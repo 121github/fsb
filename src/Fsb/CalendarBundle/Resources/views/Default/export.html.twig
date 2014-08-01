@@ -5,8 +5,7 @@
 
 {% block article -%}
 
-	{% set submit_id = exportForm.vars.id ~ "_submit" %}
-	<form action="{{ path('calendar_export') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(exportForm) }}>
+	<form action="{{ path('calendar_export') }}" method="post"  data-ajax="false" {{ form_enctype(exportForm) }}>
 		{{ form_errors(exportForm) }}
 		
 		<div class="ui-grid-a" style="margin-bottom: 30px; border: 2px solid #ddd; padding: 15px; -webkit-border-radius: 10px; border-radius: 10px;">
@@ -69,7 +68,7 @@
 			</div>
 		</div><!-- /grid-a -->
 		
-		<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Cancel" }}</a>				
+		<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Back to Calendar" }}</a>				
 		{{ form_rest(exportForm) }}	
 		
 	</form>

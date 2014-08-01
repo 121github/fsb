@@ -6,27 +6,66 @@ use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\AppointmentBundle\Entity\AppointmentDetail;
 class CsvUtil
 {
-	
+	/**
+	 * 
+	 * @param String $filePath
+	 * @return array
+	 */
 	static public function csvToArray($filePath)
 	{
 		$rows = array();
 		if (($file = fopen($filePath, "r")) !== FALSE) {
-			// Lee los nombres de los campos
+			// Read the name of the fields
 			$headers = fgetcsv($file, 0, ",", "\"", "\"");
 			$num_fields = count($headers);
-			// Lee los registros
+			// Read the rows
 			while (($datos = fgetcsv($file, 0, ",", "\"", "\"")) !== FALSE) {
-				// Crea un array asociativo con los nombres y valores de los campos
+				// Create an array with the headres and the values
 				$row = array();
 				for ($ifield = 0; $ifield < $num_fields; $ifield++) {
 					$row[$headers[$ifield]] = $datos[$ifield];
 				}
-				// Añade el registro leido al array de registros
+				// Add the row to the rows array
 				$rows[] = $row;
 			}
 			fclose($file);
 		}
 		
 		return $rows;
+	}
+	
+	/**
+	 * 
+	 * @param array $rows
+	 * @return string (csv)
+	 */
+	static public function arrayToCsv($rows, $filePath)
+	{
+		if (count($rows) > 0) {
+			$content = "";
+			$i = 0;
+			foreach ($rows as $row) {
+				foreach ($row as $key => $value) {
+					if ($i==0) {
+						$content = $content.$key.',';
+					}
+					else {
+						$content = $content.$value.',';
+					}
+				}
+				$i++;
+				$content = substr($content, 0, strlen($content)-1);
+				$content = $content."\r";
+			}
+			$content = substr($content, 0, strlen($content)-1);
+			
+			
+			$handle = fopen($filePath,"w");
+			fwrite($handle, $content);
+			fclose($handle);
+		}
+	
+		
+		return true;
 	}
 }

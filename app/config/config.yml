@@ -72,6 +72,10 @@ doctrine:
 parameters:
     fsb.importFiles.dir: "%kernel.root_dir%/../web/uploads/importFiles/"
     fsb.importFiles.asset.dir: "uploads/importFiles/"
+    
+    fsb.exportFiles.dir: "%kernel.root_dir%/../web/downloads/export/temp/"
+    
+    
     fsb.appointment.origin.type.system: "Created from the System"
     fsb.appointment.origin.type.import: "Imported from external file"
     fsb.appointment.origin.type.rest: "Imported from Rest web service"

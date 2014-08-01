@@ -68,6 +68,14 @@ class AppointmentImportController extends DefaultController
         		$appointment->setFileName($filePath);
         		$this->saveAppointment($appointment);
         	}
+        	
+        	//Send the email
+        	$subject = 'Fsb - New Appointment Setted';
+        	$from = 'admin@fsb.co.uk';
+        	$to = $recruiter->getUserDetail()->getEmail();
+        	$textBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.txt.twig', array('appointmentList' => $appointmentList));
+        	$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.html.twig', array('appointmentList' => $appointmentList));
+        	$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
         }
         
         $title = ($appointmentList)?"File Imported!":"ERROR! File not imported!";
@@ -81,14 +89,6 @@ class AppointmentImportController extends DefaultController
         				'message' => $msg
         		)
         );
-        
-        //Send the email
-        $subject = 'Fsb - New Appointment Setted';
-        $from = ($appointment->getAppointmentSetter())?$appointment->getAppointmentSetter()->getUserDetail()->getEmail() : 'admin@fsb.co.uk';
-        $to = $appointment->getRecruiter()->getUserDetail()->getEmail();
-        $textBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.txt.twig', array('appointmentList' => $appointmentList));
-        $htmlBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.html.twig', array('appointmentList' => $appointmentList));
-        $this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
         
         
         return $this->redirect($this->generateUrl('calendar_homepage'));
@@ -139,7 +139,7 @@ class AppointmentImportController extends DefaultController
     	if (count($file_ar) > 0) {
     		$em = $this->getDoctrine()->getManager();
     		$appointmentList = array(new Appointment());
-    	
+    		
     		$i = 0;
 	    	foreach ($file_ar as $row) {
 	    		$appointment = new Appointment();

@@ -24,8 +24,8 @@ class Import
 	/**
 	 * @Assert\File(
 	 * 		maxSize = "500k",
-	 * 		mimeTypes = {"text/calendar", "text/csv", "text/plain"},
-     *      mimeTypesMessage = "Please upload a valid file (*.ics, *.csv)"
+	 * 		mimeTypes = {"text/csv", "text/plain"},
+     *      mimeTypesMessage = "Please upload a valid file (*.csv)"
 	 * )
 	 */
     private $file;
