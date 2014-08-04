@@ -330,8 +330,9 @@ class AppointmentRepository extends EntityRepository
 	 * 
 	 * @param \DateTime $startDate
 	 * @param \DateTime $endDate
+	 * @param $recruiter_id
 	 */
-	public function findAppointmentsWithCollision(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
+	public function findAppointmentsWithCollisionByDate(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
 		$em = $this->getEntityManager();
 		
 		$query = $em->createQueryBuilder()
@@ -349,7 +350,7 @@ class AppointmentRepository extends EntityRepository
 				(((SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) >= SUBSTRING(:endDate, 12, 8)) OR
 				((SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) > SUBSTRING(:startDate, 12, 8)) OR
 				((SUBSTRING(a.startDate, 12, 8)) >= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8)) OR
-				((SUBSTRING(a.startDate, 12, 8)) >= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) >= SUBSTRING(:endDate, 12, 8) AND (SUBSTRING(a.startDate, 12, 8)) <= SUBSTRING(:endDate, 12, 8)))
+				((SUBSTRING(a.startDate, 12, 8)) >= SUBSTRING(:startDate, 12, 8) AND (SUBSTRING(a.endDate, 12, 8)) >= SUBSTRING(:endDate, 12, 8) AND (SUBSTRING(a.startDate, 12, 8)) < SUBSTRING(:endDate, 12, 8)))
 		')
 		->orderBy('a.startDate', 'ASC')
 		
@@ -360,6 +361,52 @@ class AppointmentRepository extends EntityRepository
 		
 		$appointment_ar = $query->getQuery()->getResult();
 		
+		return $appointment_ar;
+	}
+	
+	/**
+	 *
+	 * Find the appointments which location are too far from the parameters for a particular recruiter
+	 *
+	 * @param $lat
+	 * @param $lon
+	 * @param $distance
+	 * @param \DateTime $startDate
+	 * @param \DateTime $endDate
+	 * @param $recruiter_id
+	 */
+	public function findAppointmentsWithCollisionByLocation($lat, $lon, $distance, \DateTime $startDate, \DateTime $endDate, $recruiter_id) {
+		$em = $this->getEntityManager();
+		
+		$startDate = new \DateTime($startDate->format('Y-m-d H:i:s')." - 1 hour");
+		$endDate = new \DateTime($endDate->format('Y-m-d H:i:s')." + 1 hour");
+	
+		$query = $em->createQueryBuilder()
+		->select(array('a.id'))
+		->from('AppointmentBundle:Appointment', 'a')
+		->innerJoin('a.appointmentDetail', 'ad')
+		->innerJoin('ad.address', 'adr')
+		->where('a.recruiter = :recruiter_id')
+		->andWhere('a.startDate <= :endDate')
+		->andWhere('a.endDate >= :startDate')
+		->andWhere('
+					((((
+						ACOS(
+							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
+							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
+						)
+					)*180/PI())*160*1.1515)) <= :distance')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('lat', $lat)
+		->setParameter('lon', $lon)
+		->setParameter('startDate', $startDate)
+		->setParameter('endDate', $endDate)
+		->setParameter('distance', $distance)
+		;
+	
+		$appointment_ar = $query->getQuery()->getResult();
+	
 		return $appointment_ar;
 	}
 	

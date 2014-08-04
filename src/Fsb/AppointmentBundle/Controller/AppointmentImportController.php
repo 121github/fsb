@@ -34,6 +34,7 @@ class AppointmentImportController extends DefaultController
     {	
     	$em = $this->getDoctrine()->getManager();
     	
+    	
     	if ($recruiter_id) {
     		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
     	}
@@ -62,36 +63,45 @@ class AppointmentImportController extends DefaultController
         }
         
         if ($appointmentList) {
-        	//Save the appointments
-        	foreach ($appointmentList as $appointment) {
-        		$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.import'));
-        		$appointment->setFileName($filePath);
-        		$this->saveAppointment($appointment);
-        	}
         	
-        	//Send the email
-        	$subject = 'Fsb - New Appointment Setted';
-        	$from = 'admin@fsb.co.uk';
-        	$to = $recruiter->getUserDetail()->getEmail();
-        	$textBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.txt.twig', array('appointmentList' => $appointmentList));
-        	$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.html.twig', array('appointmentList' => $appointmentList));
-        	$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+        	//Check the appointmentes that will be imported
+        	$errors = array();
+        	$appointmentListSaved = array();
+        	$i = 0;
+        	foreach ($appointmentList as $appointment) {
+        		$clonedForm = $this->createImportForm($filePath, $mimeType, $recruiter_id, $project_id);
+        		$this->checkAppointmentRestrictions($appointment, $clonedForm);
+        		if (strlen($clonedForm->getErrors()->__toString()) > 0) {
+        			$errors[$i] = $clonedForm->getErrors()->__toString();
+        		}
+        		else {
+        			$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.import'));
+        			$appointment->setFileName($filePath);
+        			$this->saveAppointment($appointment);
+        			array_push($appointmentListSaved, $appointment); 
+        		}
+        		$i++;
+        	}
+        	if (count($appointmentListSaved) > 0) {
+	        	//Send the email
+	        	$subject = 'Fsb - New Appointment Setted';
+	        	$from = 'admin@fsb.co.uk';
+	        	$to = $recruiter->getUserDetail()->getEmail();
+	        	$textBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.txt.twig', array('appointmentList' => $appointmentListSaved));
+	        	$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.html.twig', array('appointmentList' => $appointmentListSaved));
+	        	$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+	        
+        	}        	
+        	
         }
         
-        $title = ($appointmentList)?"File Imported!":"ERROR! File not imported!";
-        $msg = ($appointmentList)?"The file has been imported":"ERROR! The file has not been imported";
-        
-        
-        $this->get('session')->getFlashBag()->set(
-        		'success',
-        		array(
-        				'title' => $title,
-        				'message' => $msg
-        		)
-        );
-        
-        
-        return $this->redirect($this->generateUrl('calendar_homepage'));
+        return $this->render('AppointmentBundle:Appointment:appointmentImport.html.twig', array(
+        		'recruiter' => $recruiter,
+        		'appointmentList' => $appointmentList,
+        		'errors' => $errors,
+        		'numImported' => count($appointmentListSaved),
+        ));
+       
         
     }
     
@@ -112,6 +122,36 @@ class AppointmentImportController extends DefaultController
     	$em->persist($appointment->getAppointmentDetail());
     	$em->persist($appointment);
     	$em->flush();
+    }
+    
+    /**
+     * Creates a form to accept the import
+     *
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createImportForm($filePath, $mimeType, $recruiter_id, $project_id = null)
+    {
+    	$data = array();
+    	$form = $this->createFormBuilder($data, array(
+    			'action' => $this->generateUrl('appointment_import', array(
+    				'filePath' => $filePath,
+    				'mimeType'   => $mimeType,
+    				'recruiter_id' => $recruiter_id,
+    				'project_id' => $project_id,
+    			)),
+    			'method' => 'POST',
+    	))
+    	->getForm()
+    	;
+    	
+    	
+    	$form->add('submit', 'submit', array(
+    			'label' => 'Confirm',
+    			'attr' => array('class' => 'ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check')
+    	));
+    
+    	return $form;
     }
     
     private function importiCalAppointments ($filePath, $recruiter, $project = null) {

@@ -1,0 +1,49 @@
+{% extends '::calendar_dialog.html.twig' %}
+
+{% block title %}Appointment Import{% endblock %}
+
+
+{% block article -%}
+	
+	<h1>{{ "Appointment Import - " ~ recruiter }}</h1>
+	
+	<h3>{{ numImported ~ " appointments imported (only the green rows have been imported)" }}</h3>
+	
+	<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Back to Calendar" }}</a>
+	
+	<table style="border: 2px solid #ddd; padding: 0; -webkit-border-radius: 10px; border-radius: 10px; text-shadow: none;">
+        <thead>
+            <tr style="text-align: left;">
+            	<th>Appointment</th>
+            	<th>Date</th>
+                <th>Error</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set i = 0 %}
+        {% for appointment in appointmentList %}
+        	{% if (errors[i] is defined) %}
+            	<tr style="background: rgb(255, 173, 173);">
+            {% else %}
+            	<tr style="background: rgb(187, 238, 187);">
+            {% endif %}
+            	<td style="width: 33%; padding-left: 10px;">{{ appointment }}</td>
+            	<td style="width: 23%; padding-left: 10px;">
+            		{{ appointment.startDate|date('Y-m-d H:i') }}
+            		<br />
+            		{{ appointment.endDate|date('Y-m-d H:i') }}
+            	</td>
+            	<td>
+            		{% if (errors[i] is defined) %}
+                		{{ errors[i] }}
+                	{% endif %}
+                </td>
+            </tr>
+           	{% set i = i+1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-mini="true" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Back to Calendar" }}</a>
+	
+{% endblock %}

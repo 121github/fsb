@@ -61,7 +61,7 @@ class AppointmentController extends DefaultController
         $form->handleRequest($request);
         
         //Before save the appointment we have to check some constraints
-        $this->checkNewAppointmentRestrictions($appointment, $form);
+        $this->checkAppointmentRestrictions($appointment, $form);
         
         $startDate = $appointment->getStartDate()->getTimestamp();
         $day = date('d',$startDate);
@@ -94,10 +94,11 @@ class AppointmentController extends DefaultController
         	$address = $appointmentDetail->getAddress();
         	$address->setAppointmentDetail($appointmentDetail);
         	Util::setCreateAuditFields($address, $userLogged->getId());
-        	
-        	$postcode_coord = Util::postcodeToCoords($address->getPostcode());
-        	$address->setLat($postcode_coord["lat"]);
-        	$address->setLon($postcode_coord["lng"]);
+
+        	//Save the postcode -> it is saved in the check function
+			//$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+			//$address->setLat($postcode_coord["lat"]);
+			//$address->setLon($postcode_coord["lng"]);
         	
        		$em->persist($appointment);
         	$em->persist($appointmentDetail);
@@ -238,25 +239,7 @@ class AppointmentController extends DefaultController
     }
     
     
-    /**
-     * Check if is possible to edit an appointment
-     *
-     * @param Appointment $appointment
-     */
-    private function checkEditAppointmentRestrictions(Appointment $appointment, Form $form) {
-    	 
-    	//Check if exist any other appointment in the same datetime for the same recruiter
-    	//$this->appointmentAlreadyExist($appointment, $form);
-    	 
-    	//Check the postcode
-    	$this->postcodeExist($appointment, $form);
-    	 
-    	//The endDate has to be after the startDate
-    	$this->endDateAfterStartDate($appointment, $form);
-    	 
-    	return true;
-    }
-
+   
     /**
      * Displays a form to edit an existing Appointment entity.
      *
@@ -341,7 +324,7 @@ class AppointmentController extends DefaultController
         $editForm->submit($request);
         
         //Before save the appointment we have to check some constraints
-        $this->checkEditAppointmentRestrictions($appointment, $editForm);
+        $this->checkAppointmentRestrictions($appointment, $editForm, true);
         
         $startDate = $appointment->getStartDate()->getTimestamp();
         $day = date('d',$startDate);
