@@ -321,8 +321,9 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$symbol = array("+","-");
         		$symbol = $symbol[rand(0, 1)];
         		$weekDays = array("monday this week ", "tuesday this week ", "wednesday this week ", "thursday this week ", "friday this week ", "saturday this week ");
-        		$appointment->setStartDate(new \DateTime($weekDays[rand(0, 5)].$hour.':'.$minute.':00'.$symbol.' '.$days.' days'));
-        		$appointment->setEndDate(new \DateTime($weekDays[rand(0, 5)].$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
+        		$weekday = $weekDays[rand(0, 5)];
+        		$appointment->setStartDate(new \DateTime($weekday.$hour.':'.$minute.':00'.$symbol.' '.$days.' days'));
+        		$appointment->setEndDate(new \DateTime($weekday.$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
         		
         		Util::setCreateAuditFields($appointment, 1);
         		

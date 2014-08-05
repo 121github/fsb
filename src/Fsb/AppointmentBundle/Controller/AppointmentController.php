@@ -226,6 +226,11 @@ class AppointmentController extends DefaultController
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        
+        $session = $this->getRequest()->getSession();
+        
+        $session_fitler = $session->get('filter');
+        $postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
 
         $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
 
@@ -235,9 +240,9 @@ class AppointmentController extends DefaultController
 
         return $this->render('AppointmentBundle:Appointment:show.html.twig', array(
             'appointment'      => $appointment,
+        	'postcodeDest' => $postcode_filter,
         ));
     }
-    
     
    
     /**

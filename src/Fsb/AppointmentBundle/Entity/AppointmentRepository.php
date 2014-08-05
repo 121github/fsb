@@ -395,7 +395,7 @@ class AppointmentRepository extends EntityRepository
 							SIN(:lat*PI()/180) * SIN(adr.lat*PI()/180) +
 							COS(:lat*PI()/180) * COS(adr.lat*PI()/180) * COS((:lon - adr.lon)*PI()/180)
 						)
-					)*180/PI())*160*1.1515)) <= :distance')
+					)*180/PI())*160*1.1515)) >= :distance')
 		
 		->setParameter('recruiter_id', $recruiter_id)
 		->setParameter('lat', $lat)

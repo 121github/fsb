@@ -52,6 +52,7 @@ class AppointmentFilterType extends AbstractType
             ->add('range', 'hidden', array(
             		'required'    => false,
             		'max_length' => 4,
+            		'empty_data' => 10,
             ))
         ;
     }

@@ -14,6 +14,11 @@
     </style>
     
     <script>
+
+    	var directionsDisplay;
+    	var directionsService = new google.maps.DirectionsService();
+    	var map;
+    
 		function initialize() {
 		  var lat = {{ appointment.appointmentDetail.address.lat }};
 		  var lng = {{ appointment.appointmentDetail.address.lon }};
@@ -22,23 +27,47 @@
 		    zoom: 12,
 		    center: myLatlng
 		  }
-		  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-		
-		  var marker = new google.maps.Marker({
-		      position: myLatlng,
-		      map: map,
-		      title: '{{ appointment.appointmentDetail.title }}'
-		  });
+		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-		  var infowindow = new google.maps.InfoWindow({
-              content: '<span><b>Appointment</b><br></span>Recruiter'
-          });
+		  if ({{ postcodeDest|json_encode|raw }}) {
+			  var destination = {{ postcodeDest|json_encode|raw }};
+		      var origin = {{ (appointment.appointmentDetail.address.postcode ~ "," ~ appointment.appointmentDetail.address.country)|json_encode|raw }};
+			  directionsDisplay = new google.maps.DirectionsRenderer();
+			  calcRoute(origin, destination);
+			  directionsDisplay.setMap(map);
+		  }
+		  else {
 
-          google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-          });                             
+			  var marker = new google.maps.Marker({
+			      position: myLatlng,
+			      map: map,
+			      title: '{{ appointment.appointmentDetail.title }}'
+			  });
+	
+			  var infowindow = new google.maps.InfoWindow({
+	              content: '<span><b>Appointment</b><br></span>Recruiter'
+	          });
+	
+	          google.maps.event.addListener(marker, 'click', function() {
+	            infowindow.open(map,marker);
+	          });  
+		   }                           
 		}
 
+		function calcRoute(start, end) {
+		  var request = {
+		      origin:start,
+		      destination:end,
+		      travelMode: google.maps.TravelMode.DRIVING
+		  };
+
+		  directionsService.route(request, function(response, status) {
+		    if (status == google.maps.DirectionsStatus.OK) {
+		      directionsDisplay.setDirections(response);
+		    }
+		  });
+		}
+		
 		google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>

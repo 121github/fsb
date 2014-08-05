@@ -55,7 +55,7 @@ class DefaultController extends Controller
 			$i++;
 			}
 		}
-		 
+		
 		if (count($appointments) > 0) {
 			$form->addError(new FormError("There is any other appointment for this recruiter that exist into the dates chosen"));
 		}

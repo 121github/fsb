@@ -91,7 +91,7 @@ class AppointmentRestController extends FOSRestController
 
 			$form = $this->createForm(new AppointmentRestType(), $appointmentRest);
 			$form->handleRequest($request);
-			
+
 			
 			if ($form->isValid()) {
 				$newAppointment = new Appointment();
