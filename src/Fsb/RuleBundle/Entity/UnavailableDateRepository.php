@@ -151,4 +151,34 @@ class UnavailableDateRepository extends EntityRepository
 	
 		return $unavailableDate;
 	}
+	
+	
+	public function findUnavailableDatesBetweenDatesByRecruiter(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
+		
+		$em = $this->getEntityManager();
+		
+		$query = $em->createQueryBuilder()
+		->select('ud')
+		->from('RuleBundle:UnavailableDate', 'ud')
+		->where('ud.recruiter = :recruiter_id')
+		->andWhere('
+				(ud.unavailableDate = SUBSTRING(:startDate, 1, 10))
+				AND
+				((ud.allDay = 1) OR
+				((ud.startTime <= SUBSTRING(:startDate, 12, 8) AND ud.endTime >= SUBSTRING(:endDate, 12, 8)) OR
+				(ud.startTime <= SUBSTRING(:startDate, 12, 8) AND ud.endTime <= SUBSTRING(:endDate, 12, 8) AND ud.endTime > SUBSTRING(:startDate, 12, 8)) OR
+				(ud.startTime >= SUBSTRING(:startDate, 12, 8) AND ud.endTime <= SUBSTRING(:endDate, 12, 8)) OR
+				(ud.startTime >= SUBSTRING(:startDate, 12, 8) AND ud.endTime >= SUBSTRING(:endDate, 12, 8) AND ud.startTime < SUBSTRING(:endDate, 12, 8))))
+		')
+		->orderBy('ud.unavailableDate', 'ASC')
+		
+		->setParameter('recruiter_id', $recruiter_id)
+		->setParameter('startDate', $startDate)
+		->setParameter('endDate', $endDate)
+		;
+		
+		$unavailableDate = $query->getQuery()->getResult();
+		
+		return $unavailableDate;
+	}
 }

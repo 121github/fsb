@@ -72,7 +72,7 @@ class DefaultController extends Controller
 	 * @param $edit (true if we are editing an appointment)
 	 * 
 	 */
-	protected function postcodeCheck(Appointment $appointment, Form $form, $edit = null) {
+	private function postcodeCheck(Appointment $appointment, Form $form, $edit = null) {
 	
 		$address = $appointment->getAppointmentDetail()->getAddress();
 	
@@ -115,12 +115,32 @@ class DefaultController extends Controller
 	 *
 	 * @param Appointment $appointment
 	 */
-	protected function endDateAfterStartDate(Appointment $appointment, Form $form) {
+	private function endDateAfterStartDate(Appointment $appointment, Form $form) {
 	
 		if (strtotime($appointment->getEndDate()->format('Y-m-d H:i:s')) <= strtotime($appointment->getStartDate()->format('Y-m-d H:i:s'))) {
 			$form->addError(new FormError("The endDate has to be posterior to the startDate"));
 		}
 	
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param Appointment $appointment
+	 * @param Form $form
+	 * @return boolean
+	 */
+	private function isAnUnvailableDate(Appointment $appointment, Form $form) {
+
+		$em = $this->getDoctrine()->getManager();
+			
+		$appointments = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesBetweenDatesByRecruiter($appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
+		
+		if (count($appointments) > 0) {
+			$form->addError(new FormError("The recruiter selected this date as unavailable date"));
+		}
+		
+		
 		return true;
 	}
 	
@@ -143,6 +163,10 @@ class DefaultController extends Controller
 		 
 		//The endDate has to be after the startDate
 		$this->endDateAfterStartDate($appointment, $form);
+		
+		//The date selected is not an unavailable date for the recruiter
+		$this->isAnUnvailableDate($appointment, $form);
+		
 		 
 		return true;
 	}

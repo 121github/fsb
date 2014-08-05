@@ -163,7 +163,7 @@ class AppointmentRepository extends EntityRepository
 	public function findAppointmentsByDay($day,$month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
 		$em = $this->getEntityManager();
-	
+		
 		$query = $em->createQueryBuilder()
 		->select(array(
 				'SUBSTRING(a.startDate, 11, 3) AS hour', 

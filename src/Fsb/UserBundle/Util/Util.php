@@ -32,22 +32,24 @@ class Util
 
 	
 	static public function postcodeToCoords($postcode){
-		//Contact the google maps api to get the lat & `long` from the postcode
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . ',UK&sensor=false';
-		$json = json_decode(file_get_contents($url));
+		$coord = array(
+			'lat' => null,
+			'lng' => null
+		);
 		
-		if (!empty($json->results)) {
-			$coord = array(
-					'lat' => $json->results[0]->geometry->location->lat,
-					'lng' => $json->results[0]->geometry->location->lng
-			);
+		if ($postcode) {
+			//Contact the google maps api to get the lat & `long` from the postcode
+			$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . ',UK&sensor=false';
+			$json = json_decode(file_get_contents($url));
+			
+			if (!empty($json->results)) {
+				$coord = array(
+						'lat' => $json->results[0]->geometry->location->lat,
+						'lng' => $json->results[0]->geometry->location->lng
+				);
+			}	
 		}
-		else {
-			$coord = array(
-				'lat' => null,
-				'lng' => null
-			);
-		}		
+		
 		return $coord;
 	}
 	
