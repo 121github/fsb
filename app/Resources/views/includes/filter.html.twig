@@ -43,7 +43,9 @@
 					<ul data-role="listview" data-theme="d" data-divider-theme="d">
 						<li data-role="list-divider"> {{ "Select the postcode" }}</li>
 						<li>
-							{{ form_widget(searchForm.postcode) }}
+							{{ form_widget(searchForm.postcode, { 'attr': {'class': 'current_postcode_input'} }) }}
+							<a id="use-my-location" href="#" class="locate-postcode" type="button" data-icon="location" data-iconpos="right">Find my location</a>
+            				<div class="error geolocation-error"></div>
 						</li>
 					</ul>
 					<p> {{ form_errors(searchForm.range) }} </p>

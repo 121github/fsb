@@ -70,11 +70,11 @@
 					<td>
 						{{ form_label(form.appointmentDetail.address.add1) }}
 						{{ form_errors(form.appointmentDetail.address.add1) }}
-						{{ form_widget(form.appointmentDetail.address.add1) }}
+						{{ form_widget(form.appointmentDetail.address.add1, { 'attr': {'class': 'current_add1_input'} }) }}
 					</td><td colspan="2">
 						{{ form_label(form.appointmentDetail.address.postcode) }}
 						{{ form_errors(form.appointmentDetail.address.postcode) }}
-						{{ form_widget(form.appointmentDetail.address.postcode) }}
+						{{ form_widget(form.appointmentDetail.address.postcode, { 'attr': {'class': 'current_postcode_input'} }) }}
 						{{ form_widget(form.appointmentDetail.address.lat) }}
 						{{ form_widget(form.appointmentDetail.address.lon) }}
 					</td>
@@ -86,7 +86,7 @@
 					</td><td colspan="2">
 						{{ form_label(form.appointmentDetail.address.town) }}
 						{{ form_errors(form.appointmentDetail.address.town) }}
-						{{ form_widget(form.appointmentDetail.address.town) }}
+						{{ form_widget(form.appointmentDetail.address.town, { 'attr': {'class': 'current_locality_input'} }) }}
 					</td>
 				</tr><tr>
 					<td>
@@ -96,7 +96,7 @@
 					</td><td colspan="2">
 						{{ form_label(form.appointmentDetail.address.country) }}
 						{{ form_errors(form.appointmentDetail.address.country) }}
-						{{ form_widget(form.appointmentDetail.address.country) }}
+						{{ form_widget(form.appointmentDetail.address.country, { 'attr': {'class': 'current_country_input'} }) }}
 					</td>
 				</tr><tr>
 					<td colspan="3">
