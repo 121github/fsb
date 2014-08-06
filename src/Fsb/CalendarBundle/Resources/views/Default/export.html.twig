@@ -36,9 +36,18 @@
 				{{ form_widget(exportForm.filter.projects) }}
 			</div>
 			<div class="ui-block-b" style="padding-left: 10px; padding-right: 10px;">
-				{{ form_label(exportForm.filter.recruiters) }}
-				{{ form_errors(exportForm.filter.recruiters) }}
-				{{ form_widget(exportForm.filter.recruiters) }}
+			
+				{% if (is_granted('ROLE_RECRUITER')) %}
+					{{ form_label(exportForm.filter.recruiters) }}
+					<h4>{{ userLogged }}</h4>
+					<div style="display: none;">
+				{% else %}
+					<div>
+				{% endif %}
+					{{ form_label(exportForm.filter.recruiters) }}				
+					{{ form_errors(exportForm.filter.recruiters) }}
+					{{ form_widget(exportForm.filter.recruiters) }}
+				</div>
 			</div>
 			<div class="ui-block-c" style="padding-left: 10px;">
 				{{ form_label(exportForm.filter.outcomes) }}
@@ -57,7 +66,7 @@
 				{{ form_label(exportForm.filter.range) }}
 				{{ form_errors(exportForm.filter.range) }}
 				{{ form_widget(exportForm.filter.range) }}
-				<input id="fsb_appointmentbundle_filter_range" name="fsb_appointmentbundle_filter[range]" data-highlight="true" min="0" max="500" value="0" type="range">
+				<input id="fsb_appointmentbundle_filter_range" name="fsb_appointmentbundle_filter[range]" data-highlight="true" min="10" max="500" value="10" type="range">
 				<script>
 					$(document).ready(function(){
 						$('.ui-slider-handle').on('mouseup',function(e){

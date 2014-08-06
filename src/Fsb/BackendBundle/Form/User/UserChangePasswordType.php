@@ -16,10 +16,11 @@ class UserChangePasswordType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
+		->add('oldPassword', 'password')
 		->add('password', 'repeated', array(
 				'type' => 'password',
 				'invalid_message' => 'Both passwords must be the same',
-				'options' => array('label' => 'Password')
+				'options' => array('label' => 'New Password')
 		))
 		;
 	}
@@ -30,7 +31,7 @@ class UserChangePasswordType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Fsb\UserBundle\Entity\User',
+            'data_class' => 'Fsb\UserBundle\Entity\UserChangePassword',
 			'validation_groups' => array('Default')
         ));
     }

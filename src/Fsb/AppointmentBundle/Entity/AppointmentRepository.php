@@ -681,7 +681,7 @@ class AppointmentRepository extends EntityRepository
 		
 		$firstWeekDay = date('Y-m-d 00:00:00',strtotime('monday this week'));
 		$lastWeekDay = date('Y-m-d 23:59:59',strtotime('sunday this week'));
-	
+		
 		$query = $em->createQueryBuilder()
 		->select('count(a) as num, SUBSTRING(a.startDate,9,2) as day')
 		->from('AppointmentBundle:Appointment', 'a')
@@ -774,7 +774,7 @@ class AppointmentRepository extends EntityRepository
 	
 		if ($recruiter_id) {
 			$query
-			->andWhere('r.id = :recruiter_id')
+			->andWhere('a.recruiter = :recruiter_id')
 			->setParameter('recruiter_id', $recruiter_id)
 			;
 		}

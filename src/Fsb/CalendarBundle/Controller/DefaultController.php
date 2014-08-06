@@ -54,7 +54,7 @@ class DefaultController extends Controller
     	
     	//If the user logged is a recruiter we get the upcoming appointments for this recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointment(new \DateTime('now'), $recruiter->getId());
+    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'), $recruiter->getId());
     	}
     	//If the user logged is not a recruiter, we get the upcoming appoinments for all the recruiters
     	else {
@@ -136,8 +136,10 @@ class DefaultController extends Controller
     	}
     	foreach ($numAppointmentsList as $numAppointments) {
     		$auxList[$numAppointments["month"]] = $numAppointments["num"];
-    		$appointmentsByMonthChart["max"] = ($numAppointments["num"] > $max)?$numAppointments["num"] + $numAppointments["num"] : $max;
+    		$max = ($numAppointments["num"] > $max)?$numAppointments["num"] : $max;
     	}
+    	
+    	$appointmentsByMonthChart["max"] = $max + ($max*10/100);
     	
     	foreach ($auxList as $aux) {
     		array_push($appointmentsByMonthChart["values"], $aux);
@@ -160,8 +162,8 @@ class DefaultController extends Controller
     	$appointmentsByWeekChart["values"] = array();
     	$max = 10;
     	$appointmentsByWeekChart["max"] = $max;
-    	$firstWeekDay = date('d',strtotime('monday this week'));
-    	$lastWeekDay = date('d',strtotime('sunday this week'));
+    	$firstWeekDay = (int)date('d',strtotime('monday this week'));
+    	$lastWeekDay = (int)date('d',strtotime('sunday this week'));
     	
     	//Get the num appointment outcomes
     	//If the user logged is a recruiter
@@ -177,15 +179,18 @@ class DefaultController extends Controller
     	for ($i=$firstWeekDay; $i<=$lastWeekDay;$i++) {
     		$auxList[$i] = 0;
     	}
+    	
     	foreach ($numAppointmentsList as $numAppointments) {
-    		$auxList[$numAppointments["day"]] = $numAppointments["num"];
-    		$appointmentsByWeekChart["max"] = ($numAppointments["num"] > $max)?$numAppointments["num"] + $numAppointments["num"] : $max;
+    		$auxList[(int)$numAppointments["day"]] = $numAppointments["num"];
+    		$max = ($numAppointments["num"] > $max)?$numAppointments["num"] : $max;
     	}
+    	
+    	$appointmentsByWeekChart["max"] = $max + ($max*10/100);
     	
     	foreach ($auxList as $aux) {
     		array_push($appointmentsByWeekChart["values"], $aux);
     	}
-    
+    	
     	return $appointmentsByWeekChart;
     }
     

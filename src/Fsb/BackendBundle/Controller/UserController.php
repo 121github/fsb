@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Fsb\UserBundle\Entity\UserFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\BackendBundle\Form\User\UserFilterType;
+use Fsb\UserBundle\Entity\UserChangePassword;
+use Symfony\Component\Form\FormError;
 
 /**
  * User controller.
@@ -467,16 +469,25 @@ class UserController extends Controller
     		throw $this->createNotFoundException('Unable to find User entity.');
     	}
     
-    	$passwordForm = $this->createChangePasswordForm($user);
+    	$userChangePassword = new UserChangePassword();
+    	$passwordForm = $this->createChangePasswordForm($userChangePassword, $user->getId());
     	$passwordForm->handleRequest($request);
-    
-    	$passwordForm->submit($request);
+    	
+    	$encoder = $this->get('security.encoder_factory')->getEncoder($user);
+    	
+    	//Check the oldPassword
+    	if ($userChangePassword->getOldPassword()) {
+	    	$isValid = $encoder->isPasswordValid($user->getPassword(), $userChangePassword->getOldPassword(), $user->getSalt());
+	    	
+	    	if (!$isValid) {
+	    		$passwordForm->addError(new FormError("The oldPassword is not correct"));
+	    	}
+    	}
+    	
     	if ($passwordForm->isValid()) {
-    
-    		$encoder = $this->get('security.encoder_factory')->getEncoder($user);
-    
+    		
     		$passwordEncoded = $encoder->encodePassword(
-    				$user->getPassword(),
+    				$userChangePassword->getPassword(),
     				$user->getSalt()
     		);
     		$user->setPassword($passwordEncoded);
@@ -510,11 +521,11 @@ class UserController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createChangePasswordForm(User $user)
+    private function createChangePasswordForm(UserChangePassword $userChangePassword, $userId)
     {
-    	$form = $this->createForm(new UserChangePasswordType(), $user, array(
-    			'action' => $this->generateUrl('user_password', array('id' => $user->getId())),
-    			'method' => 'PUT',
+    	$form = $this->createForm(new UserChangePasswordType(), $userChangePassword, array(
+    			'action' => $this->generateUrl('user_password', array('id' => $userId)),
+    			'method' => 'POST',
     	));
     	 
     	$form->add('submit', 'submit', array(

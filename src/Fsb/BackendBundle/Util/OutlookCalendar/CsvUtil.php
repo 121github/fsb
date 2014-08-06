@@ -43,21 +43,22 @@ class CsvUtil
 	{
 		if (count($rows) > 0) {
 			$content = "";
+			$header = "";
 			$i = 0;
 			foreach ($rows as $row) {
 				foreach ($row as $key => $value) {
 					if ($i==0) {
-						$content = $content.$key.',';
+						$header = $header.$key.',';
 					}
-					else {
-						$content = $content.$value.',';
-					}
+					$content = $content.$value.',';
 				}
 				$i++;
 				$content = substr($content, 0, strlen($content)-1);
 				$content = $content."\r";
 			}
+			$header = substr($header, 0, strlen($header)-1);
 			$content = substr($content, 0, strlen($content)-1);
+			$content = $header."\r".$content;
 			
 			
 			$handle = fopen($filePath,"w");

@@ -45,8 +45,13 @@ class ExportController extends DefaultController
 			
 			//Prepare the filter
 			$recruiter_ar = array();
-			foreach ($export->getFilter()->getRecruiters() as $recruiter) {
-				array_push($recruiter_ar,$recruiter->getId());
+			if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
+				array_push($recruiter_ar,$userLogged->getId());
+			}
+			else {
+				foreach ($export->getFilter()->getRecruiters() as $recruiter) {
+					array_push($recruiter_ar,$recruiter->getId());
+				}	
 			}
 			
 			$project_ar = array();
@@ -140,6 +145,7 @@ class ExportController extends DefaultController
 		/******************************************************************************************************************************/
 		return $this->render('CalendarBundle:Default:export.html.twig', array(
 				'exportForm' => $exportForm->createView(),
+				'userLogged' => $userLogged,
 		));
 	}
 	

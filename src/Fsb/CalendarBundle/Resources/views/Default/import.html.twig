@@ -9,7 +9,11 @@
 	<form action="{{ path('calendar_import') }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(importForm) }}>
 		{{ form_errors(importForm) }}
 		
-		<div>
+		{% if (is_granted('ROLE_RECRUITER')) %}
+			<div style="display: none;">
+		{% else %}
+			<div>
+		{% endif %}
 			{{ form_label(importForm.recruiter) }}
 			{{ form_errors(importForm.recruiter) }}
 			{{ form_widget(importForm.recruiter) }}
