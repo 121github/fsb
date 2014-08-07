@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}{% endblock %} | Fsb Calendar Management System</title>
+        
+		{% block stylesheets %}{% endblock %}
+        {# jquery-mobile css#}
+        <link href="{{ asset('bundles/jquery/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css') }}" rel="stylesheet" type="text/css" />
+        {# common css#}
+        <link href="{{ asset('bundles/backend/css/common.css') }}"	rel="stylesheet" type="text/css" />
+        
+        {# favicon#}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+        {% block javascripts %}
+			{# jquery Lib #}
+    		<script type="text/javascript" src="{{ asset('bundles/jquery/js/jquery-1.11.0.min.js') }}" ></script>
+    		{# jquery-mobile Lib #}
+    		<script type="text/javascript" src="{{ asset('bundles/jquery/js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js') }}" ></script>
+    		{# googleapis Lib #}
+			<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    		
+		{% endblock %}
+		
+    </head>
+    <body id="{%  block id '' %}">
+    	<div data-role="page" id="base-page">			
+    		<header data-role="header" class="header" data-theme="a" data-position="fixed" data-tap-toggle="false">
+				{# Logo #}
+				<h1><a href="{{ path('index') }}" data-ajax="false"><img alt="fsb" src="{{ asset('bundles/backend/images/logo.png') }}" width="60px;"></a></h1>
+			</header><!-- /header -->
+    
+			{% block body %}
+				
+				<div data-role="content" data-theme="a">
+					{% block article %}{% endblock %}
+				</div>
+			
+			{% endblock %}
+    		
+    		<footer data-role="footer" class="footer" data-position="fixed" data-theme="b" data-tap-toggle="false">
+    			&copy; {{ 'now' | date('Y') }} - Fsb
+			</footer><!-- /footer -->
+			
+		</div>	    
+    </body>
+</html>
+    

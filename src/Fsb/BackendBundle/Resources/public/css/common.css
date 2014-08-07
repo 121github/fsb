@@ -239,3 +239,18 @@ section#login {
 	text-decoration: underline;
 	margin-bottom: 20px;
 }
+
+
+/* ===========================================================================
+   Error Page
+   ======================================================================== */
+   
+   .error-page {
+   		text-align: center;
+   		border: 1px solid #ddd;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		width: 50%;
+		margin: auto;
+   }

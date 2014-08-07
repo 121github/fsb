@@ -1,0 +1,14 @@
+{% extends '::base_error.html.twig' %}
+
+
+{% block title %}An Error Occurred: {{ status_text }}{% endblock %}
+
+{% block article %}
+
+	<div class="error-page">
+		<h1 style="color: red;">Oops! An Error Occurred</h1>
+   		<h2>The server returned a "{{ status_code }} {{ status_text }}".</h2>
+   		<a href="{{ path('calendar_homepage') }}" data-ajax="false" data-role="button" data-inline="true" class="ui-btn ui-shadow ui-corner-all ui-btn-a">{{ "Back to home" }}</a>
+   	</div>
+	
+{% endblock %}
