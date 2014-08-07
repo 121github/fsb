@@ -87,11 +87,11 @@ class DefaultController extends Controller
     	//If the user logged is a recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
     		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes($recruiter->getId());
-    		$appointmentOutcomesChart["names"] = [$recruiter->getUserDetail()];
+    		$appointmentOutcomesChart["names"] = array($recruiter->getUserDetail()->__toString());
     	}
     	else {
     		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes();
-    		$appointmentOutcomesChart["names"] = ["Total"];
+    		$appointmentOutcomesChart["names"] = array("Total");
     		
     		
     	}
