@@ -2,14 +2,14 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
+    database_name:     fsb
+    database_user:     fsb_user
+    database_password: fsb_user
 
     mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    mailer_host:       mail.leadcontrol.co.uk
+    mailer_user:       admin@leadcontrol.co.uk
+    mailer_password:   IAfMV.M;mwX2
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
