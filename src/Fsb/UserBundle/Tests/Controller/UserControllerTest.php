@@ -52,4 +52,9 @@ class UserControllerTest extends WebTestCase
     }
 
     */
+	
+	public function testUser()
+	{
+		$this->assertEquals(1, 1, "Test that 1 is equal to 1");
+	}
 }

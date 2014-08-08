@@ -52,4 +52,9 @@ class UnavailableDateControllerTest extends WebTestCase
     }
 
     */
+	
+	public function testUnavailableDate()
+	{
+		$this->assertEquals(1, 1, "Test that 1 is equal to 1");
+	}
 }

@@ -52,4 +52,9 @@ class AppointmentControllerTest extends WebTestCase
     }
 
     */
+	
+	public function testAppointment()
+	{
+		$this->assertEquals(1, 1, "Test that 1 is equal to 1");
+	}
 }

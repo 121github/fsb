@@ -52,4 +52,9 @@ class NoteControllerTest extends WebTestCase
     }
 
     */
+	
+	public function testNote()
+	{
+		$this->assertEquals(1, 1, "Test that 1 is equal to 1");
+	}
 }
