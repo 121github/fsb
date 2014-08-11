@@ -24,3 +24,6 @@
 nbproject
 .idea
 .tm_properties
+
+# phpunit
+/app/build/*
