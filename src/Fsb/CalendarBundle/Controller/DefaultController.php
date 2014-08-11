@@ -10,13 +10,13 @@ use Fsb\CalendarBundle\Form\FilterType;
 use Symfony\Component\HttpFoundation\Request;
 use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\CalendarBundle\Entity\Filter;
-use Doctrine\Tests\Common\DataFixtures\TestEntity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\UserBundle\Util\Util;
 use Fsb\RuleBundle\Form\UnavailableDateType;
 use Fsb\RuleBundle\Entity\UnavailableDate;
 use Fsb\AppointmentBundle\Entity\Address;
+use Fsb\UserBundle\Entity\User;
 
 class DefaultController extends Controller
 {
@@ -262,5 +262,30 @@ class DefaultController extends Controller
     	}
     		
     	return $this->createSearchForm($filter);
+    }
+    
+    /**
+     * 
+     * @param User $recruiter
+     * @return array
+     */
+    protected function getRules(User $recruiter) {
+    	/******************************************************************************************************************************/
+    	/************************************************** Get the Rules ***********************************************************/
+    	/******************************************************************************************************************************/
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
+    	if ($recruiter->getRole() == 'ROLE_RECRUITER') {
+    		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+    				'recruiter' => $recruiter->getId()
+    		));
+    	}
+    	//In any other case, we search all the appointments
+    	else {
+    		$ruleList = $em->getRepository('RuleBundle:Rule')->findAll();
+    	}
+    	
+    	return $ruleList;
     }
 }

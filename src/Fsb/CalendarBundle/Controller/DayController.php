@@ -58,17 +58,7 @@ class DayController extends DefaultController
 		/******************************************************************************************************************************/
 		/************************************************** Get the Rules ***********************************************************/
 		/******************************************************************************************************************************/
-		
-		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
-		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
-				'recruiter' => $recruiter->getId()
-			));
-		}
-		//In any other case, we search all the appointments
-		else {
-			$ruleList = $em->getRepository('RuleBundle:Rule')->findAll();
-		}
+		$ruleList = $this->getRules($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Postcode Filter ***********************************************************/
