@@ -32,6 +32,13 @@ class UserFilterTest extends \PHPUnit_Framework_TestCase
 				$userFilter->getRoles()->count(),
 				'The roles are saved in the UserFilter'
 		);
+		
+		$userFilter->setRoles($this->roles);
+		$this->assertEquals(
+				$userFilter->getRoles(),
+				$userFilter->__toString(),
+				'The roles are saved in the UserFilter'
+		);
 	}
 	
 }

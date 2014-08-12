@@ -25,6 +25,13 @@ class AppointmentProjectTest extends AppointmentDefaultEntityTest
 				'The name is saved in the appointmentProject'
 		);
 		
+		$appointmentProject->setName('name');
+		$this->assertEquals(
+				'name',
+				$appointmentProject->__toString(),
+				'The toString method prints the name saved in the appointmentProject entity'
+		);
+		
 	}
 	
 }

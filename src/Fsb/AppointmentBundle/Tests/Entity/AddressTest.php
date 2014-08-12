@@ -107,6 +107,13 @@ class AddressTest extends \PHPUnit_Framework_TestCase
 				'The modified date is saved in the entity'
 		);
 		
+		$addressToString = $address->getAdd1().' '.$address->getAdd2().' '.$address->getAdd3().' '.$address->getPostcode().' '.$address->getTown().' '.$address->getCountry();
+		$this->assertEquals(
+				$addressToString,
+				$address->__toString(),
+				'The toString method prints the address saved in the address entity'
+		);
+		
 	}
 	
 }

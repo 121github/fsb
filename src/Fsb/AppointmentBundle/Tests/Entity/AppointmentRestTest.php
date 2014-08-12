@@ -75,6 +75,13 @@ class AppointmentRestTest extends \PHPUnit_Framework_TestCase
 				'The title is saved in the appointmentRest'
 		);
 		
+		$appointmentRest->setTitle('title');
+		$this->assertEquals(
+				'title',
+				$appointmentRest->__toString(),
+				'The title is saved in the appointmentRest'
+		);
+		
 		$appointmentRest->setComment('comment');
 		$this->assertEquals(
 				'comment',

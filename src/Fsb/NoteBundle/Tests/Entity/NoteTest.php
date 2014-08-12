@@ -38,6 +38,13 @@ class NoteTest extends \PHPUnit_Framework_TestCase
 				'The title is saved in the note entity'
 		);
 		
+		$note->setTitle('title');
+		$this->assertEquals(
+				'title',
+				$note->__toString(),
+				'The title is saved in the note entity'
+		);
+		
 		$note->setText('text');
 		$this->assertEquals(
 				'text',

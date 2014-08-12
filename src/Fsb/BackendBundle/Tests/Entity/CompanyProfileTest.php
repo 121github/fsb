@@ -38,6 +38,13 @@ class CompanyProfileTest extends \PHPUnit_Framework_TestCase
 				'The coname is saved in the companyProfile'
 		);
 		
+		$companyProfile->setConame('coname');
+		$this->assertEquals(
+				'coname',
+				$companyProfile->__toString(),
+				'The coname is saved in the companyProfile'
+		);
+		
 		$companyProfile->setCreatedBy(1);
 		$this->assertEquals(
 				1,
