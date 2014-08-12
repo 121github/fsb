@@ -2,18 +2,13 @@
 
 use Symfony\Component\Validator\Validation;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
+use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
 
-class AppointmentOutcomeTest extends \PHPUnit_Framework_TestCase
+class AppointmentOutcomeTest extends AppointmentDefaultEntityTest
 {
-	private $validator;
 
 	public function setUp()
 	{
-		$this->validator = Validation::createValidatorBuilder()
-		->enableAnnotationMapping()
-		->getValidator();
-
-		
 
 	}
 
@@ -21,6 +16,7 @@ class AppointmentOutcomeTest extends \PHPUnit_Framework_TestCase
 	{
 		$appointmentOutcome = new AppointmentOutcome();
 		
+		$this->globalValidation($appointmentOutcome);
 		
 		$appointmentOutcome->setName('name');
 		$this->assertEquals(

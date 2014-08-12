@@ -63,5 +63,19 @@ class AppointmentFilterTest extends \PHPUnit_Framework_TestCase
 				$appointmentFilter->getOutcomes()->count(),
 				'The outcomes are saved in the appointment Filter'
 		);
+		
+		$appointmentFilter->setPostcode('postcode');
+		$this->assertEquals(
+				'postcode',
+				$appointmentFilter->getPostcode(),
+				'The postcode is saved in the appointment Filter'
+		);
+		
+		$appointmentFilter->setRange(50);
+		$this->assertEquals(
+				50,
+				$appointmentFilter->getRange(),
+				'The range is saved in the appointment Filter'
+		);
 	}
 }

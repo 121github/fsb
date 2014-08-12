@@ -2,18 +2,13 @@
 
 use Symfony\Component\Validator\Validation;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
+use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
 
-class AppointmentProjectTest extends \PHPUnit_Framework_TestCase
+class AppointmentProjectTest extends AppointmentDefaultEntityTest
 {
-	private $validator;
 
 	public function setUp()
 	{
-		$this->validator = Validation::createValidatorBuilder()
-		->enableAnnotationMapping()
-		->getValidator();
-
-		
 
 	}
 
@@ -21,6 +16,7 @@ class AppointmentProjectTest extends \PHPUnit_Framework_TestCase
 	{
 		$appointmentProject = new AppointmentProject();
 		
+		$this->globalValidation($appointmentProject);
 		
 		$appointmentProject->setName('name');
 		$this->assertEquals(

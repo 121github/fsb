@@ -6,20 +6,17 @@ use Fsb\AppointmentBundle\Entity\AppointmentDetail;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\AppointmentBundle\Entity\Address;
+use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
 
-class AppointmentTest extends \PHPUnit_Framework_TestCase
+class AppointmentTest extends AppointmentDefaultEntityTest
 {
-	private $validator;
+	//private $validator;
 	private $project;
 	private $outcome;
 	private $address;
 		
 	public function setUp()
 	{
-		$this->validator = Validation::createValidatorBuilder()
-		->enableAnnotationMapping()
-		->getValidator();
-
 		$project = new AppointmentProject();
 		$project->setName('project');
 		$this->project = $project;
@@ -37,6 +34,8 @@ class AppointmentTest extends \PHPUnit_Framework_TestCase
 	public function testValidation()
 	{
 		$appointmentDetail = new AppointmentDetail();
+		
+		$this->globalValidation($appointmentDetail);
 		
 		$appointmentDetail->setProject($this->project);
 		$this->assertEquals(
@@ -85,6 +84,13 @@ class AppointmentTest extends \PHPUnit_Framework_TestCase
 				'comment',
 				$appointmentDetail->getComment(),
 				'The comment is saved in the appointmentDetail'
+		);
+		
+		$appointmentDetail->setTitle('title');
+		$this->assertEquals(
+				'title',
+				$appointmentDetail->__toString(),
+				'The title is saved in the appointmentDetail'
 		);
 	}
 }
