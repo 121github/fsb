@@ -10,7 +10,6 @@ use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
 
 class AppointmentTest extends AppointmentDefaultEntityTest
 {
-	//private $validator;
 	private $project;
 	private $outcome;
 	private $address;
