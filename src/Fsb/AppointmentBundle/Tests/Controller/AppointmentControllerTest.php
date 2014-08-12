@@ -53,8 +53,13 @@ class AppointmentControllerTest extends WebTestCase
 
     */
 	
-	public function testAppointment()
+	public function testNewDateAction()
 	{
-		$this->assertEquals(1, 1, "Test that 1 is equal to 1");
+		$client = static::createClient();
+		$date = new \DateTime('now');
+		$crawler = $client->request('GET', '/calendar/appointment/new/hour/'.$date->format('H').'/minute/'.$date->format('i').'/day/'.$date->format('d').'/month/'.$date->format('m').'/year/'.$date->format('Y'));
+		$this->assertEquals(302, $client->getResponse()->getStatusCode(),
+		'Unexpected HTTP status code for GET'
+		);
 	}
 }

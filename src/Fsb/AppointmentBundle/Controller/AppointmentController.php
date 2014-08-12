@@ -28,21 +28,6 @@ class AppointmentController extends DefaultController
 {
 
     /**
-     * Lists all Appointment entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $appointments = $em->getRepository('AppointmentBundle:Appointment')->findAll();
-
-        return $this->render('AppointmentBundle:Appointment:index.html.twig', array(
-            'entities' => $appointments,
-        ));
-    }
-    
-    /**
      * Creates a new Appointment entity.
      *
      */
@@ -166,21 +151,6 @@ class AppointmentController extends DefaultController
         return $form;
     }
 
-    /**
-     * Displays a form to create a new Appointment entity.
-     *
-     */
-    public function newAction()
-    {
-        $appointment = new Appointment();
-        $form   = $this->createCreateForm($appointment);
-
-        return $this->render('AppointmentBundle:Appointment:new.html.twig', array(
-            'appointment' => $appointment,
-            'form'   => $form->createView(),
-        ));
-    }
-    
     /**
      * Displays a form to create a new Appointment entity for a particular date 
      *

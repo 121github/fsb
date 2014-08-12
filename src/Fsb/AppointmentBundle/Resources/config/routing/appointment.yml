@@ -1,7 +1,3 @@
-appointment:
-    pattern:  /
-    defaults: { _controller: "AppointmentBundle:Appointment:index" }
-
 appointment_filter:
     pattern:  /filter/month/{month}/year/{year}
     defaults: { _controller: "AppointmentBundle:Appointment:searchAppointment"}
@@ -13,10 +9,6 @@ appointment_clean_filter:
 appointment_show:
     pattern:  /{id}/show
     defaults: { _controller: "AppointmentBundle:Appointment:show" }
-
-appointment_new:
-    pattern:  /new
-    defaults: { _controller: "AppointmentBundle:Appointment:new" }
 
 appointment_new_date:
     pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{recruiter_id}
