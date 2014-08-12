@@ -33,7 +33,7 @@ class AppointmentController extends DefaultController
      */
     public function createAction(Request $request)
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	 
@@ -41,7 +41,7 @@ class AppointmentController extends DefaultController
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-        $appointment = new Appointment($em);
+        $appointment = new Appointment($eManager);
         $form = $this->createCreateForm($appointment);
         $form->handleRequest($request);
         
@@ -85,11 +85,11 @@ class AppointmentController extends DefaultController
 			//$address->setLat($postcode_coord["lat"]);
 			//$address->setLon($postcode_coord["lng"]);
         	
-       		$em->persist($appointment);
-        	$em->persist($appointmentDetail);
-        	$em->persist($address);
+       		$eManager->persist($appointment);
+        	$eManager->persist($appointmentDetail);
+        	$eManager->persist($address);
         	
-        	$em->flush();
+        	$eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             	'success',
@@ -103,10 +103,10 @@ class AppointmentController extends DefaultController
             //Send the email
             $subject = 'Fsb - New Appointment Setted';
             $from = ($appointment->getAppointmentSetter())?$appointment->getAppointmentSetter()->getUserDetail()->getEmail() : 'admin@fsb.co.uk'; 
-            $to = $appointment->getRecruiter()->getUserDetail()->getEmail();
+            $recipient = $appointment->getRecruiter()->getUserDetail()->getEmail();
             $textBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.txt.twig', array('appointment' => $appointment));
             $htmlBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.html.twig', array('appointment' => $appointment));
-            $this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+            $this->sendAppointmentEmail($subject, $from, $recipient, $textBody, $htmlBody);
             
             
 
@@ -157,7 +157,7 @@ class AppointmentController extends DefaultController
      */
     public function newDateAction($hour, $minute, $day, $month, $year, $recruiter_id = null)
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	$appointment = new Appointment();
     	
@@ -170,7 +170,7 @@ class AppointmentController extends DefaultController
     	$appointment->setEndDate($endDate);
     	
     	if ($recruiter_id) {
-    		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+    		$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
     	
     		if (!$recruiter) {
     			throw $this->createNotFoundException('Unable to find Recruiter entity.');
@@ -193,16 +193,16 @@ class AppointmentController extends DefaultController
      * Finds and displays a Appointment entity.
      *
      */
-    public function showAction($id)
+    public function showAction($appointmentId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
         
         $session = $this->getRequest()->getSession();
         
         $session_fitler = $session->get('filter');
         $postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
 
-        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
 
         if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
@@ -219,11 +219,11 @@ class AppointmentController extends DefaultController
      * Displays a form to edit an existing Appointment entity.
      *
      */
-    public function editAction($id)
+    public function editAction($appointmentId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
         
 
         if (!$appointment) {
@@ -277,7 +277,7 @@ class AppointmentController extends DefaultController
      * Edits an existing Appointment entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $appointmentId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -285,9 +285,9 @@ class AppointmentController extends DefaultController
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+        $appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
 
         if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
@@ -330,11 +330,11 @@ class AppointmentController extends DefaultController
             $address->setLat($postcode_coord["lat"]);
             $address->setLon($postcode_coord["lng"]);
              
-            $em->persist($appointment);
-            $em->persist($appointmentDetail);
-            $em->persist($address);
+            $eManager->persist($appointment);
+            $eManager->persist($appointmentDetail);
+            $eManager->persist($address);
         	
-            $em->flush();
+            $eManager->flush();
 
             $this->get('session')->getFlashBag()->set(
             	'success',
@@ -366,21 +366,21 @@ class AppointmentController extends DefaultController
      * Deletes a Appointment entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $appointmentId)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($appointmentId);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+            $eManager = $this->getDoctrine()->getManager();
+            $appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
 
             if (!$appointment) {
                 throw $this->createNotFoundException('Unable to find Appointment entity.');
             }
 
-            $em->remove($appointment);
-            $em->flush();
+            $eManager->remove($appointment);
+            $eManager->flush();
         }
 
         return $this->redirect($this->generateUrl('appointment'));
@@ -389,14 +389,14 @@ class AppointmentController extends DefaultController
     /**
      * Creates a form to delete a Appointment entity by id.
      *
-     * @param mixed $id The entity id
+     * @param mixed $appointmentId The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($appointmentId)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('appointment_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('appointment_delete', array('id' => $appointmentId)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
@@ -429,7 +429,7 @@ class AppointmentController extends DefaultController
      * Edits the outcome of an existing Appointment entity.
      *
      */
-    public function outcomeEditAction($id)
+    public function outcomeEditAction($appointmentId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	 
@@ -437,9 +437,9 @@ class AppointmentController extends DefaultController
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	 
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     
-    	$appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+    	$appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
     
     	if (!$appointment) {
     		throw $this->createNotFoundException('Unable to find Appointment entity.');
@@ -459,9 +459,9 @@ class AppointmentController extends DefaultController
     		 
     		Util::setModifyAuditFields($appointmentDetail, $userLogged->getId());
     		 
-    		$em->persist($appointmentDetail);
+    		$eManager->persist($appointmentDetail);
     		 
-    		$em->flush();
+    		$eManager->flush();
     
     		$this->get('session')->getFlashBag()->set(
     				'success',
@@ -527,7 +527,7 @@ class AppointmentController extends DefaultController
      */
     public function searchAppointmentAction($month,$year)
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     
     	/******************************************************************************************************************************/
     	/************************************************** Build the form with the session values if are isset ***********************/
@@ -542,13 +542,13 @@ class AppointmentController extends DefaultController
     	$postcode_filter = isset($session_fitler["postcode"]) ? $session_fitler["postcode"] : null;
     	$range_filter = isset($session_fitler["range"]) ? $session_fitler["range"] : null;
     	
-    	$searchAppointmentFormSubmitted = ($projects_filter || $recruiters_filter || $outcomes_filter || $postcode_filter || $range_filter)? true : false;
+    	$searchFormSubmitted = ($projects_filter || $recruiters_filter || $outcomes_filter || $postcode_filter || $range_filter)? true : false;
     
     	if ($recruiters_filter) {
     		$recruiter_ar = new ArrayCollection();
     		 
     		foreach ($recruiters_filter as $recruiter) {
-    			$recruiter_ar->add($em->getRepository('UserBundle:User')->find($recruiter));
+    			$recruiter_ar->add($eManager->getRepository('UserBundle:User')->find($recruiter));
     		}
     		 
     		$filter->setRecruiters($recruiter_ar);
@@ -558,7 +558,7 @@ class AppointmentController extends DefaultController
     		$project_ar = new ArrayCollection();
     		 
     		foreach ($projects_filter as $project) {
-    			$project_ar->add($em->getRepository('AppointmentBundle:AppointmentProject')->find($project));
+    			$project_ar->add($eManager->getRepository('AppointmentBundle:AppointmentProject')->find($project));
     		}
     		 
     		$filter->setProjects($project_ar);
@@ -568,7 +568,7 @@ class AppointmentController extends DefaultController
     		$outcome_ar = new ArrayCollection();
     		 
     		foreach ($outcomes_filter as $outcome) {
-    			$outcome_ar->add($em->getRepository('AppointmentBundle:AppointmentOutcome')->find($outcome));
+    			$outcome_ar->add($eManager->getRepository('AppointmentBundle:AppointmentOutcome')->find($outcome));
     		}
     		 
     		$filter->setOutcomes($outcome_ar);
@@ -644,7 +644,7 @@ class AppointmentController extends DefaultController
     	/**********************************************************************************************************************************/
     	/************************************************** Get the appointments **********************************************************/
     	/**********************************************************************************************************************************/
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByFilter($month, $year, $recruiters_filter, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+    	$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByFilter($month, $year, $recruiters_filter, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	
     	//Build the month array with the available recruiters
     	$auxList = array();
@@ -670,7 +670,7 @@ class AppointmentController extends DefaultController
     			'month' => $month,
     			"year" => $year,
     			'searchAppointmentForm' => $form->createView(),
-    			'searchAppointmentFormSubmitted' => $searchAppointmentFormSubmitted,
+    			'searchAppointmentFormSubmitted' => $searchFormSubmitted,
     	));
     }
     
@@ -698,7 +698,7 @@ class AppointmentController extends DefaultController
     	$lat = null;
     	$lon = null;
     
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     
     	/******************************************************************************************************************************/
     	/************************************************** FILTER FORM ***************************************************************/
@@ -726,14 +726,14 @@ class AppointmentController extends DefaultController
     	/************************************************** Get Appointments ***************************************************************/
     	/******************************************************************************************************************************/
     
-    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByFilter($month, $year, $recruiters_filter, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+    	$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByFilter($month, $year, $recruiters_filter, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
     	
     	//Build the month array with the available recruiters
     	$auxList = array();
-    	$i = 0;
+    	$iter = 0;
     	foreach ($appointmentList as $appointment) {
-    		$auxList[$i] = array($appointment->getAppointmentDetail()->getTitle(), $appointment->getAppointmentDetail()->getAddress()->getLat(), $appointment->getAppointmentDetail()->getAddress()->getLon(), $i+1);
-    		$i++;
+    		$auxList[$iter] = array($appointment->getAppointmentDetail()->getTitle(), $appointment->getAppointmentDetail()->getAddress()->getLat(), $appointment->getAppointmentDetail()->getAddress()->getLon(), $iter+1);
+    		$iter++;
     	}
     	$appointmentList = $auxList;
     

@@ -15,16 +15,16 @@ class DefaultController extends Controller
 	 *
 	 * @param unknown $subject
 	 * @param unknown $from
-	 * @param unknown $to
+	 * @param unknown $recipient
 	 * @param unknown $textBody
 	 * @param unknown $htmlBody
 	 */
-	protected function sendAppointmentEmail ($subject, $from, $to, $textBody, $htmlBody) {
+	protected function sendAppointmentEmail ($subject, $from, $recipient, $textBody, $htmlBody) {
 	
 		$email = \Swift_Message::newInstance()
 		->setSubject($subject)
 		->setFrom($from)
-		->setTo($to)
+		->setTo($recipient)
 		->setBody($textBody)
 		->addPart($htmlBody, 'text/html')
 		;

@@ -32,11 +32,11 @@ class AppointmentImportController extends DefaultController
      */
     public function appointmentImportAction($filePath, $mimeType, $recruiter_id, $project_id = null)
     {	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	
     	if ($recruiter_id) {
-    		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+    		$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
     	}
     	
     	if (!$recruiter && $recruiter_id) {
@@ -44,7 +44,7 @@ class AppointmentImportController extends DefaultController
     	}
     	
     	if ($project_id) {
-    		$project = $em->getRepository('AppointmentBundle:AppointmentProject')->find($project_id);
+    		$project = $eManager->getRepository('AppointmentBundle:AppointmentProject')->find($project_id);
     	}
     	 
     	if (!$project && $project_id) {
@@ -67,12 +67,12 @@ class AppointmentImportController extends DefaultController
         	//Check the appointmentes that will be imported
         	$errors = array();
         	$appointmentListSaved = array();
-        	$i = 0;
+        	$iter = 0;
         	foreach ($appointmentList as $appointment) {
         		$clonedForm = $this->createImportForm($filePath, $mimeType, $recruiter_id, $project_id);
         		$this->checkAppointmentRestrictions($appointment, $clonedForm);
         		if (strlen($clonedForm->getErrors()->__toString()) > 0) {
-        			$errors[$i] = $clonedForm->getErrors()->__toString();
+        			$errors[$iter] = $clonedForm->getErrors()->__toString();
         		}
         		else {
         			$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.import'));
@@ -80,16 +80,16 @@ class AppointmentImportController extends DefaultController
         			$this->saveAppointment($appointment);
         			array_push($appointmentListSaved, $appointment); 
         		}
-        		$i++;
+        		$iter++;
         	}
         	if (count($appointmentListSaved) > 0) {
 	        	//Send the email
 	        	$subject = 'Fsb - New Appointment Setted';
 	        	$from = 'admin@fsb.co.uk';
-	        	$to = $recruiter->getUserDetail()->getEmail();
+	        	$recipient = $recruiter->getUserDetail()->getEmail();
 	        	$textBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.txt.twig', array('appointmentList' => $appointmentListSaved));
 	        	$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentListEmail.html.twig', array('appointmentList' => $appointmentListSaved));
-	        	$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+	        	$this->sendAppointmentEmail($subject, $from, $recipient, $textBody, $htmlBody);
 	        
         	}        	
         	
@@ -106,7 +106,7 @@ class AppointmentImportController extends DefaultController
     }
     
     private function saveAppointment(Appointment $appointment) {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -118,10 +118,10 @@ class AppointmentImportController extends DefaultController
     	Util::setCreateAuditFields($appointment->getAppointmentDetail(), $userLogged);
     	Util::setCreateAuditFields($appointment->getAppointmentDetail()->getAddress(), $userLogged);
     	
-    	$em->persist($appointment->getAppointmentDetail()->getAddress());
-    	$em->persist($appointment->getAppointmentDetail());
-    	$em->persist($appointment);
-    	$em->flush();
+    	$eManager->persist($appointment->getAppointmentDetail()->getAddress());
+    	$eManager->persist($appointment->getAppointmentDetail());
+    	$eManager->persist($appointment);
+    	$eManager->flush();
     }
     
     /**
@@ -165,6 +165,8 @@ class AppointmentImportController extends DefaultController
     	    	
     	//$appointmentList = $this->get('jms.serializer')->deserialize($xmlFile, 'Fsb\AppointmentBundle\Entity\AppointmentImport\AppointmentListCSI', 'xml');
     	var_dump($appointmentList);
+    	var_dump($recruiter);
+    	var_dump($project);
 
     	return $appointmentList;
     }
@@ -177,10 +179,10 @@ class AppointmentImportController extends DefaultController
     	$file_ar = CsvUtil::csvToArray($filePath);
     	
     	if (count($file_ar) > 0) {
-    		$em = $this->getDoctrine()->getManager();
+    		$eManager = $this->getDoctrine()->getManager();
     		$appointmentList = array(new Appointment());
     		
-    		$i = 0;
+    		$iter = 0;
 	    	foreach ($file_ar as $row) {
 	    		$appointment = new Appointment();
 	    		$startDate = str_replace('/', '-', $row["Start Date"]);
@@ -188,7 +190,7 @@ class AppointmentImportController extends DefaultController
 	    		$endDate = str_replace('/', '-', $row["End Date"]);
 	    		$appointment->setEndDate(new \DateTime(date('Y-m-d', strtotime($endDate))." ".$row["End Time"]));
 	    		$appointment->setRecruiter($recruiter);
-	    		$appointmentSetter = $em->getRepository('UserBundle:User')->findUserByNameAndRole($row["Meeting Organizer"], 'ROLE_APPOINTMENT_SETTER');
+	    		$appointmentSetter = $eManager->getRepository('UserBundle:User')->findUserByNameAndRole($row["Meeting Organizer"], 'ROLE_APPOINTMENT_SETTER');
 	    		if ($appointmentSetter) {
 	    			$appointment->setAppointmentSetter($appointmentSetter[0]);
 	    		}
@@ -212,8 +214,8 @@ class AppointmentImportController extends DefaultController
 	    		$appointmentDetail->setAddress($address);
 	    		$appointment->setAppointmentDetail($appointmentDetail);
 	    			
-	    		$appointmentList[$i] = $appointment;
-	    		$i++;
+	    		$appointmentList[$iter] = $appointment;
+	    		$iter++;
 	    	}
     	}
     	
