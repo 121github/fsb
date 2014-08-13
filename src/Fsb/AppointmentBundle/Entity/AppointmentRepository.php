@@ -24,9 +24,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentsByMonth($month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('SUBSTRING(a.startDate, 9, 2) AS day', 'COUNT(a.id) AS numapp'))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -93,9 +93,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findAppointmentsByMonth($month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('a.id, ad.title, adr.lat, adr.lon')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -162,9 +162,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findAppointmentsByDay($day,$month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array(
 				'SUBSTRING(a.startDate, 11, 3) AS hour', 
 				'SUBSTRING(a.startDate, 15, 2) AS minute',
@@ -252,10 +252,10 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findAppointmentsFromDay($day,$month,$year, $recruiter_id = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array(
 				'a.startDate as date, a.id, ad.title, ad.comment',
 				'CONCAT(ud.firstname, :space, ud.lastname) as recruiter',
@@ -333,9 +333,9 @@ class AppointmentRepository extends EntityRepository
 	 * @param $recruiter_id
 	 */
 	public function findAppointmentsWithCollisionByDate(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('a.id'))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -376,12 +376,12 @@ class AppointmentRepository extends EntityRepository
 	 * @param $recruiter_id
 	 */
 	public function findAppointmentsWithCollisionByLocation($lat, $lon, $distance, \DateTime $startDate, \DateTime $endDate, $recruiter_id) {
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
 		$startDate = new \DateTime($startDate->format('Y-m-d H:i:s')." - 1 hour");
 		$endDate = new \DateTime($endDate->format('Y-m-d H:i:s')." + 1 hour");
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('a.id'))
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -421,9 +421,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findAppointmentsByFilter($month,$year, $recruiters = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('a, ad, adr')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -490,9 +490,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findAppointmentsByExportFilter($startDate, $endDate, $recruiters = null, $projects = null, $outcomes = null, $postcode_lat = null, $postcode_lon = null, $distance = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('a, ad, adr')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -557,9 +557,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentOutcomesByMonth ($year, $recruiters = null,  $appointmentSetters = null) {
 		
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('SUBSTRING(a.startDate, 6, 2) as month, ao.name, count(a) as num_appointments')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -582,9 +582,9 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('appointmentSetters', $appointmentSetters);
 		}
 		
-		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		$appOutcomes_ar = $query->getQuery()->getResult();
 		
-		return $appointmentOutcomes_ar;
+		return $appOutcomes_ar;
 	}
 	
 	
@@ -598,9 +598,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentOutcomesGroupByRecruiter ($startDate = null,  $endDate = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('r.id as recruiter_id, ao.name, count(a) as num_appointments')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -629,9 +629,9 @@ class AppointmentRepository extends EntityRepository
 			->setParameter('endDate', $endDate);
 		}
 	
-		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		$appOutcomes_ar = $query->getQuery()->getResult();
 	
-		return $appointmentOutcomes_ar;
+		return $appOutcomes_ar;
 	}
 	
 	/**
@@ -643,9 +643,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentOutcomes ($recruiter_id = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('count(a)')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -662,9 +662,9 @@ class AppointmentRepository extends EntityRepository
 			;
 		}
 	
-		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		$appOutcomes_ar = $query->getQuery()->getResult();
 	
-		return $appointmentOutcomes_ar;
+		return $appOutcomes_ar;
 	}
 
 	/**
@@ -677,12 +677,12 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentsThisWeek ($recruiter_id = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
 		$firstWeekDay = date('Y-m-d 00:00:00',strtotime('monday this week'));
 		$lastWeekDay = date('Y-m-d 23:59:59',strtotime('sunday this week'));
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('count(a) as num, SUBSTRING(a.startDate,9,2) as day')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -702,9 +702,9 @@ class AppointmentRepository extends EntityRepository
 			;
 		}
 	
-		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		$appOutcomes_ar = $query->getQuery()->getResult();
 	
-		return $appointmentOutcomes_ar;
+		return $appOutcomes_ar;
 	}
 	
 	/**
@@ -717,12 +717,12 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findNumAppointmentsThisYear ($recruiter_id = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
 		$currentYear = date('Y',strtotime('now'));
 		$nextYear = date('Y',strtotime('next year'));
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('count(a) as num, SUBSTRING(a.startDate,6,2) as month')
 		->from('AppointmentBundle:Appointment', 'a')
 		->innerJoin('a.appointmentDetail', 'ad')
@@ -742,9 +742,9 @@ class AppointmentRepository extends EntityRepository
 			;
 		}
 	
-		$appointmentOutcomes_ar = $query->getQuery()->getResult();
+		$appOutcomes_ar = $query->getQuery()->getResult();
 	
-		return $appointmentOutcomes_ar;
+		return $appOutcomes_ar;
 	}
 	
 	
@@ -758,9 +758,9 @@ class AppointmentRepository extends EntityRepository
 	 */
 	public function findUpcomingAppointments($currentDate, $recruiter_id = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array(
 				'a'
 		))

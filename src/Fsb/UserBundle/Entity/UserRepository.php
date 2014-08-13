@@ -37,9 +37,9 @@ class UserRepository extends EntityRepository
 	 */
 	public function findUsersByRoleQuery($role)
 	{
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 			->select('u')
 			->from('UserBundle:User', 'u')
 			->innerJoin('u.role', 'ur')
@@ -60,9 +60,9 @@ class UserRepository extends EntityRepository
 	 */
 	public function findAllOrderByName($roles = null){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 			->select('u')
 			->from('UserBundle:User', 'u')
 			->innerJoin('u.userDetail', 'ud')
@@ -92,10 +92,10 @@ class UserRepository extends EntityRepository
 	 */
 	public function findUserByNameAndRole($name, $role){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('u')
 		->from('UserBundle:User', 'u')
 		->innerJoin('u.userDetail', 'ud')

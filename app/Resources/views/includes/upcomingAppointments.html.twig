@@ -4,7 +4,7 @@
 		<ul data-role="listview">
 			{% for appointment in upcomingAppointmentList %}
 				<li>
-					<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="clock" data-iconpos="right" data-mini="false" data-rel="dialog" data-transition="pop" data-ajax="false">
+					<a href="{{ path('appointment_show', {'appointmentId': appointment.id}) }}" data-role="button" data-icon="clock" data-iconpos="right" data-mini="false" data-rel="dialog" data-transition="pop" data-ajax="false">
 						{% if not is_granted('ROLE_RECRUITER') %}
 							<h2>{{ appointment.recruiter }}</h2>
 						{% endif %}

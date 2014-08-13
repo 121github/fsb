@@ -40,20 +40,20 @@ class AppointmentRestController extends FOSRestController
 	 * @Annotations\View(template="AppointmentBundle:Appointment:show.html.twig", templateVar="appointment")
 	 *
 	 * @param Request $request the request object
-	 * @param int     $id      the appointment id
+	 * @param int     $appointmentId      the appointment id
 	 *
 	 * @return array
 	 *
 	 * @throws NotFoundHttpException when appointment not exist
 	 */
-	public function getAppointmentAction(Request $request, $id)
+	public function getAppointmentAction($appointmentId)
 	{
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		 
-		$appointment = $em->getRepository('AppointmentBundle:Appointment')->find($id);
+		$appointment = $eManager->getRepository('AppointmentBundle:Appointment')->find($appointmentId);
 		 
 		if (!$appointment) {
-			throw new NotFoundHttpException(sprintf('The appointment \'%s\' was not found.',$id));
+			throw new NotFoundHttpException(sprintf('The appointment \'%s\' was not found.',$appointmentId));
 		}
 	
 		return $appointment;
@@ -85,7 +85,7 @@ class AppointmentRestController extends FOSRestController
 	public function postAppointmentAction(Request $request)
 	{
 		try {
-			$em = $this->getDoctrine()->getManager();
+			$eManager = $this->getDoctrine()->getManager();
 			 
 			$appointmentRest = new AppointmentRest();
 
@@ -102,14 +102,14 @@ class AppointmentRestController extends FOSRestController
 				$newAppointment->setStartDate(new \DateTime($appointmentRest->getStartDate()));
 				$newAppointment->setEndDate(new \DateTime($appointmentRest->getEndDate()));
 				
-				$recruiter = $em->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getRecruiter(), 'ROLE_RECRUITER');
+				$recruiter = $eManager->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getRecruiter(), 'ROLE_RECRUITER');
 				
 				if (!$recruiter) {
 					throw new NotFoundHttpException(sprintf('Unable to find a Recruiter with this name \'%s\'',$appointmentRest->getRecruiter()));
 				}
 				$newAppointment->setRecruiter($recruiter[0]);
 				
-				$appointmentSetter = $em->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getAppointmentSetter(), 'ROLE_APPOINTMENT_SETTER');
+				$appointmentSetter = $eManager->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getAppointmentSetter(), 'ROLE_APPOINTMENT_SETTER');
 				if (!$appointmentSetter) {
 					throw new NotFoundHttpException(sprintf('Unable to find an Appointment Setter with this name \'%s\'',$appointmentRest->getAppointmentSetter()));
 				}
@@ -119,7 +119,7 @@ class AppointmentRestController extends FOSRestController
 				$appointmentDetail = $newAppointment->getAppointmentDetail();
 				$appointmentDetail->setTitle($appointmentRest->getTitle());
 				$appointmentDetail->setComment($appointmentRest->getComment());
-				$project = $em->getRepository('AppointmentBundle:AppointmentProject')->findBy(array('name' => $appointmentRest->getProject()));
+				$project = $eManager->getRepository('AppointmentBundle:AppointmentProject')->findBy(array('name' => $appointmentRest->getProject()));
 				if (!$project) {
 					throw new NotFoundHttpException(sprintf('Unable to find a Project with this name \'%s\'',$appointmentRest->getProject()));
 				}
@@ -142,10 +142,10 @@ class AppointmentRestController extends FOSRestController
 				Util::setCreateAuditFields($address, 1);
 				
 				
-				$em->persist($newAppointment);
-				$em->persist($appointmentDetail);
-				$em->persist($address);
-				$em->flush();
+				$eManager->persist($newAppointment);
+				$eManager->persist($appointmentDetail);
+				$eManager->persist($address);
+				$eManager->flush();
 	
 				$routeOptions = array(
 						'id' => $newAppointment->getId(),
@@ -155,10 +155,10 @@ class AppointmentRestController extends FOSRestController
 				//Send the email
 				$subject = 'Fsb - New Appointment Setted';
 				$from = ($newAppointment->getAppointmentSetter())?$newAppointment->getAppointmentSetter()->getUserDetail()->getEmail() : 'admin@fsb.co.uk';
-				$to = $newAppointment->getRecruiter()->getUserDetail()->getEmail();
+				$recipient = $newAppointment->getRecruiter()->getUserDetail()->getEmail();
 				$textBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.txt.twig', array('appointment' => $newAppointment));
 				$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.html.twig', array('appointment' => $newAppointment));
-				$this->sendAppointmentEmail($subject, $from, $to, $textBody, $htmlBody);
+				$this->sendAppointmentEmail($subject, $from, $recipient, $textBody, $htmlBody);
 	
 				return $this->routeRedirectView('get_appointment', $routeOptions, Codes::HTTP_CREATED);
 			}
@@ -174,16 +174,16 @@ class AppointmentRestController extends FOSRestController
 	 *
 	 * @param unknown $subject
 	 * @param unknown $from
-	 * @param unknown $to
+	 * @param unknown $recipient
 	 * @param unknown $textBody
 	 * @param unknown $htmlBody
 	 */
-	private function sendAppointmentEmail ($subject, $from, $to, $textBody, $htmlBody) {
+	private function sendAppointmentEmail ($subject, $from, $recipient, $textBody, $htmlBody) {
 	
 		$email = \Swift_Message::newInstance()
 		->setSubject($subject)
 		->setFrom($from)
-		->setTo($to)
+		->setTo($recipient)
 		->setBody($textBody)
 		->addPart($htmlBody, 'text/html')
 		;

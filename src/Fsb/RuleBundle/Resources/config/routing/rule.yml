@@ -3,7 +3,7 @@ rule:
     defaults: { _controller: "RuleBundle:Rule:index" }
 
 rule_show:
-    pattern:  /{id}/show
+    pattern:  /{ruleId}/show
     defaults: { _controller: "RuleBundle:Rule:show" }
 
 rule_new:
@@ -11,7 +11,7 @@ rule_new:
     defaults: { _controller: "RuleBundle:Rule:new" }
 
 rule_new_by_id:
-    pattern:  /{id}/new
+    pattern:  /{recruiterId}/new
     defaults: { _controller: "RuleBundle:Rule:newById" }
 
 rule_create:
@@ -20,15 +20,15 @@ rule_create:
     requirements: { _method: post }
 
 rule_edit:
-    pattern:  /{id}/edit
+    pattern:  /{ruleId}/edit
     defaults: { _controller: "RuleBundle:Rule:edit" }
 
 rule_update:
-    pattern:  /{id}/update
+    pattern:  /{ruleId}/update
     defaults: { _controller: "RuleBundle:Rule:update" }
     requirements: { _method: post|put }
 
 rule_delete:
-    pattern:  /{id}/delete
+    pattern:  /{ruleId}/delete
     defaults: { _controller: "RuleBundle:Rule:delete" }
     requirements: { _method: post|delete }

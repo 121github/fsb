@@ -100,7 +100,7 @@ class UserController extends Controller
     		throw new AccessDeniedException();
     	}
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
         
         /******************************************************************************************************************************/
         /************************************************** Build the form with the session values if are isset ***********************/
@@ -117,7 +117,7 @@ class UserController extends Controller
         	$role_ar = new ArrayCollection();
         	 
         	foreach ($roles_filter as $role) {
-        		$role_ar->add($em->getRepository('UserBundle:UserRole')->find($role));
+        		$role_ar->add($eManager->getRepository('UserBundle:UserRole')->find($role));
         	}
         	 
         	$filter->setRoles($role_ar);
@@ -149,7 +149,7 @@ class UserController extends Controller
         /************************************************** Get the users *************** ***********************/
         /******************************************************************************************************************************/
 
-        $entities = $em->getRepository('UserBundle:User')->findAllOrderByName($roles_filter);
+        $entities = $eManager->getRepository('UserBundle:User')->findAllOrderByName($roles_filter);
         
         return $this->render('BackendBundle:User:index.html.twig', array(
             'entities' => $entities,
@@ -195,7 +195,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-        	$em = $this->getDoctrine()->getManager();
+        	$eManager = $this->getDoctrine()->getManager();
         	
         	$encoder = $this->get('security.encoder_factory')->getEncoder($user);
         	
@@ -217,9 +217,9 @@ class UserController extends Controller
             Util::setCreateAuditFields($userDetail, $userLogged->getId());
             
             
-            $em->persist($user);
-            $em->persist($userDetail);
-            $em->flush();
+            $eManager->persist($user);
+            $eManager->persist($userDetail);
+            $eManager->flush();
             
             
             $this->get('session')->getFlashBag()->set(
@@ -292,17 +292,17 @@ class UserController extends Controller
      * Finds and displays a User entity.
      *
      */
-    public function showAction($id)
+    public function showAction($userId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('UserBundle:User')->find($id);
+        $user = $eManager->getRepository('UserBundle:User')->find($userId);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($userId);
         $passwordForm = $this->createChangePasswordForm($user);
 
         return $this->render('BackendBundle:User:show.html.twig', array(
@@ -325,18 +325,18 @@ class UserController extends Controller
      * Displays a form to edit an existing User entity.
      *
      */
-    public function editAction($id)
+    public function editAction($userId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('UserBundle:User')->find($id);
+        $user = $eManager->getRepository('UserBundle:User')->find($userId);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
         $editForm = $this->createEditForm($user);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($userId);
 
         return $this->render('BackendBundle:User:edit.html.twig', array(
             'entity'      => $user,
@@ -355,7 +355,7 @@ class UserController extends Controller
     private function createEditForm(User $user)
     {
         $form = $this->createForm(new UserEditType(), $user, array(
-            'action' => $this->generateUrl('user_update', array('id' => $user->getId())),
+            'action' => $this->generateUrl('user_update', array('userId' => $user->getId())),
             'method' => 'PUT',
         ));
 
@@ -370,7 +370,7 @@ class UserController extends Controller
      * Edits an existing User entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $userId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -379,16 +379,16 @@ class UserController extends Controller
     	}
     	
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('UserBundle:User')->find($id);
+        $user = $eManager->getRepository('UserBundle:User')->find($userId);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
         $editForm = $this->createEditForm($user);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($userId);
         
         $editForm->handleRequest($request);
         
@@ -418,9 +418,9 @@ class UserController extends Controller
         	$userDetail->setUser($user);
         	
         	
-        	$em->persist($user);
-        	$em->persist($userDetail);
-            $em->flush();
+        	$eManager->persist($user);
+        	$eManager->persist($userDetail);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -453,7 +453,7 @@ class UserController extends Controller
      * Change password
      *
      */
-    public function changePasswordAction(Request $request, $id)
+    public function changePasswordAction(Request $request, $userId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -461,9 +461,9 @@ class UserController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     
-    	$user = $em->getRepository('UserBundle:User')->find($id);
+    	$user = $eManager->getRepository('UserBundle:User')->find($userId);
     
     	if (!$user) {
     		throw $this->createNotFoundException('Unable to find User entity.');
@@ -494,8 +494,8 @@ class UserController extends Controller
     		 
     		Util::setModifyAuditFields($user, $userLogged->getId());
     		 
-    		$em->persist($user);
-    		$em->flush();
+    		$eManager->persist($user);
+    		$eManager->flush();
     		
     		$this->get('session')->getFlashBag()->set(
     				'success',
@@ -524,7 +524,7 @@ class UserController extends Controller
     private function createChangePasswordForm(UserChangePassword $userChangePassword, $userId)
     {
     	$form = $this->createForm(new UserChangePasswordType(), $userChangePassword, array(
-    			'action' => $this->generateUrl('user_password', array('id' => $userId)),
+    			'action' => $this->generateUrl('user_password', array('userId' => $userId)),
     			'method' => 'POST',
     	));
     	 
@@ -549,22 +549,23 @@ class UserController extends Controller
      * Deletes a User entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $userId)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($userId);
         $form->handleRequest($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $user = $em->getRepository('UserBundle:User')->find($id);
+            $eManager = $this->getDoctrine()->getManager();
+            $user = $eManager->getRepository('UserBundle:User')->find($userId);
 
             if (!$user) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }
 
-            $em->remove($user->getUserDetail());
-            $em->remove($user);
-            $em->flush();
+            $eManager->remove($user->getUserDetail());
+            $eManager->remove($user);
+            $eManager->flush();
             
             
             $this->get('session')->getFlashBag()->set(
@@ -582,14 +583,14 @@ class UserController extends Controller
     /**
      * Creates a form to delete a User entity by id.
      *
-     * @param mixed $id The entity id
+     * @param mixed $userId The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($userId)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('user_delete', array('userId' => $userId)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array(
             		'label' => 'Delete',

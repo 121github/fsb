@@ -105,7 +105,7 @@
 							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["appointment"].appointmentDetail.outcomeReason }}</p>
 							                		<p>
 							                			<strong>{{ "Postcode: " }}</strong>{{ appointment["appointment"].appointmentDetail.address.postcode }}
-							                			<a href="{{ path('appointment_show', {'id': appointment["appointment"].id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+							                			<a href="{{ path('appointment_show', {'appointmentId': appointment["appointment"].id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
 							                			{% if appointment["distance"] is defined %}
 															{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
 														{% endif %}
@@ -114,9 +114,9 @@
 							                		
 							                		<p style="padding-top: 10px; text-align: right;">
 							                		{% if (is_granted('ROLE_RECRUITER')) %}
-												        <a href="{{ path('appointment_outcome_edit', {'id': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												        <a href="{{ path('appointment_outcome_edit', {'appointmentId': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 												    {% else %}
-												    	<a href="{{ path('appointment_edit', {'id': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    	<a href="{{ path('appointment_edit', {'appointmentId': appointment["appointment"].id}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 												    {% endif %}
 												        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 												    </p>

@@ -57,14 +57,14 @@
 					</div>
 					<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 						<div style="text-align: right;">
-							<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
+							<a href="{{ path('rule_new_by_id', {'recruiterId': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
 						</div>
 						<h2 class="ui-title">{{ recruiter }}</h2>
 						<br />
 						<ul data-role="listview">
 							{% if ruleList|length > 0 %}
 								{% for rule in ruleList %} 
-								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+								  	<li><a href="{{ path('rule_edit', {'ruleId': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
 								  		<h3>{{ rule.rule }}</h3>
 								  		<p><strong>{{ "[" ~ rule.recruiter ~ "]" }}</strong></p>
 								  		<p>{{ rule.description }}</p>
@@ -120,7 +120,7 @@
 								<h3 class="ui-title">Are you sure you want to set Available this day?</h3>
 							    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-btn-icon-left ui-icon-delete" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
 							    {% set submit_id = setAvailableForm.vars.id ~ "_submit" %}
-							    <form action="{{ path('unavailableDate_delete', { 'id': unavailableDateId }) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
+							    <form action="{{ path('unavailableDate_delete', { 'unavailableDateId': unavailableDateId }) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(setAvailableForm) }}>
 							    	<input type="hidden" name="_method" value="DELETE">
 							   		{{ form_rest(setAvailableForm) }}
 							   	</form>
@@ -216,7 +216,7 @@
 								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
 								                		<p>
 								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
-								                			<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+								                			<a href="{{ path('appointment_show', {'appointmentId': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
 								                			{% if appointment["distance"] is defined %}
 																{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
 															{% endif %}
@@ -225,9 +225,9 @@
 								                		
 								                		<p style="padding-top: 10px; text-align: right;">
 								                		{% if (is_granted('ROLE_RECRUITER')) %}
-													        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+													        <a href="{{ path('appointment_outcome_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 													    {% else %}
-													    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+													    	<a href="{{ path('appointment_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 													    {% endif %}
 													        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 													    </p>
@@ -263,7 +263,7 @@
 								                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
 								                		<p>
 								                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
-															<a href="{{ path('appointment_show', {'id': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+															<a href="{{ path('appointment_show', {'appointmentId': appointment.id}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
 															{% if appointment["distance"] is defined %}
 																{{ "[" ~ appointment["distance"] ~  " miles from " ~ appointment["postcode_dest"] ~ "]" }}
 															{% endif %}
@@ -272,9 +272,9 @@
 								                		
 								                		<p style="padding-top: 10px; text-align: right;">
 													        {% if (is_granted('ROLE_RECRUITER')) %}
-														        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+														        <a href="{{ path('appointment_outcome_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 														    {% else %}
-														    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+														    	<a href="{{ path('appointment_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 														    {% endif %}
 													        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 													    </p>
@@ -291,7 +291,7 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
-													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'recruiterId': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 												</ul>
 											</div>
 								       </div>
@@ -312,8 +312,8 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" class="ui-btn ui-disabled" data-rel="dialog" data-transition="pop">Create New Appointment</a></li>
-													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
-													<li><a href="{{ path('unavailableDate_edit', {'id': unavailableTimeList[time], 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Change Availability</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year,'recruiterId': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
+													<li><a href="{{ path('unavailableDate_edit', {'unavailableDateId': unavailableTimeList[time], 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Change Availability</a></li>
 												</ul>
 											</div>
 					                	{% else %}
@@ -323,7 +323,7 @@
 												<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 													<li data-role="divider" data-theme="b">{{ "What action do you want to do at " ~ time ~ "h ?"}}</li>
 													<li><a href="{{ path('appointment_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
-													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': j*00, 'day': day, 'month': month, 'year': year, 'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
+													<li><a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': j*00, 'day': day, 'month': month, 'year': year, 'recruiterId': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 													<li><a href="{{ path('unavailableDate_new_date', {'hour': i, 'minute': j*30, 'day': day, 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
 												</ul>
 											</div>
@@ -344,12 +344,12 @@
 											</div>
 											<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 												<div style="text-align: right;">
-													<a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Note" }}</a>
+													<a href="{{ path('note_new_by_recruiter_id', {'hour': i, 'minute': 00, 'day': day, 'month': month, 'year': year, 'recruiterId': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Note" }}</a>
 												</div>
 												<br />
 												<ul data-role="listview">
 													{% for note in noteList[hour]  %} 
-													  	<li><a href="{{ path('note_edit', {'id': note.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+													  	<li><a href="{{ path('note_edit', {'noteId': note.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
 													  		<p>{{ "[" ~ note.recruiter ~ "]" }}</p>
 													  		<h3>{{ note.title }}</h3>
 													  		<p>{{ note.text }}</p>

@@ -68,8 +68,8 @@
 				    	{% if (entity.role == 'ROLE_RECRUITER') %}
 			    			<a href="{{ path('calendar_month', {'month': nowMonth, 'year': nowYear, 'recruiter_id': entity.id}) }}" data-iconpos="notext" data-role="button" data-ajax="false" data-inline="true" data-icon="calendar" data-theme="a">View Calendar</a>
 			    		{% endif %}
-						<a href="{{ path('user_edit', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="edit" data-theme="a">Edit</a>
-						<a href="{{ path('user_password', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="lock" data-theme="a">Change Password</a>
+						<a href="{{ path('user_edit', { 'userId': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="edit" data-theme="a">Edit</a>
+						<a href="{{ path('user_password', { 'userId': entity.id }) }}" data-role="button" data-inline="true" data-iconpos="notext" data-icon="lock" data-theme="a">Change Password</a>
 			    	</p>
 			    </div>
 			   	

@@ -16,7 +16,7 @@ class MapController extends DefaultController
 		$lat = null;
 		$lon = null;
 		 
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		 
 		/******************************************************************************************************************************/
 		/************************************************** FILTER FORM ***************************************************************/
@@ -43,7 +43,7 @@ class MapController extends DefaultController
 		/************************************************** Get the recruiter *********************************************************/
 		/******************************************************************************************************************************/
 		//Recruiter
-		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+		$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 			
 		if (!$recruiter) {
 			throw $this->createNotFoundException('Unable to find this recruiter.');
@@ -56,18 +56,18 @@ class MapController extends DefaultController
 		//Appointments in the current month
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		 
 		$auxList = array();
-		$i = 0;
+		$iter = 0;
 		foreach ($appointmentList as $appointment) {
-			$auxList[$i] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $i+1);
-			$i++;
+			$auxList[$iter] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $iter+1);
+			$iter++;
 		}
 		$appointmentList = $auxList;
 		 
@@ -111,7 +111,7 @@ class MapController extends DefaultController
 		$lat = null;
 		$lon = null;
 	
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 	
 		/******************************************************************************************************************************/
 		/************************************************** FILTER FORM ***************************************************************/
@@ -138,7 +138,7 @@ class MapController extends DefaultController
 		/************************************************** Get the recruiter *********************************************************/
 		/******************************************************************************************************************************/
 		//Recruiter
-		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+		$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 			
 		if (!$recruiter) {
 			throw $this->createNotFoundException('Unable to find this recruiter.');
@@ -152,18 +152,18 @@ class MapController extends DefaultController
 		//Appointments in the current month
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 	
 		$auxList = array();
-		$i = 0;
+		$iter = 0;
 		foreach ($appointmentList as $appointment) {
-			$auxList[$i] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $i+1);
-			$i++;
+			$auxList[$iter] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $iter+1);
+			$iter++;
 		}
 		$appointmentList = $auxList;
 	
@@ -207,7 +207,7 @@ class MapController extends DefaultController
 		$lat = null;
 		$lon = null;
 	
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 	
 		/******************************************************************************************************************************/
 		/************************************************** FILTER FORM ***************************************************************/
@@ -234,7 +234,7 @@ class MapController extends DefaultController
 		/************************************************** Get the recruiter *********************************************************/
 		/******************************************************************************************************************************/
 		//Recruiter
-		$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+		$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 			
 		if (!$recruiter) {
 			throw $this->createNotFoundException('Unable to find this recruiter.');
@@ -247,18 +247,18 @@ class MapController extends DefaultController
 		//Appointments in the current month
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, $recruiter_id, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsFromDay($day, $month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 	
 		$auxList = array();
-		$i = 0;
+		$iter = 0;
 		foreach ($appointmentList as $appointment) {
-			$auxList[$i] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $i+1);
-			$i++;
+			$auxList[$iter] = array($appointment["title"], $appointment["lat"], $appointment["lon"], $iter+1);
+			$iter++;
 		}
 		$appointmentList = $auxList;
 			

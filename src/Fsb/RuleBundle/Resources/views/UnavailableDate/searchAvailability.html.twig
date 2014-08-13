@@ -89,7 +89,7 @@
 											<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">
 												<li data-role="divider" data-theme="b">{{ recruiter.userDetail ~ " - " ~ day|date("D d M Y") }}</li>
 												<li><a href="{{ path('appointment_new_date', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Appointment</a></li>
-												<li><a href="{{ path('note_new_by_recruiter_id', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year,'id': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
+												<li><a href="{{ path('note_new_by_recruiter_id', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year,'recruiterId': recruiter.id}) }}" data-rel="dialog" data-transition="pop">Create Note</a></li>
 												<li><a href="{{ path('unavailableDate_new_date', {'hour': 08, 'minute': 00, 'day': day|date("d"), 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}"  data-rel="dialog" data-transition="pop">Set Unavailable</a></li>
 												<li><a href="{{ path('calendar_day', {'day': day|date("d") , 'month': month, 'year': year, 'recruiter_id': recruiter.id}) }}" data-ajax="false">{{ "Day View" }}</a></li>
 											</ul>

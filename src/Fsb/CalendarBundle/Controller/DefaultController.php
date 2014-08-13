@@ -50,18 +50,18 @@ class DefaultController extends Controller
      */
     protected function getUpcomingAppointments($recruiter) {
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	//If the user logged is a recruiter we get the upcoming appointments for this recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'), $recruiter->getId());
+    		$upcomingAppList = $eManager->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'), $recruiter->getId());
     	}
     	//If the user logged is not a recruiter, we get the upcoming appoinments for all the recruiters
     	else {
-    		$upcomingAppointmentList = $em->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'));
+    		$upcomingAppList = $eManager->getRepository('AppointmentBundle:Appointment')->findUpcomingAppointments(new \DateTime('now'));
     	}
     	
-    	return $upcomingAppointmentList; 
+    	return $upcomingAppList; 
     }
     
     /**
@@ -71,38 +71,38 @@ class DefaultController extends Controller
      */
     protected function getAppointmentOutcomeChart($recruiter) {
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
-    	$appointmentOutcomesChart = array();
+    	$appOutcomesChart = array();
     	
     	//Get the outcome names
-    	$outcomesList = $em->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
-    	$appointmentOutcomesChart["outcomes"] = array();
+    	$outcomesList = $eManager->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
+    	$appOutcomesChart["outcomes"] = array();
     	foreach ($outcomesList as $outcome) {
-    		array_push($appointmentOutcomesChart["outcomes"], $outcome->__toString());
+    		array_push($appOutcomesChart["outcomes"], $outcome->__toString());
     	}
     	
     	//Get the num appointment outcomes
-    	$appointmentOutcomesChart["values"] = array();
+    	$appOutcomesChart["values"] = array();
     	//If the user logged is a recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes($recruiter->getId());
-    		$appointmentOutcomesChart["names"] = array($recruiter->getUserDetail()->__toString());
+    		$numAppOutcomeList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes($recruiter->getId());
+    		$appOutcomesChart["names"] = array($recruiter->getUserDetail()->__toString());
     	}
     	else {
-    		$numAppointmentOutcomeList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes();
-    		$appointmentOutcomesChart["names"] = array("Total");
+    		$numAppOutcomeList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomes();
+    		$appOutcomesChart["names"] = array("Total");
     		
     		
     	}
     	$max = 10;
     	//Fix the array in order to start with the key 0 because of the jqplot lib
-    	foreach ($numAppointmentOutcomeList as $numAppointmentOutcome) {
-    		array_push($appointmentOutcomesChart["values"], array("0" => $numAppointmentOutcome[1]));
-    		$appointmentOutcomesChart["max"] = ($numAppointmentOutcome[1] > $max)?$numAppointmentOutcome[1] + $numAppointmentOutcome[1] : $max;
+    	foreach ($numAppOutcomeList as $numAppOutcome) {
+    		array_push($appOutcomesChart["values"], array("0" => $numAppOutcome[1]));
+    		$appOutcomesChart["max"] = ($numAppOutcome[1] > $max)?$numAppOutcome[1] + $numAppOutcome[1] : $max;
     	}
     	
-    	return $appointmentOutcomesChart;
+    	return $appOutcomesChart;
     }
     
     
@@ -113,19 +113,19 @@ class DefaultController extends Controller
      */
     protected function getAppointmentsByMonthChart($recruiter) {
     	 
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	 
     	//Array initialization
-    	$appointmentsByMonthChart = array();
-    	$appointmentsByMonthChart["values"] = array();
+    	$appsByMonthChart = array();
+    	$appsByMonthChart["values"] = array();
     	
     	//Get the num appointment outcomes
     	//If the user logged is a recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear($recruiter->getId());
+    		$numAppointmentsList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear($recruiter->getId());
     	}
     	else {
-    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear();
+    		$numAppointmentsList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisYear();
     	}
     	
     	$max = 10;
@@ -139,13 +139,13 @@ class DefaultController extends Controller
     		$max = ($numAppointments["num"] > $max)?$numAppointments["num"] : $max;
     	}
     	
-    	$appointmentsByMonthChart["max"] = $max + ($max*10/100);
+    	$appsByMonthChart["max"] = $max + ($max*10/100);
     	
     	foreach ($auxList as $aux) {
-    		array_push($appointmentsByMonthChart["values"], $aux);
+    		array_push($appsByMonthChart["values"], $aux);
     	}
     	 
-    	return $appointmentsByMonthChart;
+    	return $appsByMonthChart;
     }
     
     /**
@@ -155,23 +155,23 @@ class DefaultController extends Controller
      */
     protected function getAppointmentsByWeekChart($recruiter) {
     
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     
     	//Array initialization
-    	$appointmentsByWeekChart = array();
-    	$appointmentsByWeekChart["values"] = array();
+    	$appsByWeekChart = array();
+    	$appsByWeekChart["values"] = array();
     	$max = 10;
-    	$appointmentsByWeekChart["max"] = $max;
+    	$appsByWeekChart["max"] = $max;
     	$firstWeekDay = (int)date('d',strtotime('monday this week'));
     	$lastWeekDay = (int)date('d',strtotime('sunday this week'));
     	
     	//Get the num appointment outcomes
     	//If the user logged is a recruiter
     	if ($this->get('security.context')->isGranted('ROLE_RECRUITER')) {
-    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek($recruiter->getId());
+    		$numAppointmentsList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek($recruiter->getId());
     	}
     	else {
-    		$numAppointmentsList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek();
+    		$numAppointmentsList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsThisWeek();
     	}
     	
     	//Fix the array because of the jqplot lib
@@ -185,13 +185,13 @@ class DefaultController extends Controller
     		$max = ($numAppointments["num"] > $max)?$numAppointments["num"] : $max;
     	}
     	
-    	$appointmentsByWeekChart["max"] = $max + ($max*10/100);
+    	$appsByWeekChart["max"] = $max + ($max*10/100);
     	
     	foreach ($auxList as $aux) {
-    		array_push($appointmentsByWeekChart["values"], $aux);
+    		array_push($appsByWeekChart["values"], $aux);
     	}
     	
-    	return $appointmentsByWeekChart;
+    	return $appsByWeekChart;
     }
     
     /**
@@ -222,7 +222,7 @@ class DefaultController extends Controller
      * @return \Symfony\Component\Form\Form
      */
     protected function getFilterForm($filter) {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	$session = $this->getRequest()->getSession();
     
     	$session_fitler = $session->get('filter');
@@ -237,19 +237,19 @@ class DefaultController extends Controller
     		$project_ar = new ArrayCollection();
     		 
     		foreach ($projects_filter as $project) {
-    			$project_ar->add($em->getRepository('AppointmentBundle:AppointmentProject')->find($project));
+    			$project_ar->add($eManager->getRepository('AppointmentBundle:AppointmentProject')->find($project));
     		}
     		 
     		$filter->setProjects($project_ar);
     	}
     	if ($recruiter_filter && !$filter->getRecruiter()) {
-    		$filter->setRecruiter($em->getRepository('UserBundle:User')->find($recruiter_filter));
+    		$filter->setRecruiter($eManager->getRepository('UserBundle:User')->find($recruiter_filter));
     	}
     	if ($outcomes_filter) {
     		$outcome_ar = new ArrayCollection();
     		 
     		foreach ($outcomes_filter as $outcome) {
-    			$outcome_ar->add($em->getRepository('AppointmentBundle:AppointmentOutcome')->find($outcome));
+    			$outcome_ar->add($eManager->getRepository('AppointmentBundle:AppointmentOutcome')->find($outcome));
     		}
     		 
     		$filter->setOutcomes($outcome_ar);
@@ -273,17 +273,17 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	/************************************************** Get the Rules ***********************************************************/
     	/******************************************************************************************************************************/
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
     	if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-    		$ruleList = $em->getRepository('RuleBundle:Rule')->findBy(array(
+    		$ruleList = $eManager->getRepository('RuleBundle:Rule')->findBy(array(
     				'recruiter' => $recruiter->getId()
     		));
     	}
     	//In any other case, we search all the appointments
     	else {
-    		$ruleList = $em->getRepository('RuleBundle:Rule')->findAll();
+    		$ruleList = $eManager->getRepository('RuleBundle:Rule')->findAll();
     	}
     	
     	return $ruleList;

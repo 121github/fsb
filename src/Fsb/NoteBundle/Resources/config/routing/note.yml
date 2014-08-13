@@ -3,7 +3,7 @@ note:
     defaults: { _controller: "NoteBundle:Note:index" }
 
 note_show:
-    pattern:  /{id}/show
+    pattern:  /{noteId}/show
     defaults: { _controller: "NoteBundle:Note:show" }
 
 note_new:
@@ -11,7 +11,7 @@ note_new:
     defaults: { _controller: "NoteBundle:Note:new" }
     
 note_new_by_recruiter_id:
-    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{id}
+    pattern:  /new/hour/{hour}/minute/{minute}/day/{day}/month/{month}/year/{year}/{recruiterId}
     defaults: { _controller: "NoteBundle:Note:newByRecruiterId" }
 
 note_create:
@@ -20,15 +20,15 @@ note_create:
     requirements: { _method: post }
 
 note_edit:
-    pattern:  /{id}/edit
+    pattern:  /{noteId}/edit
     defaults: { _controller: "NoteBundle:Note:edit" }
 
 note_update:
-    pattern:  /{id}/update
+    pattern:  /{noteId}/update
     defaults: { _controller: "NoteBundle:Note:update" }
     requirements: { _method: post|put }
 
 note_delete:
-    pattern:  /{id}/delete
+    pattern:  /{noteId}/delete
     defaults: { _controller: "NoteBundle:Note:delete" }
     requirements: { _method: post|delete }

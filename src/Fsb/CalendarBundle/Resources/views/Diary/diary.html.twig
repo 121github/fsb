@@ -55,14 +55,14 @@
 					</div>
 					<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 						<div style="text-align: right;">
-							<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-theme="b" data-transition="pop">{{ "New Rule" }}</a>
+							<a href="{{ path('rule_new_by_id', {'recruiterId': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-theme="b" data-transition="pop">{{ "New Rule" }}</a>
 						</div>
 						<h2 class="ui-title">{{ recruiter }}</h2>
 						<br />
 						<ul data-role="listview">
 							{% if ruleList|length > 0 %}
 								{% for rule in ruleList %} 
-								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+								  	<li><a href="{{ path('rule_edit', {'ruleId': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
 								  		<h3>{{ rule.rule }}</h3>
 								  		<p><strong>{{ "[" ~ rule.recruiter ~ "]" }}</strong></p>
 								  		<p>{{ rule.description }}</p>
@@ -166,15 +166,15 @@
 							                		<p><strong>{{ "Outcome Reason: " }}</strong>{{ appointment["outcomeReason"] }}</p>
 							                		<p>
 							                			<strong>{{ "Postcode: " }}</strong>{{ appointment["postcode"] }}
-							                			<a href="{{ path('appointment_show', {'id': appointment["id"]}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
+							                			<a href="{{ path('appointment_show', {'appointmentId': appointment["id"]}) }}" data-role="button" data-icon="navigation" data-iconpos="notext" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop" data-ajax="false"></a>
 							                		</p>
 							                		<p style="border-top: 1px solid gray; padding-top: 10px;">{{ appointment["comment"] }}</p>
 							                		
 							                		<p style="padding-top: 10px; text-align: right;">
 							                		{% if (is_granted('ROLE_RECRUITER')) %}
-												        <a href="{{ path('appointment_outcome_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												        <a href="{{ path('appointment_outcome_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 												    {% else %}
-												    	<a href="{{ path('appointment_edit', {'id': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
+												    	<a href="{{ path('appointment_edit', {'appointmentId': appointment["id"]}) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="b" data-rel="dialog" data-transition="pop">Edit</a>
 												    {% endif %}
 												        <a href="docs-dialogs.html" data-role="button" data-inline="true" data-icon="delete" data-rel="back">Cancel</a>
 												    </p>

@@ -5,7 +5,7 @@
 {% block article -%}
 	
 	{% set submit_id = edit_form.vars.id ~ "_submit" %}
-    <form action="{{ path('unavailableDate_update', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+    <form action="{{ path('unavailableDate_update', {'unavailableDateId': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
     	<input type="hidden" name="_method" value="PUT">
     	<h3 class="ui-title">Are you sure you want to set unavailable this day?</h3>
     	{{ form_errors(edit_form) }}
@@ -26,7 +26,7 @@
 	<!--  POPUP DELETE CONFIRM -->
     <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
     	{% set submit_delete_id = delete_form.vars.id ~ "_submit" %}
-    	<form action="{{ path('unavailableDate_delete' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    	<form action="{{ path('unavailableDate_delete' , { 'unavailableDateId': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
     		<div data-role="header" data-theme="a" class="ui-corner-top">
 		        <h1>Set Available?</h1>
 		    </div>

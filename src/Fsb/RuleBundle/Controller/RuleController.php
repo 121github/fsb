@@ -24,9 +24,9 @@ class RuleController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('RuleBundle:Rule')->findAll();
+        $entities = $eManager->getRepository('RuleBundle:Rule')->findAll();
 
         return $this->render('RuleBundle:Rule:index.html.twig', array(
             'entities' => $entities,
@@ -49,12 +49,12 @@ class RuleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $eManager = $this->getDoctrine()->getManager();
             
             Util::setCreateAuditFields($entity, $userLogged->getId());
             
-            $em->persist($entity);
-            $em->flush();
+            $eManager->persist($entity);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -114,17 +114,17 @@ class RuleController extends Controller
     /**
      * Displays a form to create a new Rule entity.
      *
-     * @param $id recruiter Id
+     * @param $recruiterId recruiter Id
      *
      */
-    public function newByIdAction($id)
+    public function newByIdAction($recruiterId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	//Get the recruiter if exist
-    	$recruiter = $em->getRepository('UserBundle:User')->find($id);
+    	$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiterId);
     	 
     	if (!$recruiter) {
     		throw $this->createNotFoundException('Unable to find Recruiter entity.');
@@ -151,17 +151,17 @@ class RuleController extends Controller
      * Finds and displays a Rule entity.
      *
      */
-    public function showAction($id)
+    public function showAction($ruleId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('RuleBundle:Rule')->find($id);
+        $entity = $eManager->getRepository('RuleBundle:Rule')->find($ruleId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Rule entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($ruleId);
 
         return $this->render('RuleBundle:Rule:show.html.twig', array(
             'entity'      => $entity,
@@ -172,7 +172,7 @@ class RuleController extends Controller
      * Displays a form to edit an existing Rule entity.
      *
      */
-    public function editAction($id)
+    public function editAction($ruleId)
     {
     	
     	$userLogged = $this->get('security.context')->getToken()->getUser();
@@ -182,9 +182,9 @@ class RuleController extends Controller
     	}
     	
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('RuleBundle:Rule')->find($id);
+        $entity = $eManager->getRepository('RuleBundle:Rule')->find($ruleId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Rule entity.');
@@ -198,7 +198,7 @@ class RuleController extends Controller
         }
 
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($ruleId);
 
         return $this->render('RuleBundle:Rule:edit.html.twig', array(
             'entity'      => $entity,
@@ -217,7 +217,7 @@ class RuleController extends Controller
     private function createEditForm(Rule $entity)
     {
         $form = $this->createForm(new RuleType(), $entity, array(
-            'action' => $this->generateUrl('rule_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('rule_update', array('ruleId' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -232,7 +232,7 @@ class RuleController extends Controller
      * Edits an existing Rule entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $ruleId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -240,9 +240,9 @@ class RuleController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('RuleBundle:Rule')->find($id);
+        $entity = $eManager->getRepository('RuleBundle:Rule')->find($ruleId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Rule entity.');
@@ -256,7 +256,7 @@ class RuleController extends Controller
         }
         
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($ruleId);
         
         $editForm->handleRequest($request);
 
@@ -266,9 +266,9 @@ class RuleController extends Controller
         	
         	Util::setModifyAuditFields($entity, $userLogged->getId());
         	
-        	$em->persist($entity);
+        	$eManager->persist($entity);
         	
-            $em->flush();
+            $eManager->flush();
 
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -292,7 +292,7 @@ class RuleController extends Controller
      * Deletes a Rule entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $ruleId)
     {
     	
     	$userLogged = $this->get('security.context')->getToken()->getUser();
@@ -301,8 +301,8 @@ class RuleController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-    	$em = $this->getDoctrine()->getManager();
-    	$entity = $em->getRepository('RuleBundle:Rule')->find($id);
+    	$eManager = $this->getDoctrine()->getManager();
+    	$entity = $eManager->getRepository('RuleBundle:Rule')->find($ruleId);
     	
     	if (!$entity) {
     		throw $this->createNotFoundException('Unable to find Rule entity.');
@@ -315,13 +315,14 @@ class RuleController extends Controller
     		}
     	}
     	
-        $form = $this->createDeleteForm($id);
+    	$form = $this->createDeleteForm($ruleId);
         $form->handleRequest($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
 
-            $em->remove($entity);
-            $em->flush();
+            $eManager->remove($entity);
+            $eManager->flush();
             
 
             $this->get('session')->getFlashBag()->set(
@@ -340,14 +341,14 @@ class RuleController extends Controller
     /**
      * Creates a form to delete a Rule entity by id.
      *
-     * @param mixed $id The entity id
+     * @param mixed $ruleId The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($ruleId)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('rule_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('rule_delete', array('ruleId' => $ruleId)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array(
             		'label' => 'Delete',

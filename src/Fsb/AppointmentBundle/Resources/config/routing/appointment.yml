@@ -7,7 +7,7 @@ appointment_clean_filter:
     defaults: { _controller: "AppointmentBundle:Appointment:cleanSearchAppointment" }
 
 appointment_show:
-    pattern:  /{id}/show
+    pattern:  /{appointmentId}/show
     defaults: { _controller: "AppointmentBundle:Appointment:show" }
 
 appointment_new_date:
@@ -20,21 +20,21 @@ appointment_create:
     requirements: { _method: post }
 
 appointment_edit:
-    pattern:  /{id}/edit
+    pattern:  /{appointmentId}/edit
     defaults: { _controller: "AppointmentBundle:Appointment:edit" }
 
 appointment_update:
-    pattern:  /{id}/update
+    pattern:  /{appointmentId}/update
     defaults: { _controller: "AppointmentBundle:Appointment:update" }
     requirements: { _method: post|put }
 
 appointment_delete:
-    pattern:  /{id}/delete
+    pattern:  /{appointmentId}/delete
     defaults: { _controller: "AppointmentBundle:Appointment:delete" }
     requirements: { _method: post|delete }
 
 appointment_outcome_edit:
-    pattern:  /{id}/outcome_edit
+    pattern:  /{appointmentId}/outcome_edit
     defaults: { _controller: "AppointmentBundle:Appointment:outcomeEdit" }
     
 appointment_map_month:

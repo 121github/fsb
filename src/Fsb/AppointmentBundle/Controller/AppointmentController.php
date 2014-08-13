@@ -262,7 +262,7 @@ class AppointmentController extends DefaultController
     private function createEditForm(Appointment $appointment)
     {
         $form = $this->createForm(new AppointmentEditType(), $appointment, array(
-            'action' => $this->generateUrl('appointment_update', array('id' => $appointment->getId())),
+            'action' => $this->generateUrl('appointment_update', array('appointmentId' => $appointment->getId())),
             'method' => 'PUT',
         ));
 

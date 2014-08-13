@@ -66,12 +66,12 @@ class Util
 	
 	/**
 	 * With an id we need to get a color by the mod
-	 * @param unknown $id
+	 * @param unknown $identifier
 	 */
-	static public function getColorById($id) {
+	static public function getColorById($identifier) {
 		$trueColors = array('#8A2BE2','#A52A2A','#5F9EA0','#D2691E','#FF7F50','#6495ED','#DC143C','#00008B','#008B8B','#B8860B','#006400','#556B2F','#FF8C00','#9932CC','#8B0000','#483D8B','#2F4F4F','#9400D4','#696969','#1E90FF','#B22222','#228B22');
 		
-		return $trueColors[$id % count($trueColors)];
+		return $trueColors[$identifier % count($trueColors)];
 	}
 		
 }

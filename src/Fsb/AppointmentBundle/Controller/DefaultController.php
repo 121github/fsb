@@ -41,18 +41,18 @@ class DefaultController extends Controller
 	 */
 	protected function appointmentAlreadyExist(Appointment $appointment, Form $form, $edit = null) {
 	
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		 
-		$appointments = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsWithCollisionByDate($appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
+		$appointments = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsWithCollisionByDate($appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
 		
 		//If we are editing we have to remove the id for the appointment list
 		if ($edit) {
-			$i = 0;
+			$iter = 0;
 			foreach ($appointments as $value){
 				if (in_array($appointment->getId(), $value)) {
-					unset($appointments[$i]);
+					unset($appointments[$iter]);
 				}	
-			$i++;
+			$iter++;
 			}
 		}
 		
@@ -86,19 +86,19 @@ class DefaultController extends Controller
 		}
 		//Check if there are another appointments for the same recruiter in the previous or next hour that are too far from this location 
 		else {
-			$em = $this->getDoctrine()->getManager();
+			$eManager = $this->getDoctrine()->getManager();
 		 
 			$distance = 10; //(miles)
-			$appointments = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsWithCollisionByLocation($address->getLat(), $address->getLon(), $distance,$appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
+			$appointments = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsWithCollisionByLocation($address->getLat(), $address->getLon(), $distance,$appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
 			
 			//If we are editing we have to remove the id for the appointment list
 			if ($edit) {
-				$i = 0;
+				$iter = 0;
 				foreach ($appointments as $value){
 					if (in_array($appointment->getId(), $value)) {
-						unset($appointments[$i]);
+						unset($appointments[$iter]);
 					}	
-				$i++;
+				$iter++;
 				}
 			}
 
@@ -132,9 +132,9 @@ class DefaultController extends Controller
 	 */
 	private function isAnUnvailableDate(Appointment $appointment, Form $form) {
 
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 			
-		$appointments = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesBetweenDatesByRecruiter($appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
+		$appointments = $eManager->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesBetweenDatesByRecruiter($appointment->getStartDate(), $appointment->getEndDate(), $appointment->getRecruiter()->getId());
 		
 		if (count($appointments) > 0) {
 			$form->addError(new FormError("The recruiter selected this date as unavailable date"));

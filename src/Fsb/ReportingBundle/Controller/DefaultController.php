@@ -18,7 +18,7 @@ class DefaultController extends Controller
     {
     	$session = $this->getRequest()->getSession();
     	$request = $this->getRequest();
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	/******************************************************************************************************************************/
     	/************************************************** FILTER REPORTS TYPE FORM **************************************************/
@@ -27,7 +27,7 @@ class DefaultController extends Controller
     	$session_fitler = $session->get('reporting_filter');
     	$reports_filter = isset($session_fitler["reports"]) ? $session_fitler["reports"] : null;
     		
-   		$reportingFilterFormSubmitted = ($reports_filter)? true : false;
+   		$reportFormSubmitted = ($reports_filter)? true : false;
    		
    		/************************************************** Create form  *************************************************************/
    		$reportingFilter = new ReportingFilter();
@@ -59,64 +59,64 @@ class DefaultController extends Controller
    		$session_fitler = $session->get('reporting_by_month_filter');
    		$year_filter = isset($session_fitler["year"]) ? $session_fitler["year"] : null;
    		$recruiters_filter = isset($session_fitler["recruiters"]) ? $session_fitler["recruiters"] : null;
-   		$appointmentSetters_filter = isset($session_fitler["appointmentSetters"]) ? $session_fitler["appointmentSetters"] : null;
+   		$appSetter_filter = isset($session_fitler["appointmentSetters"]) ? $session_fitler["appointmentSetters"] : null;
    		
-   		$reportingFilterByMonthFormSubmitted = ($year_filter || $recruiters_filter || $appointmentSetters_filter)? true : false;
+   		$repByMonthFormSubmit = ($year_filter || $recruiters_filter || $appSetter_filter)? true : false;
    		
    		
    		/************************************************** Create form  *************************************************************/
-   		$reportingFilterByMonth = new ReportingFilterByMonth();
+   		$reportFilterByMonth = new ReportingFilterByMonth();
    		
    		if ($year_filter) {
-   			$reportingFilterByMonth->setYear($year_filter);
+   			$reportFilterByMonth->setYear($year_filter);
    		}
    		else {
    			$today = new \DateTime('now');
-   			$reportingFilterByMonth->setYear($today->format('Y'));
+   			$reportFilterByMonth->setYear($today->format('Y'));
    		}
    		 
    		if ($recruiters_filter) {
    			$recruiter_ar = new ArrayCollection();
    			 
    			foreach ($recruiters_filter as $recruiter) {
-   				$recruiter_ar->add($em->getRepository('UserBundle:User')->find($recruiter));
+   				$recruiter_ar->add($eManager->getRepository('UserBundle:User')->find($recruiter));
    			}
    			 
-   			$reportingFilterByMonth->setRecruiters($recruiter_ar);
+   			$reportFilterByMonth->setRecruiters($recruiter_ar);
    		}
    		 
-   		if ($appointmentSetters_filter) {
-   			$appointmentSetters_ar = new ArrayCollection();
+   		if ($appSetter_filter) {
+   			$appSetters_ar = new ArrayCollection();
    			 
-   			foreach ($appointmentSetters_filter as $appointmentSetter) {
-   				$appointmentSetters_ar->add($em->getRepository('UserBundle:User')->find($appointmentSetter));
+   			foreach ($appSetter_filter as $appointmentSetter) {
+   				$appSetters_ar->add($eManager->getRepository('UserBundle:User')->find($appointmentSetter));
    			}
    			 
-   			$reportingFilterByMonth->setAppointmentSetters($appointmentSetters_ar);
+   			$reportFilterByMonth->setAppointmentSetters($appSetters_ar);
    		}
    		 
-   		$reportingFilterByMonthForm = $this->createReportingSearchByMonthForm($reportingFilterByMonth);
+   		$repFilterByMonthForm = $this->createReportingSearchByMonthForm($reportFilterByMonth);
    		 
-   		$reportingFilterByMonthForm->handleRequest($request);
+   		$repFilterByMonthForm->handleRequest($request);
    		
    		/************************************************** Submit action *************************************************************/
-   		if ($reportingFilterByMonthForm->isValid()) {
+   		if ($repFilterByMonthForm->isValid()) {
    			 
    			$recruiter_ar = array();
-   			foreach ($reportingFilterByMonth->getRecruiters() as $recruiter) {
+   			foreach ($reportFilterByMonth->getRecruiters() as $recruiter) {
    				array_push($recruiter_ar,$recruiter->getId());
    			}
    		
-   			$appointmentSetters_ar = array();
-   			foreach ($reportingFilterByMonth->getAppointmentSetters() as $appointmentSetter) {
-   				array_push($appointmentSetters_ar,$appointmentSetter->getId());
+   			$appSetters_ar = array();
+   			foreach ($reportFilterByMonth->getAppointmentSetters() as $appointmentSetter) {
+   				array_push($appSetters_ar,$appointmentSetter->getId());
    			}
    		
    			//Save the form fields in the session
    			$this->getRequest()->getSession()->set('reporting_by_month_filter',array(
-   					"year" => ($reportingFilterByMonth->getYear()) ? $reportingFilterByMonth->getYear() : null,
-   					"recruiters" => ($reportingFilterByMonth->getRecruiters()) ? $recruiter_ar : null,
-   					"appointmentSetters" => ($reportingFilterByMonth->getAppointmentSetters()) ? $appointmentSetters_ar : null,
+   					"year" => ($reportFilterByMonth->getYear()) ? $reportFilterByMonth->getYear() : null,
+   					"recruiters" => ($reportFilterByMonth->getRecruiters()) ? $recruiter_ar : null,
+   					"appointmentSetters" => ($reportFilterByMonth->getAppointmentSetters()) ? $appSetters_ar : null,
    			));
    		
    			$url = $this->getRequest()->headers->get("referer");
@@ -131,31 +131,31 @@ class DefaultController extends Controller
    		$startDate_filter = isset($session_fitler["startDate"]) ? $session_fitler["startDate"] : null;
    		$endDate_filter = isset($session_fitler["endDate"]) ? $session_fitler["endDate"] : null;
    		
-   		$reportingFilterByRecruiterFormSubmitted = ($startDate_filter || $endDate_filter)? true : false;
+   		$repFiltByRecrFormSub = ($startDate_filter || $endDate_filter)? true : false;
     	
     	
     	/************************************************** Create form  *************************************************************/
-    	$reportingFilterByRecruiter = new ReportingFilterByRecruiter();
+    	$repFilterByRecruiter = new ReportingFilterByRecruiter();
     	
-    	if ($startDate_filter && !$reportingFilterByRecruiter->getStartDate()) {
-    		$reportingFilterByRecruiter->setStartDate($startDate_filter);
+    	if ($startDate_filter && !$repFilterByRecruiter->getStartDate()) {
+    		$repFilterByRecruiter->setStartDate($startDate_filter);
     	}
     	
-    	if ($endDate_filter && !$reportingFilterByRecruiter->getEndDate()) {
-    		$reportingFilterByRecruiter->setEndDate($endDate_filter);
+    	if ($endDate_filter && !$repFilterByRecruiter->getEndDate()) {
+    		$repFilterByRecruiter->setEndDate($endDate_filter);
     	}
     	
-    	$reportingFilterByRecruiterForm = $this->createReportingSearchByRecruiterForm($reportingFilterByRecruiter);
+    	$repFilterByRecrForm = $this->createReportingSearchByRecruiterForm($repFilterByRecruiter);
     	
-    	$reportingFilterByRecruiterForm->handleRequest($request);
+    	$repFilterByRecrForm->handleRequest($request);
     	
     	/************************************************** Submit action *************************************************************/
-    	if ($reportingFilterByRecruiterForm->isValid()) {
+    	if ($repFilterByRecrForm->isValid()) {
     		
     		//Save the form fields in the session
     		$this->getRequest()->getSession()->set('reporting_by_recruiter_filter',array(
-    				"startDate" => ($reportingFilterByRecruiter->getStartDate()) ? $reportingFilterByRecruiter->getStartDate() : null,
-    				"endDate" => ($reportingFilterByRecruiter->getEndDate()) ? $reportingFilterByRecruiter->getEndDate() : null,
+    				"startDate" => ($repFilterByRecruiter->getStartDate()) ? $repFilterByRecruiter->getStartDate() : null,
+    				"endDate" => ($repFilterByRecruiter->getEndDate()) ? $repFilterByRecruiter->getEndDate() : null,
     		));
     		
     		$url = $this->getRequest()->headers->get("referer");
@@ -166,24 +166,24 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	/************************************************** Get the outocme list ******************************************************/
     	/******************************************************************************************************************************/
-    	$outcomeList = $em->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
+    	$outcomeList = $eManager->getRepository('AppointmentBundle:AppointmentOutcome')->findAll();
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get the recruiter list ******************************************************/
     	/******************************************************************************************************************************/
-    	$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    	$recruiterList = $eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get the appointmentOutcomes by month data  ********************************/
     	/******************************************************************************************************************************/
-    	$reportingByMonthList = $this->getAppointmentOutcomesByMonthData($reportingFilterByMonth->getYear(), $recruiters_filter, $appointmentSetters_filter, $outcomeList);
-    	$reportingByMonthList['year'] = $reportingFilterByMonth->getYear();
+    	$reportingByMonthList = $this->getAppointmentOutcomesByMonthData($reportFilterByMonth->getYear(), $recruiters_filter, $appSetter_filter, $outcomeList);
+    	$reportingByMonthList['year'] = $reportFilterByMonth->getYear();
     	
     	
     	/******************************************************************************************************************************/
     	/************************************************** Get the appointmentOutcomes by recruiter data  ****************************/
     	/******************************************************************************************************************************/
-    	$reportingByRecruiterList = $this->getAppointmentOutcomesByRecruiterData($reportingFilterByRecruiter->getStartDate(), $reportingFilterByRecruiter->getEndDate(), $outcomeList, $recruiterList);
+    	$repByRecruiterList = $this->getAppointmentOutcomesByRecruiterData($repFilterByRecruiter->getStartDate(), $repFilterByRecruiter->getEndDate(), $outcomeList, $recruiterList);
     	
     	
     	/******************************************************************************************************************************/
@@ -204,7 +204,7 @@ class DefaultController extends Controller
     	}
     	foreach ($outcomeList as $outcome){
     		for ($i=1; $i<=12; $i++) {
-    			$date = new \DateTime('01-'.$i.'-'.$reportingFilterByMonth->getYear());
+    			$date = new \DateTime('01-'.$i.'-'.$reportFilterByMonth->getYear());
     			$num = array_key_exists($outcome->getName(), $reportingByMonthList[$date->format("m")])?$reportingByMonthList[$date->format("m")][$outcome->getName()] : 0;
     			$value = array($date->format('d-M-Y'), $num);
     			
@@ -236,7 +236,7 @@ class DefaultController extends Controller
     	}
     	foreach ($outcomeList as $outcome){
     		foreach ($recruiterList as $recruiter) {
-    			$value = array_key_exists($outcome->getName(), $reportingByRecruiterList[$recruiter->getId()])?$reportingByRecruiterList[$recruiter->getId()][$outcome->getName()] : 0;
+    			$value = array_key_exists($outcome->getName(), $repByRecruiterList[$recruiter->getId()])?$repByRecruiterList[$recruiter->getId()][$outcome->getName()] : 0;
     			array_push($recruiterChartValues[$outcome->getName()], $value);
     			if ($recruiterChartMax < $value) $recruiterChartMax = $value;
     		}	
@@ -254,13 +254,13 @@ class DefaultController extends Controller
     	/******************************************************************************************************************************/
     	return $this->render('ReportingBundle:Default:index.html.twig', array(
     			'reportingByMonthList' => $reportingByMonthList,
-    			'reportingByRecruiterList' => $reportingByRecruiterList,
+    			'reportingByRecruiterList' => $repByRecruiterList,
     			'searchReportingForm' => $reportingFilterForm->createView(),
-    			'searchReportingByMonthForm' => $reportingFilterByMonthForm->createView(),
-    			'searchReportingByRecruiterForm' => $reportingFilterByRecruiterForm->createView(),
-    			'searchReportingFilterFormSubmitted' => $reportingFilterFormSubmitted,
-    			'searchReportingFilterByMonthFormSubmitted' => $reportingFilterByMonthFormSubmitted,
-    			'searchReportingFilterByRecruiterFormSubmitted' => $reportingFilterByRecruiterFormSubmitted,
+    			'searchReportingByMonthForm' => $repFilterByMonthForm->createView(),
+    			'searchReportingByRecruiterForm' => $repFilterByRecrForm->createView(),
+    			'searchReportingFilterFormSubmitted' => $reportFormSubmitted,
+    			'searchReportingFilterByMonthFormSubmitted' => $repByMonthFormSubmit,
+    			'searchReportingFilterByRecruiterFormSubmitted' => $repFiltByRecrFormSub,
     			'outcomeList' => $outcomeList,
     			'recruiterList' => $recruiterList,
     			'reports_filter' => $reports_filter,
@@ -270,21 +270,21 @@ class DefaultController extends Controller
     			'recruiterChartMax' => $recruiterChartMax*2,
     			'monthChartValues' => $monthChartValues,
     			'monthChartMax' => $monthChartMax*2,
-    			'year' => $reportingFilterByMonth->getYear(),
+    			'year' => $reportFilterByMonth->getYear(),
     	));
     }
     
     
     /**
      * 
-     * @param ReportingFilterByMonth $reportingFilterByMonth
+     * @param ReportingFilterByMonth $reportFilterByMonth
      * @return multitype:
      */
     private function getAppointmentOutcomesByMonthData($year, $recruiters, $appointmentSetters, $outcomeList) {
     	
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
-    	$reportingByMonthList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesByMonth($year, $recruiters, $appointmentSetters);
+    	$reportingByMonthList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesByMonth($year, $recruiters, $appointmentSetters);
 
     	$auxList = array();
     	//Initialize the totals
@@ -317,9 +317,9 @@ class DefaultController extends Controller
      */
     private function getAppointmentOutcomesByRecruiterData($startDate, $endDate, $outcomeList, $recruiterList) {
     	 
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
-    	$reportingByRecruiterList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesGroupByRecruiter($startDate, $endDate);
+    	$repByRecruiterList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentOutcomesGroupByRecruiter($startDate, $endDate);
 
     	$auxList = array();
     	//Initialize the totals
@@ -332,14 +332,14 @@ class DefaultController extends Controller
     	}
     	
     	//Add the values to the array
-    	foreach ($reportingByRecruiterList as $reportingByRecruiter) {
+    	foreach ($repByRecruiterList as $reportingByRecruiter) {
     		$auxList[$reportingByRecruiter["recruiter_id"]][$reportingByRecruiter["name"]] = $reportingByRecruiter["num_appointments"];
     		//Sum the value to the total
     		$auxList["total"][$reportingByRecruiter["name"]] += $reportingByRecruiter["num_appointments"];
     	}
-    	$reportingByRecruiterList = $auxList;
+    	$repByRecruiterList = $auxList;
     	 
-    	return $reportingByRecruiterList;
+    	return $repByRecruiterList;
     }
     
     /**

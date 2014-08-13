@@ -22,9 +22,9 @@ class NoteRepository extends EntityRepository
 	 */
 	public function findNotesByDay(\DateTime $day, $recruiter_id = null){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('n.startDate', 'n.endDate', 'n as note'))
 		->from('NoteBundle:Note', 'n')
 		->where('SUBSTRING(n.startDate,1,10) = :day')

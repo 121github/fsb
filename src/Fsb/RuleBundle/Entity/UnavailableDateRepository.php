@@ -21,9 +21,9 @@ class UnavailableDateRepository extends EntityRepository
 	 */
 	public function getUnavailableDatesByRecruiter($recruiter_id){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('ud.unavailableDate', 'r.reason', 'ud.id'))
 		->from('RuleBundle:UnavailableDate', 'ud')
 		->innerJoin('ud.reason', 'r')
@@ -48,9 +48,9 @@ class UnavailableDateRepository extends EntityRepository
 	 */
 	public function getUnavailableTimesByRecruiter($recruiter_id, $day){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('ud.startTime', 'ud.endTime', 'ud.id'))
 		->from('RuleBundle:UnavailableDate', 'ud')
 		->innerJoin('ud.reason', 'r')
@@ -80,12 +80,12 @@ class UnavailableDateRepository extends EntityRepository
 	 */
 	public function findUnavailableDatesByMonthAndYear($month,$year, $startTime = null, $endTime = null) {
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder();
+		$query = $eManager->createQueryBuilder();
 	
 		//Get the unavailable dates for a month and a year
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('SUBSTRING(ud.unavailableDate,1,11) AS day', 'r.id'))
 		->from('RuleBundle:UnavailableDate', 'ud')
 		->innerJoin('ud.recruiter', 'r')
@@ -135,9 +135,9 @@ class UnavailableDateRepository extends EntityRepository
 	 */
 	public function findUnavailableDatesForAllRecruiters(){
 	
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 	
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select(array('SUBSTRING(ud.unavailableDate,1,11) AS day', 'r.reason', 'ud.id'))
 		->from('RuleBundle:UnavailableDate', 'ud')
 		->innerJoin('ud.reason', 'r')
@@ -155,9 +155,9 @@ class UnavailableDateRepository extends EntityRepository
 	
 	public function findUnavailableDatesBetweenDatesByRecruiter(\DateTime $startDate, \DateTime $endDate, $recruiter_id) {
 		
-		$em = $this->getEntityManager();
+		$eManager = $this->getEntityManager();
 		
-		$query = $em->createQueryBuilder()
+		$query = $eManager->createQueryBuilder()
 		->select('ud')
 		->from('RuleBundle:UnavailableDate', 'ud')
 		->where('ud.recruiter = :recruiter_id')

@@ -5,7 +5,7 @@
 {% block article -%}
 
 	{% set submit_id = edit_form.vars.id ~ "_submit" %}
-	<form action="{{ path('note_update', {'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+	<form action="{{ path('note_update', {'noteId': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
 		{{ form_errors(edit_form) }}
 		<div style="float: left;">
 			<strong>{{ "Start Date - " }}</strong> {{ entity.startDate|date('Y-m-d H:i') }}
@@ -47,7 +47,7 @@
 	<!--  POPUP DELETE CONFIRM -->
     <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
     	{% set submit_delete_id = delete_form.vars.id ~ "_submit" %}
-    	<form action="{{ path('note_delete' , { 'id': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
+    	<form action="{{ path('note_delete' , { 'noteId': entity.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_delete_id }}');" data-ajax="false" {{ form_enctype(delete_form) }}>
     		<div data-role="header" data-theme="a" class="ui-corner-top">
 		        <h1>Delete Note?</h1>
 		    </div>

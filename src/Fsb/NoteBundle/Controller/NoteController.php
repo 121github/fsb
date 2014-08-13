@@ -24,9 +24,9 @@ class NoteController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('NoteBundle:Note')->findAll();
+        $entities = $eManager->getRepository('NoteBundle:Note')->findAll();
 
         return $this->render('NoteBundle:Note:index.html.twig', array(
             'entities' => $entities,
@@ -49,12 +49,12 @@ class NoteController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $eManager = $this->getDoctrine()->getManager();
             
             Util::setCreateAuditFields($entity, $userLogged->getId());
             
-            $em->persist($entity);
-            $em->flush();
+            $eManager->persist($entity);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -117,14 +117,14 @@ class NoteController extends Controller
      * @param $recruiter_id
      *
      */
-    public function newByRecruiterIdAction($hour, $minute, $day, $month, $year, $id)
+    public function newByRecruiterIdAction($hour, $minute, $day, $month, $year, $recruiterId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	 
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	 
     	//Get the recruiter if exist
-    	$recruiter = $em->getRepository('UserBundle:User')->find($id);
+    	$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiterId);
     	
     	if (!$recruiter) {
     		throw $this->createNotFoundException('Unable to find Recruiter entity.');
@@ -161,17 +161,17 @@ class NoteController extends Controller
      * Finds and displays a Note entity.
      *
      */
-    public function showAction($id)
+    public function showAction($noteId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('NoteBundle:Note')->find($id);
+        $entity = $eManager->getRepository('NoteBundle:Note')->find($noteId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Note entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($noteId);
 
         return $this->render('NoteBundle:Note:show.html.twig', array(
             'entity'      => $entity,
@@ -182,7 +182,7 @@ class NoteController extends Controller
      * Displays a form to edit an existing Note entity.
      *
      */
-    public function editAction($id)
+    public function editAction($noteId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -190,9 +190,9 @@ class NoteController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('NoteBundle:Note')->find($id);
+        $entity = $eManager->getRepository('NoteBundle:Note')->find($noteId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Note entity.');
@@ -208,7 +208,7 @@ class NoteController extends Controller
         
         
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($noteId);
 
         return $this->render('NoteBundle:Note:edit.html.twig', array(
             'entity'      => $entity,
@@ -227,7 +227,7 @@ class NoteController extends Controller
     private function createEditForm(Note $entity)
     {
         $form = $this->createForm(new NoteType(), $entity, array(
-            'action' => $this->generateUrl('note_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('note_update', array('noteId' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -242,7 +242,7 @@ class NoteController extends Controller
      * Edits an existing Note entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $noteId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	 
@@ -250,9 +250,9 @@ class NoteController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('NoteBundle:Note')->find($id);
+        $entity = $eManager->getRepository('NoteBundle:Note')->find($noteId);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Note entity.');
@@ -265,7 +265,7 @@ class NoteController extends Controller
         	}
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($noteId);
         $editForm = $this->createEditForm($entity);
         
         $editForm->handleRequest($request);
@@ -276,9 +276,9 @@ class NoteController extends Controller
         	
         	Util::setModifyAuditFields($entity, $userLogged->getId());
         	
-        	$em->persist($entity);
+        	$eManager->persist($entity);
         	
-            $em->flush();
+            $eManager->flush();
 
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -302,7 +302,7 @@ class NoteController extends Controller
      * Deletes a Note entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $noteId)
     {
     	$userLogged = $this->get('security.context')->getToken()->getUser();
     	
@@ -310,8 +310,8 @@ class NoteController extends Controller
     		throw $this->createNotFoundException('Unable to find this user.');
     	}
     	
-    	$em = $this->getDoctrine()->getManager();
-    	$entity = $em->getRepository('NoteBundle:Note')->find($id);
+    	$eManager = $this->getDoctrine()->getManager();
+    	$entity = $eManager->getRepository('NoteBundle:Note')->find($noteId);
     	
     	if (!$entity) {
     		throw $this->createNotFoundException('Unable to find Note entity.');
@@ -324,13 +324,14 @@ class NoteController extends Controller
     		}
     	}
     	
-    	$form = $this->createDeleteForm($id);
+    	$form = $this->createDeleteForm($noteId);
         $form->handleRequest($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
         	
-            $em->remove($entity);
-            $em->flush();
+            $eManager->remove($entity);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -348,14 +349,14 @@ class NoteController extends Controller
     /**
      * Creates a form to delete a Note entity by id.
      *
-     * @param mixed $id The entity id
+     * @param mixed $noteId The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($noteId)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('note_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('note_delete', array('noteId' => $noteId)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array(
             		'label' => 'Delete',

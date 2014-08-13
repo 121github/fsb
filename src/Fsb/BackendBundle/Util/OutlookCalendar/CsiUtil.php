@@ -11,12 +11,12 @@ class CsiUtil
 		$icalendarData = file_get_contents($filePath);
 		
 		// Detecting line endings
-		if (strpos($icalendarData,"\r\n")) $lb = "\r\n";
-		elseif (strpos($icalendarData,"\n")) $lb = "\n";
-		else $lb = "\r\n";
+		if (strpos($icalendarData,"\r\n")) $lb_ = "\r\n";
+		elseif (strpos($icalendarData,"\n")) $lb_ = "\n";
+		else $lb_ = "\r\n";
 		
 		// Splitting up items per line
-		$lines = explode($lb,$icalendarData);
+		$lines = explode($lb_,$icalendarData);
 		
 		// Properties can be folded over 2 lines. In this case the second
 		// line will be preceeded by a space or tab.

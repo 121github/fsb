@@ -11,7 +11,7 @@ unavailabledate_clean_availability_filter:
     defaults: { _controller: "RuleBundle:UnavailableDate:cleanSearchAvailability" }
 
 unavailableDate_show:
-    pattern:  /{id}/show
+    pattern:  /{unavailableDateId}/show
     defaults: { _controller: "RuleBundle:UnavailableDate:show" }
 
 unavailableDate_new:
@@ -28,15 +28,15 @@ unavailableDate_create:
     requirements: { _method: post }
 
 unavailableDate_edit:
-    pattern:  /{id}/edit/{recruiter_id}
+    pattern:  /{unavailableDateId}/edit/{recruiter_id}
     defaults: { _controller: "RuleBundle:UnavailableDate:edit", recruiter_id: null }
 
 unavailableDate_update:
-    pattern:  /{id}/update
+    pattern:  /{unavailableDateId}/update
     defaults: { _controller: "RuleBundle:UnavailableDate:update" }
     requirements: { _method: post|put }
 
 unavailableDate_delete:
-    pattern:  /{id}/delete
+    pattern:  /{unavailableDateId}/delete
     defaults: { _controller: "RuleBundle:UnavailableDate:delete" }
     requirements: { _method: post|delete }

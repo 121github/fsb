@@ -54,14 +54,14 @@
 					</div>
 					<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
 						<div style="text-align: right;">
-							<a href="{{ path('rule_new_by_id', {'id': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
+							<a href="{{ path('rule_new_by_id', {'recruiterId': recruiter.id }) }}" data-role="button" data-mini="true" data-inline="true" data-rel="dialog" data-transition="pop">{{ "New Rule" }}</a>
 						</div>
 						<h2 class="ui-title">{{ recruiter }}</h2>
 						<br />
 						<ul data-role="listview">
 							{% if ruleList|length > 0 %}
 								{% for rule in ruleList %} 
-								  	<li><a href="{{ path('rule_edit', {'id': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
+								  	<li><a href="{{ path('rule_edit', {'ruleId': rule.id}) }}" data-role="button" data-inline="true"  data-theme="a" data-rel="dialog" data-transition="pop">
 								  		<h3>{{ rule.rule }}</h3>
 								  		<p><strong>{{ "[" ~ rule.recruiter ~ "]" }}</strong></p>
 								  		<p>{{ rule.description }}</p>

@@ -18,7 +18,7 @@ class MonthController extends DefaultController
 	 */
 	public function monthAction($month,$year, $recruiter_id = null) {
 		 
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		 
 		/******************************************************************************************************************************/
 		/************************************************** FILTER FORM ***************************************************************/
@@ -39,11 +39,11 @@ class MonthController extends DefaultController
 		/************************************************** Recruiter *************************************************************/
 		/******************************************************************************************************************************/
 		if ($recruiter_id) {
-			$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+			$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 		}
 		 
 		elseif ($recruiter_filter) {
-			$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_filter);
+			$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_filter);
 		}
 		 
 		else {
@@ -85,7 +85,7 @@ class MonthController extends DefaultController
 		/************************************************** Unavailable Dates *************************************************************/
 		/******************************************************************************************************************************/
 		 
-		$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->getUnavailableDatesByRecruiter($recruiter->getId());
+		$unavailableDateList = $eManager->getRepository('RuleBundle:UnavailableDate')->getUnavailableDatesByRecruiter($recruiter->getId());
 	
 		$auxList = array();
 		foreach ($unavailableDateList as $unavailableDate) {
@@ -107,11 +107,11 @@ class MonthController extends DefaultController
 		
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentPrevList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentPrevList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentPrevList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($prevMonth, $prevYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
@@ -128,11 +128,11 @@ class MonthController extends DefaultController
 		//Appointments in the current month
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter 
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($month, $year, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
@@ -152,11 +152,11 @@ class MonthController extends DefaultController
 		
 		//If you are filter by recruiter or the user logged is a recruiter, we search the appointments by recruiter
 		if ($recruiter->getRole() == 'ROLE_RECRUITER') {
-			$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentNextList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, $recruiter->getId(), $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//In any other case, we search all the appointments
 		else {
-			$appointmentNextList = $em->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
+			$appointmentNextList = $eManager->getRepository('AppointmentBundle:Appointment')->findNumAppointmentsByMonth($nextMonth, $nextYear, null, $projects_filter, $outcomes_filter, $postcode_lat, $postcode_lon, $distance);
 		}
 		//Prepare the array structure to be printed in the calendar
 		$auxList = array();
@@ -171,27 +171,27 @@ class MonthController extends DefaultController
 		/******************************************************************************************************************************/
 	
 		//Appointments in the current month
-		$appointmentMiniCalendarList = $appointmentList;
+		$appMiniCalendarList = $appointmentList;
 		 
 		/******************************************************************************************************************************/
 		/************************************************** Get upcoming appointments *************************************************/
 		/******************************************************************************************************************************/
-		$upcomingAppointmentList = $this->getUpcomingAppointments($recruiter);
+		$upcomingAppList = $this->getUpcomingAppointments($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Get appointmentOutcome chart *************************************************/
 		/******************************************************************************************************************************/
-		$appointmentOutcomesChart = $this->getAppointmentOutcomeChart($recruiter);
+		$appOutcomesChart = $this->getAppointmentOutcomeChart($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Get appointmentsByMonth chart *************************************************/
 		/******************************************************************************************************************************/
-		$appointmentsByMonthChart = $this->getAppointmentsByMonthChart($recruiter);
+		$appsByMonthChart = $this->getAppointmentsByMonthChart($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Get appointmentsByWeek chart *************************************************/
 		/******************************************************************************************************************************/
-		$appointmentsByWeekChart = $this->getAppointmentsByWeekChart($recruiter);
+		$appsByWeekChart = $this->getAppointmentsByWeekChart($recruiter);
 		
 		/******************************************************************************************************************************/
 		/************************************************** Render ***************************************************************/
@@ -208,12 +208,12 @@ class MonthController extends DefaultController
 				"year" => $year,
 				'searchForm' => $searchForm->createView(),
 				'searchFormSubmitted' => $searchFormSubmitted,
-				'appointmentMiniCalendarList' => $appointmentMiniCalendarList,
+				'appointmentMiniCalendarList' => $appMiniCalendarList,
 				'ruleList' => $ruleList,
-				'upcomingAppointmentList' => $upcomingAppointmentList,
-				'appointmentOutcomesChart' => $appointmentOutcomesChart,
-				'appointmentsByMonthChart' => $appointmentsByMonthChart,
-				'appointmentsByWeekChart' => $appointmentsByWeekChart,
+				'upcomingAppointmentList' => $upcomingAppList,
+				'appointmentOutcomesChart' => $appOutcomesChart,
+				'appointmentsByMonthChart' => $appsByMonthChart,
+				'appointmentsByWeekChart' => $appsByWeekChart,
 		));
 	}
 }

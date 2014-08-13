@@ -28,9 +28,9 @@ class UnavailableDateController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('RuleBundle:UnavailableDate')->findAll();
+        $entities = $eManager->getRepository('RuleBundle:UnavailableDate')->findAll();
 
         return $this->render('RuleBundle:UnavailableDate:index.html.twig', array(
             'entities' => $entities,
@@ -110,7 +110,7 @@ class UnavailableDateController extends Controller
         $year = $currentDate->format('Y');
         
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $eManager = $this->getDoctrine()->getManager();
             
             if ($unavailableDate->getAllDay()) {
             	$unavailableDate->setStartTime(null);
@@ -125,8 +125,8 @@ class UnavailableDateController extends Controller
             
             Util::setCreateAuditFields($unavailableDate, $userLogged->getId());
             
-            $em->persist($unavailableDate);
-            $em->flush();
+            $eManager->persist($unavailableDate);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -192,7 +192,7 @@ class UnavailableDateController extends Controller
      */
     public function newDateAction($hour, $minute, $day, $month, $year, $recruiter_id = null)
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	$unavailableDate = new UnavailableDate();
     	 
@@ -211,7 +211,7 @@ class UnavailableDateController extends Controller
     	$unavailableDate->setEndTime($endTime);
     	
     	if ($recruiter_id) {
-	    	$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+	    	$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 	    	
 	    	if (!$recruiter) {
 	    		throw $this->createNotFoundException('Unable to find this recruiter.');
@@ -237,17 +237,17 @@ class UnavailableDateController extends Controller
      * Finds and displays a UnavailableDate entity.
      *
      */
-    public function showAction($id)
+    public function showAction($unavailableDateId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $unavailableDate = $em->getRepository('RuleBundle:UnavailableDate')->find($id);
+        $unavailableDate = $eManager->getRepository('RuleBundle:UnavailableDate')->find($unavailableDateId);
 
         if (!$unavailableDate) {
             throw $this->createNotFoundException('Unable to find UnavailableDate entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($unavailableDateId);
 
         return $this->render('RuleBundle:UnavailableDate:show.html.twig', array(
             'entity'      => $unavailableDate,
@@ -258,18 +258,18 @@ class UnavailableDateController extends Controller
      * Displays a form to edit an existing UnavailableDate entity.
      *
      */
-    public function editAction($id, $recruiter_id = null)
+    public function editAction($unavailableDateId, $recruiter_id = null)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $unavailableDate = $em->getRepository('RuleBundle:UnavailableDate')->find($id);
+        $unavailableDate = $eManager->getRepository('RuleBundle:UnavailableDate')->find($unavailableDateId);
 
         if (!$unavailableDate) {
             throw $this->createNotFoundException('Unable to find UnavailableDate entity.');
         }
 
         $editForm = $this->createEditForm($unavailableDate);
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($unavailableDateId);
         
         $currentDate = $unavailableDate->getUnavailableDate();
         $day = $currentDate->format('d');
@@ -297,7 +297,7 @@ class UnavailableDateController extends Controller
     private function createEditForm(UnavailableDate $unavailableDate)
     {
         $form = $this->createForm(new UnavailableDateType(), $unavailableDate, array(
-            'action' => $this->generateUrl('unavailableDate_update', array('id' => $unavailableDate->getId())),
+            'action' => $this->generateUrl('unavailableDate_update', array('unavailableDateId' => $unavailableDate->getId())),
             'method' => 'PUT',
         ));
 
@@ -312,17 +312,17 @@ class UnavailableDateController extends Controller
      * Edits an existing UnavailableDate entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $unavailableDateId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $eManager = $this->getDoctrine()->getManager();
 
-        $unavailableDate = $em->getRepository('RuleBundle:UnavailableDate')->find($id);
+        $unavailableDate = $eManager->getRepository('RuleBundle:UnavailableDate')->find($unavailableDateId);
 
         if (!$unavailableDate) {
             throw $this->createNotFoundException('Unable to find UnavailableDate entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $deleteForm = $this->createDeleteForm($unavailableDateId);
         $editForm = $this->createEditForm($unavailableDate);
         $editForm->handleRequest($request);
         
@@ -340,7 +340,7 @@ class UnavailableDateController extends Controller
         }
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -368,21 +368,22 @@ class UnavailableDateController extends Controller
      * Deletes a UnavailableDate entity.
      *
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $unavailableDateId)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($unavailableDateId);
         $form->handleRequest($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $unavailableDate = $em->getRepository('RuleBundle:UnavailableDate')->find($id);
+            $eManager = $this->getDoctrine()->getManager();
+            $unavailableDate = $eManager->getRepository('RuleBundle:UnavailableDate')->find($unavailableDateId);
 
             if (!$unavailableDate) {
                 throw $this->createNotFoundException('deleteAction - Unable to find UnavailableDate entity.');
             }
             
-            $em->remove($unavailableDate);
-            $em->flush();
+            $eManager->remove($unavailableDate);
+            $eManager->flush();
             
             $this->get('session')->getFlashBag()->set(
             		'success',
@@ -400,14 +401,14 @@ class UnavailableDateController extends Controller
     /**
      * Creates a form to delete a UnavailableDate entity by id.
      *
-     * @param mixed $id The entity id
+     * @param mixed $unavailableDateId The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id)
+    private function createDeleteForm($unavailableDateId)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('unavailableDate_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('unavailableDate_delete', array('unavailableDateId' => $unavailableDateId)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array(
             		'label' => 'Delete',
@@ -455,13 +456,13 @@ class UnavailableDateController extends Controller
      */
     private function getAvailableRecruitersByMonthAndYear($month, $year, AvailabilityFilter $filter) {
     	 
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	 
     	$currentDate = new \DateTime('1-'.$month.'-'.$year);
     	$monthDays = $currentDate->format('t');
     	 
     	//Get the unavailable dates for that month an year
-    	$unavailableDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesByMonthAndYear($month, $year, $filter->getStartTime(), $filter->getEndTime());
+    	$unavailableDateList = $eManager->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesByMonthAndYear($month, $year, $filter->getStartTime(), $filter->getEndTime());
     	 
     	$auxList = array();
     	foreach ($unavailableDateList as $unavailableDate) {
@@ -474,7 +475,7 @@ class UnavailableDateController extends Controller
     		$recruiterList = $filter->getRecruiters();
     	}
     	else {
-    		$recruiterList = $em->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
+    		$recruiterList = $eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
     	}
     	$auxList = array();
     	foreach ($recruiterList as $recruiter) {
@@ -494,10 +495,10 @@ class UnavailableDateController extends Controller
     		}
     		$auxList[$day->format('m/d/Y')] = $recruiterListAux;
     	}
-    	$availableRecruiterList = $auxList;
+    	$availableRecruitList = $auxList;
     	 
     	 
-    	return $availableRecruiterList;
+    	return $availableRecruitList;
     }
     
     /**
@@ -506,7 +507,7 @@ class UnavailableDateController extends Controller
      */
     public function searchAvailabilityAction($month,$year)
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	 
     	/******************************************************************************************************************************/
     	/************************************************** Build the form with the session values if are isset ***********************/
@@ -521,13 +522,13 @@ class UnavailableDateController extends Controller
     	$startTime_filter = isset($session_fitler["startTime"]) ? $session_fitler["startTime"] : null;
     	$endTime_filter = isset($session_fitler["endTime"]) ? $session_fitler["endTime"] : null;
     	
-    	$searchAvailabilityFormSubmitted = ($recruiters_filter || $startTime_filter || $endTime_filter)? true : false;
+    	$searchFormSubmitted = ($recruiters_filter || $startTime_filter || $endTime_filter)? true : false;
     	 
     	if ($recruiters_filter) {
     		$recruiter_ar = new ArrayCollection();
     		 
     		foreach ($recruiters_filter as $recruiter) {
-    			$recruiter_ar->add($em->getRepository('UserBundle:User')->find($recruiter));
+    			$recruiter_ar->add($eManager->getRepository('UserBundle:User')->find($recruiter));
     		}
     		 
     		$filter->setRecruiters($recruiter_ar);
@@ -581,14 +582,14 @@ class UnavailableDateController extends Controller
     	/******************************************************************************************************************************/
     	/************************************************** Get the general unavailable dates for all recruiters (bank holidays, ...) */
     	/******************************************************************************************************************************/
-    	$unavailableCommonDateList = $em->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesForAllRecruiters($month, $year);
+    	$unavaiCommonDateList = $eManager->getRepository('RuleBundle:UnavailableDate')->findUnavailableDatesForAllRecruiters($month, $year);
     	$auxList = array();
-    	foreach ($unavailableCommonDateList as $unavailableDate) {
+    	foreach ($unavaiCommonDateList as $unavailableDate) {
     		$day = new \DateTime($unavailableDate['day']);
     		$day = $day->format("m/d/Y");
     		$auxList[$day] = $unavailableDate['reason'];
     	}
-    	$unavailableCommonDateList = $auxList;
+    	$unavaiCommonDateList = $auxList;
     	 
     	 
     	/******************************************************************************************************************************/
@@ -596,11 +597,11 @@ class UnavailableDateController extends Controller
     	/******************************************************************************************************************************/
     	return $this->render('RuleBundle:UnavailableDate:searchAvailability.html.twig', array(
     			'recruiterList' => $recruiterList,
-    			'unavailableCommonDateList' => $unavailableCommonDateList,
+    			'unavailableCommonDateList' => $unavaiCommonDateList,
     			'month' => $month,
     			"year" => $year,
     			'searchAvailabilityForm' => $form->createView(),
-    			'searchAvailabilityFormSubmitted' => $searchAvailabilityFormSubmitted,
+    			'searchAvailabilityFormSubmitted' => $searchFormSubmitted,
     	));
     }
     

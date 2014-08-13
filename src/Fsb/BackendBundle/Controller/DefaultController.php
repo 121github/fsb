@@ -25,7 +25,7 @@ class DefaultController extends Controller
      */
     public function automatedControlAction()
     {
-    	$em = $this->getDoctrine()->getManager();
+    	$eManager = $this->getDoctrine()->getManager();
     	
     	$isSubmitted = false;
     	
@@ -34,7 +34,7 @@ class DefaultController extends Controller
     	$form = $this->createAppointmentForm($appointmentData);
     	
     	//Get the compnay Profile
-    	$companyProfile = $em->getRepository('BackendBundle:CompanyProfile')->findAll();
+    	$companyProfile = $eManager->getRepository('BackendBundle:CompanyProfile')->findAll();
     	$companyProfile = $companyProfile[0];
     	
     	
