@@ -1,11 +1,12 @@
 <?php
+namespace Fsb\AppointmentBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\AppointmentBundle\Entity\Appointment;
 use Fsb\UserBundle\Entity\User;
 use Fsb\UserBundle\Entity\UserRole;
 use Fsb\AppointmentBundle\Entity\AppointmentDetail;
-use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
+use Fsb\AppointmentBundle\Tests\Entity\AppointmentDefaultEntityTest;
 
 class AppointmentDetailTest extends AppointmentDefaultEntityTest
 {

@@ -1,4 +1,6 @@
 <?php
+namespace Fsb\RuleBundle\Tests\Entity;
+
 use Symfony\Component\Validator\Validation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\RuleBundle\Entity\AvailabilityFilter;
@@ -33,8 +35,8 @@ class AvailabilityFilterTest extends \PHPUnit_Framework_TestCase
 				'The recruiters are saved in the availability Filter entity'
 		);
 		
-		$startDate = new DateTime('now');
-		$endDate = new DateTime('now + 2 hour');
+		$startDate = new \DateTime('now');
+		$endDate = new \DateTime('now + 2 hour');
 		
 		$availabilityFilter->setStartTime($startDate->format('H:i:s'));
 		$this->assertEquals(

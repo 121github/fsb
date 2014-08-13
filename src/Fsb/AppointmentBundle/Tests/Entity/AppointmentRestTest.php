@@ -1,7 +1,7 @@
 <?php
+namespace Fsb\AppointmentBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
-use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
 use Fsb\AppointmentBundle\Entity\AppointmentRest;
 use Fsb\UserBundle\Entity\User;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
@@ -37,7 +37,7 @@ class AppointmentRestTest extends \PHPUnit_Framework_TestCase
 	{
 		$appointmentRest = new AppointmentRest();
 		
-		$startDate = new DateTime('today');
+		$startDate = new \DateTime('today');
 		$appointmentRest->setStartDate($startDate);
 		$this->assertEquals(
 				$startDate,
@@ -45,7 +45,7 @@ class AppointmentRestTest extends \PHPUnit_Framework_TestCase
 				'The start Date is saved in the appointment Rest'
 		);
 		
-		$endDate = new DateTime('today');
+		$endDate = new \DateTime('today');
 		$appointmentRest->setEndDate($endDate);
 		$this->assertEquals(
 				$endDate,

@@ -1,4 +1,6 @@
 <?php
+namespace Fsb\UserBundle\Tests\Entity;
+
 use Symfony\Component\Validator\Validation;
 use Fsb\UserBundle\Entity\UserChangePassword;
 

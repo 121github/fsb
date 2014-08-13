@@ -1,4 +1,6 @@
 <?php
+namespace Fsb\BackendBundle\Tests\Entity;
+
 use Symfony\Component\Validator\Validation;
 use Fsb\BackendBundle\Entity\CompanyProfile;
 

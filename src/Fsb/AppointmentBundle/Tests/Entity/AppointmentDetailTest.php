@@ -6,7 +6,7 @@ use Fsb\AppointmentBundle\Entity\AppointmentDetail;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
 use Fsb\AppointmentBundle\Entity\AppointmentOutcome;
 use Fsb\AppointmentBundle\Entity\Address;
-use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
+use Fsb\AppointmentBundle\Tests\Entity\AppointmentDefaultEntityTest;
 
 class AppointmentTest extends AppointmentDefaultEntityTest
 {

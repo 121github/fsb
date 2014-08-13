@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\AppointmentBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\AppointmentBundle\Entity\Address;

@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\CalendarBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\CalendarBundle\Entity\Import;

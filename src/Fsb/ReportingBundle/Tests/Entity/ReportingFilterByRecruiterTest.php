@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\ReportingBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\UserBundle\Entity\User;
@@ -19,7 +20,7 @@ class ReportingFilterByRecruiterTest extends \PHPUnit_Framework_TestCase
 
 		$reportingFilterByRecruiter = new ReportingFilterByRecruiter();
 
-		$startDate = new DateTime('today');
+		$startDate = new \DateTime('today');
 		$reportingFilterByRecruiter->setStartDate($startDate);
 		$this->assertEquals(
 				$startDate,
@@ -27,7 +28,7 @@ class ReportingFilterByRecruiterTest extends \PHPUnit_Framework_TestCase
 				'The start Date are saved in the reporting Filter by recruiter'
 		);
 		
-		$endDate = new DateTime('today');
+		$endDate = new \DateTime('today');
 		$reportingFilterByRecruiter->setEndDate($endDate);
 		$this->assertEquals(
 				$endDate,

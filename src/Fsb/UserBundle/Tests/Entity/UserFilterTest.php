@@ -1,4 +1,6 @@
 <?php
+namespace Fsb\UserBundle\Tests\Entity;
+
 use Symfony\Component\Validator\Validation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\UserBundle\Entity\UserRole;

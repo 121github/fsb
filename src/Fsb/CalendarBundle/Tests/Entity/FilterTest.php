@@ -1,4 +1,6 @@
 <?php
+namespace Fsb\CalendarBundle\Tests\Entity;
+
 use Symfony\Component\Validator\Validation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fsb\UserBundle\Entity\User;

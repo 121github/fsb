@@ -1,7 +1,8 @@
 <?php
+namespace Fsb\RuleBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
-use Fsb\RuleBundle\Test\Entity\RuleDefaultEntityTest;
+use Fsb\RuleBundle\Tests\Entity\RuleDefaultEntityTest;
 use Fsb\UserBundle\Entity\User;
 use Fsb\RuleBundle\Entity\UnavailableDate;
 use Fsb\RuleBundle\Entity\UnavailableDateReason;
@@ -51,8 +52,8 @@ class UnavailableDateTest extends RuleDefaultEntityTest
 				'The other reason is saved in the unavailableDate entity'
 		);
 		
-		$startDate = new DateTime('now');
-		$endDate = new DateTime('now + 2 hour');
+		$startDate = new \DateTime('now');
+		$endDate = new \DateTime('now + 2 hour');
 		
 		$unavailableDate->setUnavailableDate($startDate->format('Y-m-d'));
 		$this->assertEquals(

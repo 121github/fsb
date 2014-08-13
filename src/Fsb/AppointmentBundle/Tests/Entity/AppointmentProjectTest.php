@@ -1,8 +1,9 @@
 <?php
+namespace Fsb\AppointmentBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\AppointmentBundle\Entity\AppointmentProject;
-use Fsb\AppointmentBundle\Test\Entity\AppointmentDefaultEntityTest;
+use Fsb\AppointmentBundle\Tests\Entity\AppointmentDefaultEntityTest;
 
 class AppointmentProjectTest extends AppointmentDefaultEntityTest
 {

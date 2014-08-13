@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\ReportingBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\ReportingBundle\Entity\ReportingFilterByMonth;

@@ -1,7 +1,8 @@
 <?php
+namespace Fsb\UserBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
-use Fsb\UserBundle\Test\Entity\UserDefaultEntityTest;
+use Fsb\UserBundle\Tests\Entity\UserDefaultEntityTest;
 use Fsb\UserBundle\Entity\User;
 use Fsb\UserBundle\Entity\UserRole;
 use Fsb\UserBundle\Entity\UserDetail;

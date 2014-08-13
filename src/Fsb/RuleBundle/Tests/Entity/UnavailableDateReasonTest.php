@@ -1,7 +1,8 @@
 <?php
+namespace Fsb\RuleBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
-use Fsb\RuleBundle\Test\Entity\RuleDefaultEntityTest;
+use Fsb\RuleBundle\Tests\Entity\RuleDefaultEntityTest;
 use Fsb\RuleBundle\Entity\UnavailableDateReason;
 
 class UnavailableDateReasonTest extends RuleDefaultEntityTest

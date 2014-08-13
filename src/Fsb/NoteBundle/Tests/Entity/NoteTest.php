@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\NoteBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\NoteBundle\Entity\Note;
@@ -52,7 +53,7 @@ class NoteTest extends \PHPUnit_Framework_TestCase
 				'The text is saved in the note entity'
 		);
 		
-		$startDate = new DateTime('today');
+		$startDate = new \DateTime('today');
 		$note->setStartDate($startDate);
 		$this->assertEquals(
 				$startDate,
@@ -60,7 +61,7 @@ class NoteTest extends \PHPUnit_Framework_TestCase
 				'The start Date is saved in the note entity'
 		);
 		
-		$endDate = new DateTime('tomorrow');
+		$endDate = new \DateTime('tomorrow');
 		$note->setEndDate($endDate);
 		$this->assertEquals(
 				$endDate,

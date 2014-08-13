@@ -1,5 +1,5 @@
 <?php
-namespace Fsb\RuleBundle\Test\Entity;
+namespace Fsb\RuleBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 

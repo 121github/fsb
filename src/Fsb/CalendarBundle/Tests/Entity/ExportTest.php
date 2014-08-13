@@ -1,4 +1,5 @@
 <?php
+namespace Fsb\CalendarBundle\Tests\Entity;
 
 use Symfony\Component\Validator\Validation;
 use Fsb\CalendarBundle\Entity\Export;
@@ -31,7 +32,7 @@ class ExportTest extends \PHPUnit_Framework_TestCase
 				'The date range typeis saved in the export entity'
 		);
 		
-		$startDate = new DateTime('today');
+		$startDate = new \DateTime('today');
 		$export->setStartDate($startDate);
 		$this->assertEquals(
 				$startDate,
@@ -39,7 +40,7 @@ class ExportTest extends \PHPUnit_Framework_TestCase
 				'The start date is saved in the export entity'
 		);
 		
-		$endDate = new DateTime('tomorrow');
+		$endDate = new \DateTime('tomorrow');
 		$export->setEndDate($endDate);
 		$this->assertEquals(
 				$endDate,

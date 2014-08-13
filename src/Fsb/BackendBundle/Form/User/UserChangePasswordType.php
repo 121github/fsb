@@ -19,7 +19,7 @@ class UserChangePasswordType extends AbstractType
 		->add('oldPassword', 'password')
 		->add('password', 'repeated', array(
 				'type' => 'password',
-				'invalid_message' => 'Both passwords must be the same',
+				
 				'options' => array('label' => 'New Password')
 		))
 		;
