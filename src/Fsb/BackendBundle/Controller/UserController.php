@@ -45,9 +45,9 @@ class UserController extends Controller
 		$session = $request->getSession();
 		
 		//Clear session variables
-		session_destroy();
-        session_write_close();
-        session_regenerate_id();
+		//session_destroy();
+        //session_write_close();
+        //session_regenerate_id();
 		 
 		$error = $request->attributes->get(
 				SecurityContext::AUTHENTICATION_ERROR,

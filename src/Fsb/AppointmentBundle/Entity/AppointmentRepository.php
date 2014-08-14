@@ -166,7 +166,7 @@ class AppointmentRepository extends EntityRepository
 		
 		$query = $eManager->createQueryBuilder()
 		->select(array(
-				'SUBSTRING(a.startDate, 11, 3) AS hour', 
+				'SUBSTRING(a.startDate, 12, 2) AS hour', 
 				'SUBSTRING(a.startDate, 15, 2) AS minute',
 				'a.id, ad.title', 
 				'ad.comment',

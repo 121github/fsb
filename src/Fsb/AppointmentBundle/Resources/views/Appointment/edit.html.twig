@@ -23,6 +23,12 @@
 				  		</div>
 					</td>
 				</tr><tr>
+					<td>
+						{{ form_label(edit_form.appointmentSetter) }}
+						{{ form_errors(edit_form.appointmentSetter) }}
+						{{ form_widget(edit_form.appointmentSetter) }}
+					</td>
+				</tr><tr>
 					<td colspan="3">
 						{{ form_label(edit_form.appointmentDetail.title) }}
 						{{ form_errors(edit_form.appointmentDetail.title) }}

@@ -26,10 +26,9 @@
 		"friendsofsymfony/rest-bundle" : "1.2.*@dev",
 		"nelmio/api-doc-bundle" : "~2.4"
 	},
-	"require-dev": {
-        "phpunit/phpunit": "*",
-        "facebook/webdriver": "dev-master"
-    },
+	"require-dev" : {
+		"facebook/webdriver" : "dev-master"
+	},
 	"scripts" : {
 		"post-install-cmd" : [
 			"Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",

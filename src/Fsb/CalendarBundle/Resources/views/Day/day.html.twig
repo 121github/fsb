@@ -192,7 +192,7 @@
 										{% if appointment_list[i][0] is defined %}
 											{% for appointment in appointment_list[i][0] %}
 												<h2>
-													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
+													<a href="#popup{{ appointment["id"] }}" id="{{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
 									                {{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}
 													<p style="color: white; font-weight: bold;">{{ appointment["outcome"] }}</p>
 													<p style="color: white; font-weight: bold;">{{ appointment["recruiter"] }}</p>
@@ -239,7 +239,7 @@
 								       {% if appointment_list[i][30] is defined %}
 								       		{% for appointment in appointment_list[i][30] %}
 												<h2>
-													<a href="#popup{{ appointment["id"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
+													<a href="#popup{{ appointment["id"] }}" id="{{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}" data-rel="popup" data-position-to="window" data-role="button" data-mini="true" data-inline="true" style=" color: white; font-weight: bold; background-color: {{ appointment["color"] }}; ">
 									                {{ appointment["hour"] ~ ":" ~ appointment["minute"] ~ " - " ~ appointment["title"] }}
 													<p style="color: white; font-weight: bold;">{{ appointment["outcome"] }}</p>
 													<p style="color: white; font-weight: bold;">{{ appointment["recruiter"] }}</p>
