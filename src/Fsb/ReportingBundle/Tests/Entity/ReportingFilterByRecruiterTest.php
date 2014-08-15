@@ -18,21 +18,21 @@ class ReportingFilterByRecruiterTest extends \PHPUnit_Framework_TestCase
 
 	public function testValidation() {
 
-		$reportingFilterByRecruiter = new ReportingFilterByRecruiter();
+		$repFilterByRecruiter = new ReportingFilterByRecruiter();
 
 		$startDate = new \DateTime('today');
-		$reportingFilterByRecruiter->setStartDate($startDate);
+		$repFilterByRecruiter->setStartDate($startDate);
 		$this->assertEquals(
 				$startDate,
-				$reportingFilterByRecruiter->getStartDate(),
+				$repFilterByRecruiter->getStartDate(),
 				'The start Date are saved in the reporting Filter by recruiter'
 		);
 		
 		$endDate = new \DateTime('today');
-		$reportingFilterByRecruiter->setEndDate($endDate);
+		$repFilterByRecruiter->setEndDate($endDate);
 		$this->assertEquals(
 				$endDate,
-				$reportingFilterByRecruiter->getEndDate(),
+				$repFilterByRecruiter->getEndDate(),
 				'The end Date are saved in the reporting Filter by recruiter'
 		);
 

@@ -21,7 +21,7 @@ class ExportController extends DefaultController
 	 */
 	public function exportAction() {
 		
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		
 		$userLogged = $this->get('security.context')->getToken()->getUser();
 			
@@ -100,7 +100,7 @@ class ExportController extends DefaultController
 			/**********************************************************************************************************************************/
 	    	/************************************************** Get the appointments **********************************************************/
 	    	/**********************************************************************************************************************************/
-	    	$appointmentList = $em->getRepository('AppointmentBundle:Appointment')->findAppointmentsByExportFilter(
+	    	$appointmentList = $eManager->getRepository('AppointmentBundle:Appointment')->findAppointmentsByExportFilter(
 	    			$export->getStartDate(),
 	    			$export->getEndDate(),
 	    			$recruiter_ar,

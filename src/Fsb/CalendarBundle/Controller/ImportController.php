@@ -17,13 +17,13 @@ class ImportController extends DefaultController
 	 */
 	public function importAction($recruiter_id = null) {
 		 
-		$em = $this->getDoctrine()->getManager();
+		$eManager = $this->getDoctrine()->getManager();
 		
 		/******************************************************************************************************************************/
 		/************************************************** Recruiter *****************************************************************/
 		/******************************************************************************************************************************/
 		if ($recruiter_id) {
-			$recruiter = $em->getRepository('UserBundle:User')->find($recruiter_id);
+			$recruiter = $eManager->getRepository('UserBundle:User')->find($recruiter_id);
 		}
 		else {
 			$recruiter = null;

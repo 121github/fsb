@@ -44,15 +44,15 @@ class CsvUtil
 		if (count($rows) > 0) {
 			$content = "";
 			$header = "";
-			$i = 0;
+			$iter = 0;
 			foreach ($rows as $row) {
 				foreach ($row as $key => $value) {
-					if ($i==0) {
+					if ($iter==0) {
 						$header = $header.$key.',';
 					}
 					$content = $content.$value.',';
 				}
-				$i++;
+				$iter++;
 				$content = substr($content, 0, strlen($content)-1);
 				$content = $content."\r";
 			}

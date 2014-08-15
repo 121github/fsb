@@ -133,7 +133,7 @@ class DayController extends DefaultController
 		$unavailableDate->setUnavailableDate($date);
 		$unavailableDate->setRecruiter($recruiter);
 		 
-		$setUnavailableDateForm   = $this->createSetUnavailableForm($unavailableDate);
+		$unavailableDateForm   = $this->createSetUnavailableForm($unavailableDate);
 	
 		 
 		/******************************************************************************************************************************/
@@ -254,7 +254,7 @@ class DayController extends DefaultController
 				'recruiter_url' => $recruiter_id,
 				'appointment_list' => $appointmentList,
 				'unavailableDateList' => $unavailableDateList,
-				'setUnavailableForm' => $setUnavailableDateForm->createView(),
+				'setUnavailableForm' => $unavailableDateForm->createView(),
 				'unavailableDateId' => $unavailableDateId,
 				'setAvailableForm' => $setAvailableDateForm->createView(),
 				'unavailableTimeList' => $unavailableTimeList,
