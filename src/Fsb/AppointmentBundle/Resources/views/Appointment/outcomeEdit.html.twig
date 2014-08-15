@@ -4,7 +4,7 @@
 
 {% block article -%}
 	{% set submit_id = edit_form.vars.id ~ "_submit" %}
-	<form action="{{ path('appointment_outcome_edit', { 'id': appointment.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
+	<form action="{{ path('appointment_outcome_edit', { 'appointmentId': appointment.id}) }}" method="post" onsubmit="return checkSubmit('{{ submit_id }}');" data-ajax="false" {{ form_enctype(edit_form) }}>
 		{{ form_errors(edit_form) }}
 			<table>
 				<tr>

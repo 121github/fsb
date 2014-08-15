@@ -3,11 +3,15 @@
 namespace Fsb\AppointmentBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Fsb\UserBundle\Entity\User;
 
 class AppointmentControllerTest extends WebTestCase
 {
 	private $client;
 	private $eManager;
+	private $currentDate;
+	private $startTime;
+	private $endTime;
 	
 	public function setUp() {
 		$this->client = static::createClient(array(), array(
@@ -18,6 +22,9 @@ class AppointmentControllerTest extends WebTestCase
 		$this->client->followRedirects(true);
 		
 		$this->eManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+		
+		$this->currentDate = new \DateTime('now');
+		$this->startTime = new \DateTime($this->currentDate->format('Y-m-d').' 08:00:00');
 	}
 	
 	private function generateUrl($routingName, $args) {
@@ -31,18 +38,18 @@ class AppointmentControllerTest extends WebTestCase
 	 */
 	public function testNewDateAction()
 	{
-
-		$date = new \DateTime('now');
-		$url = $this->generateUrl('appointment_new_date', array(
-				'hour' => $date->format('H'),
-				'minute' => $date->format('i'),
-				'day' => $date->format('d'),
-				'month' => $date->format('m'),
-				'year' => $date->format('Y'),
+		$url = $this->generateUrl('calendar_day', array(
+				'day' => $this->currentDate->format('d'),
+				'month' => $this->currentDate->format('m'),
+				'year' => $this->currentDate->format('Y'),
 		));
 		
 		$crawler = $this->client->request('GET', $url);
 	
+		$appointmentLink = $crawler->selectLink($this->startTime->format('H:i'))->link();
+		$this->client->click($appointmentLink);
+		
+		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 		//Status code 200
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 		
@@ -60,17 +67,17 @@ class AppointmentControllerTest extends WebTestCase
 		$recruiterList = $this->eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
 		$recruiter = $recruiterList[0];
 	
-		$date = new \DateTime('now');
-		$url = $this->generateUrl('appointment_new_date', array(
-				'hour' => $date->format('H'),
-				'minute' => $date->format('i'),
-				'day' => $date->format('d'),
-				'month' => $date->format('m'),
-				'year' => $date->format('Y'),
+		$url = $this->generateUrl('calendar_day', array(
+				'day' => $this->currentDate->format('d'),
+				'month' => $this->currentDate->format('m'),
+				'year' => $this->currentDate->format('Y'),
 				'recruiter_id' => $recruiter->getId(),
 		));
-	
+		
 		$crawler = $this->client->request('GET', $url);
+	
+		$appointmentLink = $crawler->selectLink($this->startTime->format('H:i'))->link();
+		$this->client->click($appointmentLink);
 		
 		//Status code 200
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
@@ -123,5 +130,43 @@ class AppointmentControllerTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("Update")')->count(),
 				'The edit appointment page has a Update submit link'
 		);
+	}
+	
+	/**
+	 *
+	 */
+	public function testOutcomeEditAction() {
+		$appointmentList = $this->eManager->getRepository('AppointmentBundle:Appointment')->findAll();
+		$appointment = $appointmentList[0];
+		
+		$url = $this->generateUrl('appointment_outcome_edit', array(
+				'appointmentId' => $appointment->getId(),
+		));
+	
+		$crawler = $this->client->request('GET', $url);
+	
+		//Status code 200
+		$this->assertEquals('200',$this->client->getResponse()->getStatusCode());
+	
+		//Contains the Update button
+		$this->assertEquals(1, $crawler->filter('html:contains("Update")')->count(),
+				'The edit appointment page has a Update submit link'
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function testSearchAppointmentAction() {
+	
+		$url = $this->generateUrl('appointment_filter', array(
+				'month' => $this->currentDate->format('m'),
+				'year' => $this->currentDate->format('Y'),
+		));
+	
+		$crawler = $this->client->request('GET', $url);
+	
+		//Status code 200
+		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 	}
 }
