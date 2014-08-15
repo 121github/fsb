@@ -4,7 +4,7 @@ namespace Fsb\AppointmentBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DayControllerTest extends WebTestCase
+class DiaryControllerTest extends WebTestCase
 {
 	private $client;
 	private $eManager;
@@ -29,13 +29,13 @@ class DayControllerTest extends WebTestCase
 	/**
 	 * 
 	 */
-	public function testDayAction()
+	public function testDiaryAction()
 	{
 		$url = $this->generateUrl('calendar_homepage', array());
 		
 		$crawler = $this->client->request('GET', $url);
 		
-		$appointmentLink = $crawler->selectLink('Day')->link();
+		$appointmentLink = $crawler->selectLink('Diary')->link();
 		$this->client->click($appointmentLink);
 		
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
@@ -44,13 +44,13 @@ class DayControllerTest extends WebTestCase
 	/**
 	 *
 	 */
-	public function testDayActionByRecruiter()
+	public function testDiaryActionByRecruiter()
 	{
 		$recruiterList = $this->eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
 		$recruiter = $recruiterList[0];
 		
 		$date = new \DateTime('now');
-		$url = $this->generateUrl('calendar_day', array(
+		$url = $this->generateUrl('calendar_diary', array(
 				'day' => $date->format('d'),
 				'month' => $date->format('m'),
 				'year' => $date->format('Y'),

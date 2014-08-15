@@ -4,7 +4,7 @@ namespace Fsb\AppointmentBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class DayControllerTest extends WebTestCase
+class MapControllerTest extends WebTestCase
 {
 	private $client;
 	private $eManager;
@@ -29,7 +29,7 @@ class DayControllerTest extends WebTestCase
 	/**
 	 * 
 	 */
-	public function testDayAction()
+	public function testMapDayAction()
 	{
 		$url = $this->generateUrl('calendar_homepage', array());
 		
@@ -38,26 +38,44 @@ class DayControllerTest extends WebTestCase
 		$appointmentLink = $crawler->selectLink('Day')->link();
 		$this->client->click($appointmentLink);
 		
+		$appointmentLink = $crawler->selectLink('Map')->link();
+		$this->client->click($appointmentLink);
+		
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 	}
 	
 	/**
 	 *
 	 */
-	public function testDayActionByRecruiter()
+	public function testMapMonthAction()
 	{
-		$recruiterList = $this->eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
-		$recruiter = $recruiterList[0];
-		
-		$date = new \DateTime('now');
-		$url = $this->generateUrl('calendar_day', array(
-				'day' => $date->format('d'),
-				'month' => $date->format('m'),
-				'year' => $date->format('Y'),
-				'recruiter_id' => $recruiter->getId(),
-		));
+		$url = $this->generateUrl('calendar_homepage', array());
 	
 		$crawler = $this->client->request('GET', $url);
+	
+		$appointmentLink = $crawler->selectLink('Month')->link();
+		$this->client->click($appointmentLink);
+	
+		$appointmentLink = $crawler->selectLink('Map')->link();
+		$this->client->click($appointmentLink);
+	
+		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
+	}
+	
+	/**
+	 *
+	 */
+	public function testMapDiaryAction()
+	{
+		$url = $this->generateUrl('calendar_homepage', array());
+	
+		$crawler = $this->client->request('GET', $url);
+	
+		$appointmentLink = $crawler->selectLink('Diary')->link();
+		$this->client->click($appointmentLink);
+	
+		$appointmentLink = $crawler->selectLink('Map')->link();
+		$this->client->click($appointmentLink);
 	
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 	}

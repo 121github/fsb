@@ -38,18 +38,16 @@ class AppointmentControllerTest extends WebTestCase
 	 */
 	public function testNewDateAction()
 	{
-		$url = $this->generateUrl('calendar_day', array(
+		$url = $this->generateUrl('appointment_new_date', array(
+				'hour' => $this->currentDate->format('H'),
+				'minute' => $this->currentDate->format('i'),
 				'day' => $this->currentDate->format('d'),
 				'month' => $this->currentDate->format('m'),
 				'year' => $this->currentDate->format('Y'),
 		));
 		
 		$crawler = $this->client->request('GET', $url);
-	
-		$appointmentLink = $crawler->selectLink($this->startTime->format('H:i'))->link();
-		$this->client->click($appointmentLink);
 		
-		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 		//Status code 200
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 		
@@ -67,7 +65,9 @@ class AppointmentControllerTest extends WebTestCase
 		$recruiterList = $this->eManager->getRepository('UserBundle:User')->findUsersByRole('ROLE_RECRUITER');
 		$recruiter = $recruiterList[0];
 	
-		$url = $this->generateUrl('calendar_day', array(
+		$url = $this->generateUrl('appointment_new_date', array(
+				'hour' => $this->currentDate->format('H'),
+				'minute' => $this->currentDate->format('i'),
 				'day' => $this->currentDate->format('d'),
 				'month' => $this->currentDate->format('m'),
 				'year' => $this->currentDate->format('Y'),
@@ -75,10 +75,7 @@ class AppointmentControllerTest extends WebTestCase
 		));
 		
 		$crawler = $this->client->request('GET', $url);
-	
-		$appointmentLink = $crawler->selectLink($this->startTime->format('H:i'))->link();
-		$this->client->click($appointmentLink);
-		
+			
 		//Status code 200
 		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 	
@@ -146,7 +143,7 @@ class AppointmentControllerTest extends WebTestCase
 		$crawler = $this->client->request('GET', $url);
 	
 		//Status code 200
-		$this->assertEquals('200',$this->client->getResponse()->getStatusCode());
+		$this->assertTrue(200 === $this->client->getResponse()->getStatusCode());
 	
 		//Contains the Update button
 		$this->assertEquals(1, $crawler->filter('html:contains("Update")')->count(),
