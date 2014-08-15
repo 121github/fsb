@@ -4,7 +4,7 @@ namespace Fsb\AppointmentBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AppointmentControllerTest extends WebTestCase
+class DayControllerTest extends WebTestCase
 {
 	private $client;
 	private $eManager;
