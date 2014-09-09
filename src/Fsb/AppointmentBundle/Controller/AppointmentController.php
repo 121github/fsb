@@ -62,6 +62,7 @@ class AppointmentController extends DefaultController
         	
         	$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.system'));
         	Util::setCreateAuditFields($appointment, $userLogged->getId());
+        	$appointment->setAppointmentRef(uniqid());
         	
         	//Check if is the appointmentSetter the person that is creating the appointment
         	if ($this->get('security.context')->isGranted('ROLE_APPOINTMENT_SETTER')) {
@@ -324,7 +325,7 @@ class AppointmentController extends DefaultController
             //Address
             $address = $appointmentDetail->getAddress();
             $address->setAppointmentDetail($appointmentDetail);
-            Util::setCreateAuditFields($address, $userLogged->getId());
+            Util::setModifyAuditFields($address, $userLogged->getId());
             
             $postcode_coord = Util::postcodeToCoords($address->getPostcode());
             $address->setLat($postcode_coord["lat"]);

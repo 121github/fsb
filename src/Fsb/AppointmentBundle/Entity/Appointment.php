@@ -26,6 +26,15 @@ class Appointment
 
     /**
      *
+     * @var String
+     *
+     * @ORM\Column(name="appointment_ref", type="string", length=100)
+     *
+     */
+    private $appointment_ref;
+    
+    /**
+     *
      * @ORM\ManyToOne(targetEntity="Fsb\UserBundle\Entity\User")
      * @Assert\NotBlank()
      * 
@@ -126,6 +135,24 @@ class Appointment
         return $this->id;
     }
 
+    
+    /**
+     *
+     * @return string
+     */
+    public function getAppointmentRef() {
+    	return $this->appointment_ref;
+    }
+    
+    /**
+     *
+     * @param String $appointment_ref
+     * @return \Fsb\AppointmentBundle\Entity\Appointment
+     */
+    public function setAppointmentRef($appointment_ref) {
+    	$this->appointment_ref = $appointment_ref;
+    	return $this;
+    }
     
     /**
      * Set recruiter

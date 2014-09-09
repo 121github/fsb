@@ -326,6 +326,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		$appointment->setEndDate(new \DateTime($weekday.$hour.':'.$minute.':00'.$symbol.' '.$days.' days + 1 hour'));
         		
         		Util::setCreateAuditFields($appointment, 1);
+        		$appointment->setAppointmentRef(uniqid());
         		
         		 
         		//Appointment Details

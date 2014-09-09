@@ -73,7 +73,7 @@ class AppointmentRestController extends FOSRestController
 	 * )
 	 *
 	 * @Annotations\View(
-	 *  template = "AppointmentBundle:Appointment:newPage.html.twig",
+	 *  template = "AppointmentBundle:Appointment:new.html.twig",
 	 *  statusCode = Codes::HTTP_BAD_REQUEST,
 	 *  templateVar = "form"
 	 * )
@@ -115,6 +115,7 @@ class AppointmentRestController extends FOSRestController
 				}
 				$newAppointment->setAppointmentSetter($appointmentSetter[0]);
 				Util::setCreateAuditFields($newAppointment, 1);
+				$newAppointment->setAppointmentRef(uniqid());
 				
 				$appointmentDetail = $newAppointment->getAppointmentDetail();
 				$appointmentDetail->setTitle($appointmentRest->getTitle());
@@ -148,7 +149,7 @@ class AppointmentRestController extends FOSRestController
 				$eManager->flush();
 	
 				$routeOptions = array(
-						'id' => $newAppointment->getId(),
+						'appointmentId' => $newAppointment->getId(),
 						'_format' => $request->get('_format')
 				);
 				
@@ -160,6 +161,114 @@ class AppointmentRestController extends FOSRestController
 				$htmlBody = $this->renderView('AppointmentBundle:Default:appointmentEmail.html.twig', array('appointment' => $newAppointment));
 				$this->sendAppointmentEmail($subject, $from, $recipient, $textBody, $htmlBody);
 	
+				return $this->routeRedirectView('get_appointment', $routeOptions, Codes::HTTP_CREATED);
+			}
+	
+		} catch (InvalidFormException $exception) {
+	
+			return $exception->getForm();
+		}
+	}
+	
+	/**
+	 * Update an Appointment from the submitted data.
+	 *
+	 * @ApiDoc(
+	 *   resource = true,
+	 *   description = "Update an appointment from the submitted data for a given appointment reference.",
+	 *   input = "Fsb\AppointmentBundle\Form\AppointmentRestType",
+	 *   statusCodes = {
+	 *     200 = "Returned when successful",
+	 *     400 = "Returned when the form has errors"
+	 *   }
+	 * )
+	 *
+	 * @Annotations\View(
+	 *  template = "AppointmentBundle:Appointment:edit.html.twig",
+	 *  statusCode = Codes::HTTP_BAD_REQUEST,
+	 *  templateVar = "form"
+	 * )
+	 *
+	 * @param Request $request the request object
+	 *
+	 * @return FormTypeInterface|View
+	 */
+	public function putAppointmentAction(Request $request, $appointmentRef)
+	{
+		try {
+			$eManager = $this->getDoctrine()->getManager();
+	
+			//Get the appointment by id
+			$appointment = $eManager->getRepository('AppointmentBundle:Appointment')->findOneBy(
+					array('appointment_ref' => $appointmentRef)
+			);
+			
+			if (!$appointment) {
+				throw new NotFoundHttpException(sprintf('The appointment \'%s\' was not found.',$appointmentRef));
+			}
+			
+			$appointmentRest = new AppointmentRest();
+			
+			$form = $this->createForm(new AppointmentRestType(), $appointmentRest, array('method' => 'PUT'));
+			$form->handleRequest($request);
+			
+				
+			if ($form->isValid()) {
+				$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.rest'));
+				
+				$appointment->setStartDate(new \DateTime($appointmentRest->getStartDate()));
+				$appointment->setEndDate(new \DateTime($appointmentRest->getEndDate()));
+	
+				$recruiter = $eManager->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getRecruiter(), 'ROLE_RECRUITER');
+	
+				if (!$recruiter) {
+					throw new NotFoundHttpException(sprintf('Unable to find a Recruiter with this name \'%s\'',$appointmentRest->getRecruiter()));
+				}
+				$appointment->setRecruiter($recruiter[0]);
+	
+				$appointmentSetter = $eManager->getRepository('UserBundle:User')->findUserByNameAndRole($appointmentRest->getAppointmentSetter(), 'ROLE_APPOINTMENT_SETTER');
+				if (!$appointmentSetter) {
+					throw new NotFoundHttpException(sprintf('Unable to find an Appointment Setter with this name \'%s\'',$appointmentRest->getAppointmentSetter()));
+				}
+				$appointment->setAppointmentSetter($appointmentSetter[0]);
+				Util::setModifyAuditFields($appointment, 1);
+	
+				$appointmentDetail = $appointment->getAppointmentDetail();
+				$appointmentDetail->setTitle($appointmentRest->getTitle());
+				$appointmentDetail->setComment($appointmentRest->getComment());
+				$project = $eManager->getRepository('AppointmentBundle:AppointmentProject')->findBy(array('name' => $appointmentRest->getProject()));
+				if (!$project) {
+					throw new NotFoundHttpException(sprintf('Unable to find a Project with this name \'%s\'',$appointmentRest->getProject()));
+				}
+				$appointmentDetail->setProject($project[0]);
+				$appointmentDetail->setRecordRef($appointmentRest->getRecordRef());
+				$appointmentDetail->setAppointment($appointment);
+				Util::setModifyAuditFields($appointmentDetail, 1);
+	
+				$address = $appointmentDetail->getAddress();
+				$address->setAdd1($appointmentRest->getAdd1());
+				$address->setAdd2($appointmentRest->getAdd2());
+				$address->setAdd3($appointmentRest->getAdd3());
+				$address->setPostcode($appointmentRest->getPostcode());
+				$address->setTown($appointmentRest->getTown());
+				$address->setCountry($appointmentRest->getCountry());
+				$address->setAppointmentDetail($appointmentDetail);
+				$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+				$address->setLat($postcode_coord["lat"]);
+				$address->setLon($postcode_coord["lng"]);
+				Util::setModifyAuditFields($address, 1);
+	
+	
+				$eManager->persist($appointment);
+				$eManager->persist($appointmentDetail);
+				$eManager->persist($address);
+				$eManager->flush();
+	
+				$routeOptions = array(
+						'appointmentId' => $appointment->getId(),
+						'_format' => $request->get('_format')
+				);
+				
 				return $this->routeRedirectView('get_appointment', $routeOptions, Codes::HTTP_CREATED);
 			}
 	

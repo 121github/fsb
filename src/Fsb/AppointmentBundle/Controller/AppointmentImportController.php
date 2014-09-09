@@ -77,6 +77,7 @@ class AppointmentImportController extends DefaultController
         		else {
         			$appointment->setOrigin($this->container->getParameter('fsb.appointment.origin.type.import'));
         			$appointment->setFileName($filePath);
+        			$appointment->setAppointmentRef(uniqid());
         			$this->saveAppointment($appointment);
         			array_push($appointmentListSaved, $appointment); 
         		}
