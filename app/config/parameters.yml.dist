@@ -4,7 +4,7 @@ parameters:
     database_port:     ~
     database_name:     fsb
     database_user:     fsb_user
-    database_password: fsb_user
+    database_password: NhE8qxYnnDtPT7fJ
 
     mailer_transport:  smtp
     mailer_host:       mail.leadcontrol.co.uk
