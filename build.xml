@@ -140,7 +140,7 @@
 
   <target name="vendors" description="Update vendors">
     <exec executable="php" failonerror="true">
-        <arg value="composer.phar" />
+        <arg value="composer" />
         <arg value="update" />
     	<arg value="--no-dev" />
     </exec>
