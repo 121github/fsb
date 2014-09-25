@@ -2,9 +2,9 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     fsb
-    database_user:     fsb_user
-    database_password: NhE8qxYnnDtPT7fJ
+    database_name:     voicegroup
+    database_user:     voicegroup
+    database_password: AADe4LhdFA5aVt3C
 
     mailer_transport:  smtp
     mailer_host:       mail.leadcontrol.co.uk
@@ -15,6 +15,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     
     project:
-        name:        Fsb
-        fullname:    Fsb Calendar Manager System
+        name:        Voice Group
+        fullname:    Voice Group Calendar Manager System
         version:     1.0
