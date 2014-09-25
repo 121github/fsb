@@ -2,8 +2,8 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     fsb
-    database_user:     fsb_user
+    database_name:     cms
+    database_user:     csm_user
     database_password: NhE8qxYnnDtPT7fJ
 
     mailer_transport:  smtp
@@ -15,6 +15,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     
     project:
-        name:        Fsb
-        fullname:    Fsb Calendar Manager System
+        name:        CSM
+        fullname:    CMS Calendar Manager System
         version:     1.0
