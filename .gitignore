@@ -27,3 +27,4 @@ nbproject
 
 # phpunit
 /app/build/*
+!app/build/.gitkeep
