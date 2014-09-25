@@ -2,8 +2,8 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     voicegroup
-    database_user:     voicegroup
+    database_name:     cms_voicegroup
+    database_user:     cms_voicegroup
     database_password: AADe4LhdFA5aVt3C
 
     mailer_transport:  smtp

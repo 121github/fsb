@@ -2,8 +2,8 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     fsb
-    database_user:     fsb_user
+    database_name:     cms_fsb
+    database_user:     cms_fsb_user
     database_password: NhE8qxYnnDtPT7fJ
 
     mailer_transport:  smtp
