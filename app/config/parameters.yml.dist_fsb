@@ -3,7 +3,7 @@ parameters:
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     cms_fsb
-    database_user:     cms_fsb_user
+    database_user:     cms_fsb
     database_password: NhE8qxYnnDtPT7fJ
 
     mailer_transport:  smtp
@@ -13,6 +13,8 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+    
+    sessid_name:    cms_fsb_sessid
     
     project:
         name:        Fsb
