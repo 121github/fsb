@@ -19,6 +19,22 @@ class DefaultController extends Controller
     }
     
     /**
+     * Rule view action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ruleAction()
+    {
+    	$eManager = $this->getDoctrine()->getManager();
+
+        $entities = $eManager->getRepository('RuleBundle:Rule')->findAll();
+
+        return $this->render('RuleBundle:Rule:index.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
+    
+    /**
      * Automated Control action. Get the url for the automated creation of an appointment 
      * 
      * @return \Symfony\Component\HttpFoundation\Response

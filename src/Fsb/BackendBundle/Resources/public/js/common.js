@@ -17,6 +17,9 @@ function checkSubmit(submit_id) {
 	return true;
 }
 
+/********************************************************************************************************/
+/******************** Messages ***********************************************/
+/********************************************************************************************************/
 $(document).ready(function() {    
 	$("#message").click(function () {
         $("#message").fadeOut("slow");
@@ -24,7 +27,12 @@ $(document).ready(function() {
     
     setTimeout(function(){
     	$("#message").fadeOut("slow");
-    },3000)
+    },5000);
+    
+    //Adding a click event to the 'x' button to close immediately
+	 $('.message_info .close').on("click", function (e) {
+	     $(this).parent().fadeTo(500, 0).slideUp(500);
+	 });
 
 });
 

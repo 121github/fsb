@@ -2,6 +2,27 @@
    
 {% block title %} Backend {% endblock %}
    
+{% block menu %}
+	{# USER OPTIONS #}
+    <div class="change_month">
+    
+    	<div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: left; padding-left: 5px;">
+				{##########################}
+				{# Admin #}
+				{##########################}
+				<a href="{{ path('backend_homepage') }}" data-role="button" data-inline="true" data-icon="gear" data-theme="a">Admin</a>
+				{##########################}
+				{# New User #}
+				{##########################}
+				<a href="{{ path('user_new') }}" data-role="button" data-mini="true" data-icon="plus">{{ "New User" }}</a>
+			</div>
+			<div class="ui-block-b" style="text-align: center;"></div>
+			<div class="ui-block-c" style="text-align: right;"></div>
+		</div><!-- /grid-b -->
+	</div>
+{% endblock %}
+   
 {% block article -%}
   
   	{% set now = "now"|date("") %}

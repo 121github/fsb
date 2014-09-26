@@ -1,0 +1,14 @@
+{# Info Messages #}
+{% for type, flashMessage in app.session.flashbag.all() %}
+	<div class="message" id="message">
+		<div class="message_{{ flashMessage.alert }}">
+			{% if flashMessage.title is defined %}
+	        	<strong>{{ flashMessage.title }}</strong>
+	        	{{ flashMessage.message }}
+	        {% else %}
+	        	{{ type }}
+	        {% endif %}
+	        <div style="float: right;"><a href="" class="message_info close">x</a></div>
+	    </div>
+   	</div>
+{% endfor %}

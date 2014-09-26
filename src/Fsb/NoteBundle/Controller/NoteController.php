@@ -59,6 +59,7 @@ class NoteController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Note Created!',
             				'message' => 'The note has been created'
             		)
@@ -283,6 +284,7 @@ class NoteController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Note Changed!',
             				'message' => 'The note has been updated'
             		)
@@ -336,10 +338,21 @@ class NoteController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Note Deleted!',
             				'message' => 'The note has been deleted'
             		)
             );
+        }
+        else {
+        	$this->get('session')->getFlashBag()->set(
+        			'success',
+        			array(
+        					'alert' => 'error',
+        					'title' => 'Error!',
+        					'message' => 'The note has NOT been deleted'
+        			)
+        	);
         }
 
         $url = $this->getRequest()->headers->get("referer");

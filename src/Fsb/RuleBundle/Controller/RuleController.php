@@ -59,6 +59,7 @@ class RuleController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Rule Created!',
             				'message' => 'The rule has been created'
             		)
@@ -273,6 +274,7 @@ class RuleController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Rule Changed!',
             				'message' => 'The rule has been updated'
             		)
@@ -328,10 +330,21 @@ class RuleController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Rule Deleted!',
             				'message' => 'The rule has been deleted'
             		)
             );
+        }
+        else {
+        	$this->get('session')->getFlashBag()->set(
+        			'success',
+        			array(
+        					'alert' => 'error',
+        					'title' => 'Error!',
+        					'message' => 'The rule has NOT been deleted'
+        			)
+        	);
         }
 
         $url = $this->getRequest()->headers->get("referer");

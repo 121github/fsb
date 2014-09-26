@@ -2,6 +2,27 @@
    
 {% block title %} Backend {% endblock %}
    
+{% block menu %}
+	{# USER OPTIONS #}
+    <div class="change_month">
+    
+    	<div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: left; padding-left: 5px;">
+				{##########################}
+				{# New User #}
+				{##########################}
+				<a href="{{ path('user_new') }}" data-role="button" data-mini="true" data-icon="plus">{{ "New User" }}</a>
+				{##########################}
+				{# New Rule #}
+				{##########################}
+				<a href="{{ path('rule_new') }}" data-role="button" data-inline="true" data-icon="plus" data-theme="a">New Rule</a>
+			</div>
+			<div class="ui-block-b" style="text-align: center;"></div>
+			<div class="ui-block-c" style="text-align: right;"></div>
+		</div><!-- /grid-b -->
+	</div>
+{% endblock %}
+
 {% block article -%}
   
   	<div class="admin-page">
@@ -10,7 +31,7 @@
 				<a href="{{ path('user') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user" data-ajax="false">{{ "Users" }}</a>
 			</div>
 			<div class="ui-block-b">
-				<a href="{{ path('rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Rules" }}</a>
+				<a href="{{ path('backend_rule') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "Rules" }}</a>
 			</div>
 			<div class="ui-block-c">
 				<a href="{{ path('nelmio_api_doc_index') }}" target="_blank" class="hreflink ui-btn ui-btn-icon-right ui-icon-action" data-ajax="false">{{ "API" }}</a>

@@ -1,11 +1,11 @@
-{% extends '::backend.html.twig' %}
+{% extends '::backend_dialog.html.twig' %}
 
 {% block title %} Backend {% endblock %}
 
 {% block article -%}
     <h1>Rule</h1>
 
-    <table class="record_properties">
+    <table class="">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -22,13 +22,16 @@
         </tbody>
     </table>
 
- 	<a href="{{ path('rule_edit', { 'id': entity.id }) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
     <a href="#popupDelete" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" data-icon="delete" data-theme="a">Delete</a>
+    <div style="float: right;">
+    	<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="a">Cancel</a>
+    	<a href="{{ path('rule_edit', { 'ruleId': entity.id }) }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">Edit</a>
+    </div>
     
     
     <!--  POPUP DELETE CONFIRM -->
     <div data-role="popup" id="popupDelete" data-overlay-theme="a" data-theme="a" data-dismissible="false" style="max-width:400px;" class="ui-corner-all">
-    	<form action="{{ path('rule_delete' , { 'id': entity.id}) }}" method="delete" data-ajax="false" {{ form_enctype(delete_form) }}>
+    	<form action="{{ path('rule_delete' , { 'ruleId': entity.id}) }}" method="delete" data-ajax="false" {{ form_enctype(delete_form) }}>
     		<div data-role="header" data-theme="a" class="ui-corner-top">
 		        <h1>Delete Rule?</h1>
 		    </div>

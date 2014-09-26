@@ -6,6 +6,9 @@ BackendBundle_user:
      resource: "@BackendBundle/Resources/config/routing/user.yml"
      prefix:   /user
 
+backend_rule:
+    path: /rule/
+    defaults: { _controller: "BackendBundle:Default:rule" }
      
 backend_automated_control:
     path: /automated

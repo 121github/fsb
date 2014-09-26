@@ -131,6 +131,7 @@ class UnavailableDateController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Set Unavailable!',
             				'message' => 'The availability has changed'
             		)
@@ -345,6 +346,7 @@ class UnavailableDateController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Update availability!',
             				'message' => 'The availability has been modified'
             		)
@@ -388,10 +390,21 @@ class UnavailableDateController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'Set Available!',
             				'message' => 'The time is now available'
             		)
             );
+        }
+        else {
+        	$this->get('session')->getFlashBag()->set(
+        			'success',
+        			array(
+        					'alert' => 'error',
+        					'title' => 'ERROR!',
+        					'message' => 'The availability has NOT been changed'
+        			)
+        	);
         }
         
         $url = $this->getRequest()->headers->get("referer");

@@ -95,6 +95,7 @@ class AppointmentController extends DefaultController
             $this->get('session')->getFlashBag()->set(
             	'success',
             	array(
+            			'alert' => 'success',
             			'title' => 'Appointment Created!',
             			'message' => 'The appointment has been created'
             	)
@@ -340,6 +341,7 @@ class AppointmentController extends DefaultController
             $this->get('session')->getFlashBag()->set(
             	'success',
             	array(
+            			'alert' => 'success',
             			'title' => 'Appointment Updated!',
             			'message' => 'The appointment has been updated'
             	)
@@ -467,6 +469,7 @@ class AppointmentController extends DefaultController
     		$this->get('session')->getFlashBag()->set(
     				'success',
     				array(
+    						'alert' => 'success',
     						'title' => 'Appointment Outcome Updated!',
     						'message' => 'The appointment outcome has been updated'
     				)

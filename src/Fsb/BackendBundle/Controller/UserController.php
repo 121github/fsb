@@ -225,6 +225,7 @@ class UserController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'User Created!',
             				'message' => 'The user has been created'
             		)
@@ -425,6 +426,7 @@ class UserController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'User Changed!',
             				'message' => 'The user '.$user->getLogin().' has been updated'
             		)
@@ -500,6 +502,7 @@ class UserController extends Controller
     		$this->get('session')->getFlashBag()->set(
     				'success',
     				array(
+    						'alert' => 'success',
     						'title' => 'Password Changed!',
     						'message' => 'The user password has been updated'
     				)
@@ -571,10 +574,21 @@ class UserController extends Controller
             $this->get('session')->getFlashBag()->set(
             		'success',
             		array(
+            				'alert' => 'success',
             				'title' => 'User Deleted!',
             				'message' => 'The user '.$user->getUserDetail().' has been deleted'
             		)
             );
+        }
+        else {
+        	$this->get('session')->getFlashBag()->set(
+        			'success',
+        			array(
+        					'alert' => 'error',
+        					'title' => 'Error!',
+        					'message' => 'The user '.$user->getUserDetail().' has NOT been deleted'
+        			)
+        	);
         }
 
         return $this->redirect($this->generateUrl('user'));

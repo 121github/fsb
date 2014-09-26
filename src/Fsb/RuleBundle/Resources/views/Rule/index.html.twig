@@ -2,6 +2,27 @@
 
 {% block title %} Backend {% endblock %}
 
+{% block menu %}
+	{# USER OPTIONS #}
+    <div class="change_month">
+    
+    	<div class="ui-grid-b">
+			<div class="ui-block-a" style="text-align: left; padding-left: 5px;">
+				{##########################}
+				{# Admin #}
+				{##########################}
+				<a href="{{ path('backend_homepage') }}" data-role="button" data-inline="true" data-icon="gear" data-theme="a">Admin</a>
+				{##########################}
+				{# New Rule #}
+				{##########################}
+				<a href="{{ path('rule_new') }}" data-role="button" data-inline="true" data-icon="plus" data-theme="a">New Rule</a>
+			</div>
+			<div class="ui-block-b" style="text-align: center;"></div>
+			<div class="ui-block-c" style="text-align: right;"></div>
+		</div><!-- /grid-b -->
+	</div>
+{% endblock %}
+
 {% block article -%}
     <h1>Rule list</h1>
 
@@ -16,14 +37,12 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-            	<td><a href="{{ path('rule_show', { 'id': entity.id }) }}">{{ entity.rule }}</a></td>
-                <td>{{ entity.description | truncate(60,true) }}</td>
-                <td><a href="{{ path('user_show', { 'id': entity.recruiter.id }) }}">{{ entity.recruiter }}</a></td>
+            	<td><a href="{{ path('rule_edit', { 'ruleId': entity.id }) }}">{{ entity.rule }}</a></td>
+                <td>{{ entity.description | truncate(100,true) }}</td>
+                <td>{{ entity.recruiter }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-	
-	<a href="{{ path('rule_new') }}" data-role="button" data-inline="true" data-icon="edit" data-theme="a">New Rule</a>
 	
 {% endblock %}
