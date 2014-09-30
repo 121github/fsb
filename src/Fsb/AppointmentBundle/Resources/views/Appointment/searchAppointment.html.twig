@@ -31,7 +31,7 @@
     {% set lastMonthDay = currentMonth ~ "/" ~ daysInMonth ~ "/" ~ currentYear %}
     
     
-    <div data-role="panel" id="filter-panel" class="" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
+    <div data-role="panel" id="filter-panel" class="" data-swipe-close="false" data-position="right" data-display="overlay" data-theme="a" data-position-fixed="false">
 		{% include '::includes/appointmentFilter.html.twig' %}
 	</div>
     
