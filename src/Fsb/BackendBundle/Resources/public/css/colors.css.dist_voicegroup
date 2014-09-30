@@ -1,0 +1,35 @@
+/*
+
+  Common styles for the voicegroup version
+
+  Applied to
+  --------------------------------------------------------------
+   all bundles
+   
+
+*/
+
+.ui-header, .ui-header > .ui-bar-inherit {
+	background-color: #525252;
+}
+
+.ui-page-theme-a .ui-header .ui-bar-inherit, html .ui-bar-a .ui-header .ui-bar-inherit, html .ui-body-a .ui-header .ui-bar-inherit, html body .ui-group-theme-a .ui-header .ui-bar-inherit {
+	background-color: #525252;
+	color: white;
+	text-shadow: none;
+	font-weight: bold;
+}
+
+.ui-page-theme-a .ui-btn,html .ui-bar-a .ui-btn,html .ui-body-a .ui-btn,html body .ui-group-theme-a .ui-btn,html head+body .ui-btn.ui-btn-a,.ui-page-theme-a .ui-btn:visited,html .ui-bar-a .ui-btn:visited,html .ui-body-a .ui-btn:visited,html body .ui-group-theme-a .ui-btn:visited,html head+body .ui-btn.ui-btn-a:visited, html head+body .ui-btn.ui-btn-a:hover{
+	border-color: transparent;
+}
+
+.ui-header .ui-title {
+	color: white;
+}
+
+.ui-footer-fixed {
+	padding-top: 15px;
+	height: 40px;
+	background-color: #525252;
+}
