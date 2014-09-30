@@ -31,15 +31,15 @@ class Util
 	}
 
 	
-	static public function postcodeToCoords($postcode){
+	static public function addressToCoords($address){
 		$coord = array(
 			'lat' => null,
 			'lng' => null
 		);
 		
-		if ($postcode) {
+		if ($address) {
 			//Contact the google maps api to get the lat & `long` from the postcode
-			$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($postcode) . ',UK&sensor=false';
+			$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address) . ',UK&sensor=false';
 			$json = json_decode(file_get_contents($url));
 			
 			if (!empty($json->results)) {
@@ -47,7 +47,7 @@ class Util
 						'lat' => $json->results[0]->geometry->location->lat,
 						'lng' => $json->results[0]->geometry->location->lng
 				);
-			}	
+			}
 		}
 		
 		return $coord;
@@ -56,11 +56,10 @@ class Util
 	
 	static public function getDistance($latOrig, $lonOrig, $latDest, $lonDest) {
 	
-		$distance = ((acos(sin($latOrig*pi()/180)*sin($latDest*pi()/180) + cos($latOrig*pi()/180)*cos($latDest*pi()/180) * cos(($lonOrig - $lonDest)*pi()/180)))*180/pi())*160*1.1515;
-		
+		$distance = ((acos(sin($latOrig*pi()/180)*sin($latDest*pi()/180) + cos($latOrig*pi()/180)*cos($latDest*pi()/180) * cos(($lonOrig - $lonDest)*pi()/180)))*180/pi())*160*0.621371192;
 		
 		$distance = round($distance, 2);
-		 
+		
 		return $distance;
 	}
 	

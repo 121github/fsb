@@ -137,7 +137,7 @@ class AppointmentRestController extends FOSRestController
 				$address->setTown($appointmentRest->getTown());
 				$address->setCountry($appointmentRest->getCountry());
 				$address->setAppointmentDetail($appointmentDetail);
-				$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+				$postcode_coord = Util::addressToCoords($address->getPostcode().' '.$address->getTown());
 				$address->setLat($postcode_coord["lat"]);
 				$address->setLon($postcode_coord["lng"]);
 				Util::setCreateAuditFields($address, 1);
@@ -253,7 +253,7 @@ class AppointmentRestController extends FOSRestController
 				$address->setTown($appointmentRest->getTown());
 				$address->setCountry($appointmentRest->getCountry());
 				$address->setAppointmentDetail($appointmentDetail);
-				$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+				$postcode_coord = Util::addressToCoords($address->getPostcode().' '.$address->getTown());
 				$address->setLat($postcode_coord["lat"]);
 				$address->setLon($postcode_coord["lng"]);
 				Util::setModifyAuditFields($address, 1);

@@ -92,10 +92,10 @@ class ExportController extends DefaultController
 			/************************************************** Postcode Filter ***********************************************************/
 			/******************************************************************************************************************************/
 			
-			$postcode_coord = Util::postcodeToCoords($export->getFilter()->getPostcode());
+			$postcode_coord = Util::addressToCoords($export->getFilter()->getPostcode());
 			$postcode_lat = $postcode_coord['lat'];
 			$postcode_lon = $postcode_coord['lng'];
-			$distance = $export->getFilter()->getRange()*1.1515;
+			$distance = $export->getFilter()->getRange()*1;
 			
 			/**********************************************************************************************************************************/
 	    	/************************************************** Get the appointments **********************************************************/

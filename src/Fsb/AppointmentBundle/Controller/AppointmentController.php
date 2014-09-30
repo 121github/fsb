@@ -209,7 +209,7 @@ class AppointmentController extends DefaultController
         if (!$appointment) {
             throw $this->createNotFoundException('Unable to find Appointment entity.');
         }
-
+        
         return $this->render('AppointmentBundle:Appointment:show.html.twig', array(
             'appointment'      => $appointment,
         	'postcodeDest' => $postcode_filter,
@@ -328,7 +328,7 @@ class AppointmentController extends DefaultController
             $address->setAppointmentDetail($appointmentDetail);
             Util::setModifyAuditFields($address, $userLogged->getId());
             
-            $postcode_coord = Util::postcodeToCoords($address->getPostcode());
+            $postcode_coord = Util::addressToCoords($address->getPostcode().' '.$address->getTown());
             $address->setLat($postcode_coord["lat"]);
             $address->setLon($postcode_coord["lng"]);
              
@@ -589,10 +589,10 @@ class AppointmentController extends DefaultController
     	/************************************************** Postcode Filter ***********************************************************/
     	/******************************************************************************************************************************/
     	 
-    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_coord = Util::addressToCoords($postcode_filter);
     	$postcode_lat = $postcode_coord['lat'];
     	$postcode_lon = $postcode_coord['lng'];
-    	$distance = $range_filter*1.1515;
+    	$distance = $range_filter*1;
     	
     	/******************************************************************************************************************************/
     	/************************************************** Form creation *************************************************************/
@@ -636,10 +636,10 @@ class AppointmentController extends DefaultController
     		/************************************************** Postcode Filter ***********************************************************/
     		/******************************************************************************************************************************/
     		 
-    		$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    		$postcode_coord = Util::addressToCoords($postcode_filter);
     		$postcode_lat = $postcode_coord['lat'];
     		$postcode_lon = $postcode_coord['lng'];
-    		$distance = $range_filter*1.1515;
+    		$distance = $range_filter*1;
     		
     		$url = $this->getRequest()->headers->get("referer");
     		return new RedirectResponse($url);
@@ -720,10 +720,10 @@ class AppointmentController extends DefaultController
     	/************************************************** Postcode Filter ***********************************************************/
     	/******************************************************************************************************************************/
     	 
-    	$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    	$postcode_coord = Util::addressToCoords($postcode_filter);
     	$postcode_lat = $postcode_coord['lat'];
     	$postcode_lon = $postcode_coord['lng'];
-    	$distance = $range_filter*1.1515;
+    	$distance = $range_filter*1;
     
     
     	/******************************************************************************************************************************/
@@ -749,7 +749,7 @@ class AppointmentController extends DefaultController
     	if ($postcode_filter) {
     		$address = new Address();
     		
-    		$postcode_coord = Util::postcodeToCoords($postcode_filter);
+    		$postcode_coord = Util::addressToCoords($postcode_filter);
     		$lat = $postcode_coord["lat"];
     		$lon = $postcode_coord["lng"];
     		$address->setLat($lat);

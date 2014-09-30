@@ -66,10 +66,10 @@ class MonthController extends DefaultController
 		/************************************************** Postcode Filter ***********************************************************/
 		/******************************************************************************************************************************/
 		 
-		$postcode_coord = Util::postcodeToCoords($postcode_filter);
+		$postcode_coord = Util::addressToCoords($postcode_filter);
 		$postcode_lat = $postcode_coord['lat'];
 		$postcode_lon = $postcode_coord['lng'];
-		$distance = $range_filter*1.1515;
+		$distance = $range_filter*1;
 		 
 		 
 		/******************************************************************************************************************************/

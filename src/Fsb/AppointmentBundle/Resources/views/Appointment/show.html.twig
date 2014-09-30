@@ -31,7 +31,7 @@
 
 		  if ({{ postcodeDest|json_encode|raw }}) {
 			  var destination = {{ postcodeDest|json_encode|raw }};
-		      var origin = {{ (appointment.appointmentDetail.address.postcode ~ "," ~ appointment.appointmentDetail.address.country)|json_encode|raw }};
+		      var origin = {{ (appointment.appointmentDetail.address.postcode ~ "," ~ appointment.appointmentDetail.address.town ~ "," ~ appointment.appointmentDetail.address.country)|json_encode|raw }};
 			  directionsDisplay = new google.maps.DirectionsRenderer();
 			  calcRoute(origin, destination);
 			  directionsDisplay.setMap(map);

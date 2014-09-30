@@ -76,10 +76,10 @@ class DefaultController extends Controller
 	
 		$address = $appointment->getAppointmentDetail()->getAddress();
 	
-		$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+		$postcode_coord = Util::addressToCoords($address->getPostcode().' '.$address->getTown());
 		$address->setLat($postcode_coord["lat"]);
 		$address->setLon($postcode_coord["lng"]);
-	
+		
 		//Check if the postcode exist
 		if (!$address->getLat() || !$address->getLon()) {
 			$form->addError(new FormError("The postcode does not exist"));

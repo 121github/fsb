@@ -357,7 +357,7 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         		 
         		Util::setCreateAuditFields($address, 1);
         		
-        		$postcode_coord = Util::postcodeToCoords($address->getPostcode());
+        		$postcode_coord = Util::addressToCoords($address->getPostcode().' '.$address->getTown());
         		$address->setLat($postcode_coord["lat"]);
         		$address->setLon($postcode_coord["lng"]);
         		
