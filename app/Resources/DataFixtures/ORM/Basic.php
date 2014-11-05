@@ -79,8 +79,8 @@ class Basico implements FixtureInterface, ContainerAwareInterface
         $manager->flush();
         
         //Names
-        $firstname_ar = array("Harry", "Oliver", "Jack", "Charlie", "Jacob", "Thomas", "Alfie", "Riley", "Williams", "James", "Amelia", "Olivia", "Jessica", "Emily", "Lily", "Ava", "Isla", "Sophie", "Mia", "Isabella");
-        $lastname_ar = array("Smith", "Jones", "Taylor", "Brown", "Williamns", "Wilson", "Johnson", "Davies", "Robinson", "Wright", "Thompson", "Evans", "Walker", "Roberts", "Green", "Hall", "Wood", "Jackson", "Clarke");
+        $firstname_ar = array('Jennifer','Martha','Nicholas','AshleyHernandez','AlbertSimmons','Thomas','Janice','Stephen','Sharon','Nicholas','Philip','Robin','Tina','Harry','Annie','Jonathan','Jimmy','Janet','Brenda','Walter','Earl','Ronald','Rose','Jennifer','Linda','Margaret','Joshua','Phillip','Martin','Joseph','Frances','Jane','Bonnie','Cynthia','Maria','Susan','Gregory','Katherine','Keith','Cheryl','Sandra','Robin','Daniel','Melissa','David','Albert','Ruth','Edward','Christine','Lawrence','Peter','Katherine','Samuel','Michael','Cheryl','Henry','Earl','Russell','Beverly','Roy','Betty','Elizabeth','Alice','William','Chris','Wanda','Susan','Brian','Daniel','Kelly','Jessica','Alan','Gary','Jerry');
+        $lastname_ar = array('Lynch','Frazier', 'Jordan', 'Hernandez','Simmons', 'Gordon','Butler', 'Carpenter','Hawkins','Clark','Hunt', 'Russell','Ford', 'Parker','Hernandez','Meyer', 'Howard', 'Cole', 'Hall','Stone','Mills', 'Ward', 'Foster', 'Foster','Pierce','Thompson', 'Evans', 'Carpenter', 'Davis', 'Brown','Ramos','Carr', 'Wilson', 'Lynch', 'Gomez', 'Stone', 'Ellis', 'Harris','Matthews','Jones', 'Bishop','Andrews', 'Hamilton', 'Parker','Willis', 'Wheeler','Welch', 'Watson','Hamilton','Mason', 'Bell', 'Fuller','Hudson','Burton','Medina', 'Peterson', 'Hall', 'Rivera', 'Fernandez','Walker', 'Ferguson', 'Romero','Gordon', 'Sanders', 'Carpenter', 'Simpson','Oliver', 'Perry', 'Martin', 'Murray', 'Edwards','Dean', 'Andrews', 'Ferguson');
         
         // Users
         $userRoles = $manager->getRepository('UserBundle:UserRole')->findAll();

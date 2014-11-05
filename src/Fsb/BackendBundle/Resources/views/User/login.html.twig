@@ -11,11 +11,11 @@
 		{% endif %}
 		<form action="{{ path('login_check') }}" method="post" data-ajax="false">
 			<label for="username">Login:</label>
-			<input type="text" id="username" name="_username"
+			<input type="text" id="username" name="_username" {{ (error.message is defined)?"":"autofocus" }}
 			value="{{ last_username }}" />
 			
 			<label for="password">Password:</label>
-			<input type="password" id="password" name="_password" />
+			<input type="password" id="password" name="_password" {{ (error.message is defined)?"autofocus":"" }} />
 			
 			<input type="checkbox" id="not_close" name="_remember_me" checked />
 			<label for="not_close">Remember me</label>
