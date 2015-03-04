@@ -13,7 +13,7 @@ releases:
   symlink: fsb
   directory: releases/cms_releases/fsb
 hosts:
-    - 10.10.1.13:
+    - 10.10.1.13
 tasks:
   pre-deploy:
   on-deploy:

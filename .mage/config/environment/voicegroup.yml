@@ -13,7 +13,7 @@ releases:
   symlink: voicegroup
   directory: releases/cms_releases/voicegroup
 hosts:
-    - 10.10.1.13:
+    - 10.10.1.13
 tasks:
   pre-deploy:
   on-deploy:
