@@ -18,6 +18,9 @@ class PrepareDeployment extends AbstractTask
             'setfacl -dR -m u:www-data:rwx -m u:\`whoami\`:rwx app/cache app/logs',
             'rm -rf web/app.php.*',
             'rm -rf app/config/parameters.yml.*',
+            'rm -rf src/Fsb/BackendBundle/Resources/public/css/colors.css.dist*',
+            'rm -rf src/Fsb/BackendBundle/Resources/public/images/logo.png.dist*',
+            'rm -rf web/favicon.ico.dist*'
         );
 
         $command = implode(" && ", $commandList);
