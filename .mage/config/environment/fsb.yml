@@ -1,8 +1,8 @@
-#accept
+#production fsb
 deployment:
   user: samba
   from: /var/lib/jenkins/jobs/CMS/workspace/
-  to: /var/www/accept_env
+  to: /var/www
   excludes:
     - app/cache/*
     - app/logs/*
@@ -10,19 +10,19 @@ deployment:
 releases:
   enabled: true
   max: 10
-  symlink: cms
-  directory: releases/cms_releases
+  symlink: fsb
+  directory: releases/cms_releases/fsb
 hosts:
-    - 10.10.1.13
+    - 10.10.1.13:
 tasks:
   pre-deploy:
   on-deploy:
     - permissionsConsole
-    - prepareAcceptDeployment
+    - prepareFsbDeployment
     - prepareDeployment
     - symfony2/cache-warmup: {env: prod}
     - symfony2/assets-install
     - permissionsGroup
   post-release:
-    - databaseBackup: {user: cms_accept, pass: AMB4m3tyAxwLCLMS, host: localhost, database: cms_accept}
-  post-deploy:
+    - databaseBackup: {user: cms_fsb, pass: NhE8qxYnnDtPT7fJ, host: localhost, database: cms_fsb}
+    post-deploy:
