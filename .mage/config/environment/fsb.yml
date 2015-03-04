@@ -25,4 +25,4 @@ tasks:
     - permissionsGroup
   post-release:
     - databaseBackup: {user: cms_fsb, pass: NhE8qxYnnDtPT7fJ, host: localhost, database: cms_fsb}
-    post-deploy:
+  post-deploy:
