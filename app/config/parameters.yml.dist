@@ -14,9 +14,9 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
     
-    sessid_name:    cms_voicegroup_sessid
+    sessid_name:    cms_sessid
     
     project:
-        name:        Voice Group
-        fullname:    Voice Group Calendar Manager System
+        name:        CSM
+        fullname:    CMS Calendar Manager System
         version:     1.0
