@@ -1,0 +1,49 @@
+#production
+deployment:
+  user: samba
+  from: /var/lib/jenkins/jobs/CMS/workspace/
+  to: /var/www
+  excludes:
+    - app/cache/*
+    - app/logs/*
+    - web/bundles/*
+releases:
+  enabled: true
+  max: 10
+  symlink: cms
+  directory: releases/cms_releases/cms
+hosts:
+    10.10.1.13:
+      deployment:
+        to: /var/www
+        user: samba
+      releases:
+        max: 10
+      symlink: fsb
+      directory: releases/121cms_releases/fsb
+      tasks:
+        on-deploy:
+          - prepareFsbDeployment
+    10.10.1.13:
+      deployment:
+        to: /var/www
+        user: samba
+      releases:
+        max: 10
+      symlink: voicegroup
+      directory: releases/121cms_releases/voicegroup
+      tasks:
+        on-deploy:
+          - prepareVoicegroupDeployment
+tasks:
+  pre-deploy:
+  on-deploy:
+    - permissionsConsole
+    - prepareDeployment
+    - symfony2/cache-warmup: {env: prod}
+    - symfony2/assets-install
+    - permissionsGroup
+  post-release:
+    - databaseBackup: {user: cms_fsb, pass: NhE8qxYnnDtPT7fJ, host: localhost, database: cms_fsb}
+    - databaseBackup: {user: cms_voicegroup, pass: AADe4LhdFA5aVt3C, host: localhost, database: cms_voicegroup}
+  post-deploy:

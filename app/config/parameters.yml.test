@@ -2,9 +2,9 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     cms_test
-    database_user:     cms_test
-    database_password: ZF8BKMuxD97DMVN4
+    database_name:     cms
+    database_user:     cms
+    database_password: VNxf9DsbW3RmSbHW
 
     mailer_transport:  smtp
     mailer_host:       mail.leadcontrol.co.uk

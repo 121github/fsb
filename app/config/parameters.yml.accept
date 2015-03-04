@@ -1,0 +1,22 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     cms_accept
+    database_user:     cms_accept
+    database_password: AMB4m3tyAxwLCLMS
+
+    mailer_transport:  smtp
+    mailer_host:       mail.leadcontrol.co.uk
+    mailer_user:       admin@leadcontrol.co.uk
+    mailer_password:   IAfMV.M;mwX2
+
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+    
+    sessid_name:    cms_accept_sessid
+    
+    project:
+        name:        CSM
+        fullname:    CMS Calendar Manager System
+        version:     1.0
