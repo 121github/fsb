@@ -2,15 +2,15 @@
 deployment:
   user: samba
   from: /var/lib/jenkins/jobs/CMS/workspace/
-  to: /var/www
+  to: /var/www/demo_env
   excludes:
     - app/cache/*
     - app/logs/*
     - web/bundles/*
 releases:
   enabled: true
-  max: 10
-  symlink: cms_demo
+  max: 4
+  symlink: cms
   directory: releases/cms_releases/demo
 hosts:
     - 10.10.1.13

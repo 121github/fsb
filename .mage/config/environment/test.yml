@@ -9,7 +9,7 @@ deployment:
     - web/bundles/*
 releases:
   enabled: true
-  max: 10
+  max: 4
   symlink: cms
   directory: releases/cms_releases
 hosts:
