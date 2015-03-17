@@ -1,0 +1,28 @@
+#demo
+deployment:
+  user: samba
+  from: /var/lib/jenkins/jobs/CMS/workspace/
+  to: /var/www
+  excludes:
+    - app/cache/*
+    - app/logs/*
+    - web/bundles/*
+releases:
+  enabled: true
+  max: 10
+  symlink: cms_demo
+  directory: releases/cms_releases/demo
+hosts:
+    - 10.10.1.13
+tasks:
+  pre-deploy:
+  on-deploy:
+    - permissionsConsole
+    - prepareDemoDeployment
+    - prepareDeployment
+    - symfony2/cache-warmup: {env: prod}
+    - symfony2/assets-install
+    - permissionsGroup
+  post-release:
+    - databaseBackup: {user: cms_demo, pass: r2G2LDB9QyqNqCar, host: localhost, database: cms_demo}
+  post-deploy:

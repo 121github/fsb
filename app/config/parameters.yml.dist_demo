@@ -1,0 +1,22 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     cms_demo
+    database_user:     cms_demo
+    database_password: r2G2LDB9QyqNqCar
+
+    mailer_transport:  smtp
+    mailer_host:       mail.leadcontrol.co.uk
+    mailer_user:       admin@leadcontrol.co.uk
+    mailer_password:   IAfMV.M;mwX2
+
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+    
+    sessid_name:    cms_demo_sessid
+    
+    project:
+        name:        121 CMS
+        fullname:    121 Demo Calendar Manager System
+        version:     1.0
