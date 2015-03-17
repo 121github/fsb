@@ -4,11 +4,11 @@ namespace Task;
 
 use Mage\Task\AbstractTask;
 
-class PrepareFsbDeployment extends AbstractTask
+class PrepareDemoDeployment extends AbstractTask
 {
     public function getName()
     {
-        return 'Preparing the deployment for fsb on the production environment';
+        return 'Preparing the deployment for the demo on the production environment';
     }
 
     public function run()
