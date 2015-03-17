@@ -11,7 +11,7 @@ releases:
   enabled: true
   max: 4
   symlink: cms
-  directory: releases/cms_releases/demo
+  directory: releases/cms_releases
 hosts:
     - 10.10.1.13
 tasks:
