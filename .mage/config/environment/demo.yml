@@ -10,7 +10,7 @@ deployment:
 releases:
   enabled: true
   max: 4
-  symlink: cms
+  symlink: cms_demo
   directory: releases/cms_releases
 hosts:
     - 10.10.1.13
