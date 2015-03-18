@@ -15,6 +15,11 @@
 				
 			{% if (is_granted('ROLE_SUPER_USER')) %}
             	<li><a href="{{ path('reporting_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-grid" data-ajax="false">{{ "Reporting" }}</a></li>
+                <li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Availability" }}</a></li>
+                <li><a href="{{ path('appointment_filter', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Appointment" }}</a></li>
+            {% elseif (is_granted('ROLE_APPOINTMENT_SETTER')) %}
+                <li><a href="{{ path('unavailableDate_search_availability', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Availability" }}</a></li>
+                <li><a href="{{ path('appointment_filter', {'month': nowMonth, 'year': nowYear }) }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-search" data-ajax="false">{{ "Search Appointment" }}</a></li>
             {% elseif (is_granted('ROLE_ADMINISTRATOR')) %}
             	<li><a href="{{ path('backend_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-carat-r ui-icon-user" data-ajax="false">{{ "Admin" }}</a></li>
             	<li><a href="{{ path('reporting_homepage') }}" class="hreflink ui-btn ui-btn-icon-right ui-icon-grid" data-ajax="false">{{ "Reporting" }}</a></li>

@@ -10,11 +10,11 @@
 */
 
 .ui-header, .ui-header > .ui-bar-inherit {
-	background-color: #58ADE7;
+	background-color: #7B95A6;
 }
 
 .ui-page-theme-a .ui-header .ui-bar-inherit, html .ui-bar-a .ui-header .ui-bar-inherit, html .ui-body-a .ui-header .ui-bar-inherit, html body .ui-group-theme-a .ui-header .ui-bar-inherit {
-	background-color: #58ADE7;
+	background-color: #7B95A6;
 	color: white;
 	text-shadow: none;
 	font-weight: bold;
@@ -31,5 +31,5 @@
 .ui-footer-fixed {
 	padding-top: 15px;
 	height: 40px;
-	background-color: #58ADE7;
+	background-color: #7B95A6;
 }
