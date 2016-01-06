@@ -6,7 +6,7 @@
   <property name="builddir" value="${workspace}/app/build" />
 
   <target name="build"
-  	depends="prepare,vendors, database_schema, parameters,lint,phploc,pdepend,phpcpd,phpmd-ci,phpcs-ci,phpdoc, phpunit, phpcb"/>
+  	depends="prepare,vendors, parameters, database_schema, lint,phploc,pdepend,phpcpd,phpmd-ci,phpcs-ci,phpdoc, phpunit, phpcb"/>
 	<!-- depends="prepare,vendors, database_schema, parameters,lint,phploc,pdepend,phpcpd,phpmd-ci,phpcs-ci,phpdoc,phpunit,phpcb"/> -->
   
   <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
@@ -147,7 +147,7 @@
 
   <target name="parameters" description="Copy parameters">
     <exec executable="cp" failonerror="true">
-      <arg path="app/config/parameters.yml.dist" />
+      <arg path="app/config/parameters.yml.test" />
       <arg path="app/config/parameters.yml" />
     </exec>
   </target>
